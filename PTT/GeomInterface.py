@@ -23,7 +23,7 @@ class GeometryInterface:
         self.type = type
         self.input_deck = input_deck
         if type == "MCNP":
-            self.parseMCNP_Geom()
+            self.parseMCNP_deck()
             self.cleanupMCNPcards()
         elif type == "Native_Dragon":
             self.parseNative_Geom()
@@ -33,9 +33,9 @@ class GeometryInterface:
             print("Error: invalid Geometry type to be parsed")
         
         
-    def parseMCNP_Geom(self):
+    def parseMCNP_deck(self):
         """
-        parsing the MCNP input file
+        parsing the MCNP input file (deck)
         Its main structure contains a defintion of "Cell Cards", "Surface Cards" and "Material Cards" 
         Each section has a dictionnary associated in order to store the info about each card.
         The dictionnary's values are :
