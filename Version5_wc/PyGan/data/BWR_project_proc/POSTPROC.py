@@ -67,9 +67,9 @@ def POSTPROC(pyCOMPO,ListeCOMPO,name_geom,name_mix,suffixe,VISU_param,form,Nmin)
         Serpent_bu_identifier = "UOx"
     elif "Gd" in burnup_points:
         Serpent_bu_identifier = "Gd"
-    SERPENT_path=f'/home/p117902/working_dir/Serpent2_para_bateman/Linux_aarch64/{Serpent_bu_identifier}/'
-
-
+    #SERPENT_path=f'/home/p117902/working_dir/Serpent2_para_bateman/Linux_aarch64/{Serpent_bu_identifier}/'
+    SERPENT_path=f'/home/p117902/Serpent2/Linux_x86_64/'
+    print(f"Visu options are DRAGON = {visu_DRAGON}, SERPENT= {visu_SERPENT}, COMP={visu_COMP}, DELTA={visu_DELTA}")
 
 
     ################################################################
@@ -129,7 +129,7 @@ def POSTPROC(pyCOMPO,ListeCOMPO,name_geom,name_mix,suffixe,VISU_param,form,Nmin)
         #print("$$$ ---------------- DRAGON isotopes = ",isotopes)
         #print("$$$ ---------------- DRAGON isotopes souhaites = ",isotopes_SOUHAITES)
         #print("$$$ ---------------- indices correspondances = ",indices)
-            
+        print("Done with retreiving Dragon5 results")
         # Store in DRAGON_ALL
         DRAGON_ALL=[
                DRAGON_BU,
@@ -146,7 +146,7 @@ def POSTPROC(pyCOMPO,ListeCOMPO,name_geom,name_mix,suffixe,VISU_param,form,Nmin)
                DRAGON_ISOTOPESDENS[int(indices[9]),:],
                DRAGON_ISOTOPESDENS[int(indices[10]),:],
            ]
-        #print("$$$ ---------------- DRAGON_ALL",DRAGON_AL)
+        print("$$$ ---------------- DRAGON_ALL",DRAGON_ALL)
 
     # -------------------------------
     #   MATRICE DES RESULTATS SERPENT 
@@ -195,6 +195,7 @@ def POSTPROC(pyCOMPO,ListeCOMPO,name_geom,name_mix,suffixe,VISU_param,form,Nmin)
         #print('$$$ ---------------- SERPENT_BU =',SERPENT_BU)
         #print("$$$ ---------------- SERPENT_Keff = ",SERPENT_Keff)    
         #print("$$$ ---------------- SERPENT_ISOTOPESDENS = ",SERPENT_ISOTOPESDENS)
+        print("Done with retrieving Serpent2 results")
 
         SERPENT_ALL=[
            SERPENT_BU,
@@ -211,7 +212,7 @@ def POSTPROC(pyCOMPO,ListeCOMPO,name_geom,name_mix,suffixe,VISU_param,form,Nmin)
            SERPENT_ISOTOPESDENS[9,:],
            SERPENT_ISOTOPESDENS[10,:],
            ]
-        #print("$$$ ---------------- SERPENT_ALL",SERPENT_ALL)
+        print("$$$ ---------------- SERPENT_ALL",SERPENT_ALL)
 
 
     # -------------------------------
@@ -355,7 +356,8 @@ def POSTPROC(pyCOMPO,ListeCOMPO,name_geom,name_mix,suffixe,VISU_param,form,Nmin)
                 plt.ylabel('Erreur relative (%)')
                 save_name=name_mix+'_ERROR_'+isotopes_SOUHAITES[k-1]
                 fig_name=name_mix+' - \u0394 '+isotopes_SOUHAITES[k-1]
-
+                print(isotopes_SOUHAITES[k-1])
+                print(f"k={k}")
             plt.title(fig_name)
             os.chdir(path+'/'+SAVE_DIR)
             plt.savefig(save_name+'.'+form,bbox_inches = 'tight', format=form, dpi=1200) #enregistrement des figures dans le repertoire des resultats
