@@ -1,159 +1,0 @@
-* CLE-2000 VERS 3.0 * R.ROY, EPM COPYRIGHT 1999 *                                                                          LINE
-*----                                                                                                                     0001
-*  TEST CASE TCM31                                                                                                        0002
-*  4X4 2D-CARTESIAN MESH WITH NXT:                                                                                        0003
-*  MACROLIB-DEFINED CROSS SECTIONS                                                                                        0004
-*----                                                                                                                     0005
-* Define STRUCTURES and MODULES used                                                                                      0006
-*----                                                                                                                     0007
-LINKED_LIST MACRO ASSMB ASSMB2D TRACK SYS FLUX ;                                                                          0008
-                                                ?                                                                       
-                                                                                                                        
-MODULE GEO: NXT: MAC: ASM: FLU: TLM: DELETE: END: ;                                                                       0009
-                                                   ?                                                                    
-                                                                                                                        
-SEQ_BINARY TRACK_FIL ;                                                                                                    0010
-                      ?                                                                                                 
-                                                                                                                        
-SEQ_ASCII Lines.m :: FILE './Lines.m' ;                                                                                   0011
-                                       ?                                                                                
-                                                                                                                        
-PROCEDURE assertS ;                                                                                                       0012
-                   ?                                                                                                    
-                                                                                                                        
-*                                                                                                                         0013
-MACRO := MAC: ::                                                                                                          0014
-                ?                                                                                                       
-                                                                                                                        
-EDIT 2 NGRO 1 NMIX 3 NIFI 1                                                                                               0015
-                           ?                                                                                            
-                                                                                                                        
-READ INPUT                                                                                                                0016
-          ?                                                                                                             
-                                                                                                                        
-MIX 1 !EAU                                                                                                                0017
-TOTAL 0.3683        SCAT 1 1 0.3661                                                                                       0018
-                                   ?                                                                                    
-                                                                                                                        
-MIX 2 !COMBUSTIBLE                                                                                                        0019
-TOTAL 0.36522       SCAT 1 1 0.3234                                                                                       0020
-                                   ?                                                                                    
-                                                                                                                        
-NUSIGF 0.1564       CHI 1.0                                                                                               0021
-                           ?                                                                                            
-                                                                                                                        
-MIX 3 !ARGENT                                                                                                             0022
-TOTAL 0.8453        SCAT 1 1 0.5216                                                                                       0023
-                                   ?                                                                                    
-                                                                                                                        
-;                                                                                                                         0024
- ?                                                                                                                      
-                                                                                                                        
-ASSMB2D := GEO: :: CAR2D 4 4                                                                                              0025
-                            ?                                                                                           
-                                                                                                                        
-EDIT 2                                                                                                                    0026
-      ?                                                                                                                 
-                                                                                                                        
-X- REFL  X+ REFL                                                                                                          0027
-                 ?                                                                                                      
-                                                                                                                        
-Y- REFL  Y+ REFL                                                                                                          0028
-                 ?                                                                                                      
-                                                                                                                        
-MESHX 0.0 0.37 0.46 0.62 0.72                                                                                             0029
-                              ?                                                                                         
-                                                                                                                        
-MESHY 0.0 0.37 0.46 0.62 0.72                                                                                             0030
-                              ?                                                                                         
-                                                                                                                        
-MIX 2 2 2 1                                                                                                               0031
-           ?                                                                                                            
-                                                                                                                        
-2 2 3 1                                                                                                                   0032
-       ?                                                                                                                
-                                                                                                                        
-2 3 1 1                                                                                                                   0033
-       ?                                                                                                                
-                                                                                                                        
-1 1 1 1                                                                                                                   0034
-            ?                                                                                                           
-                                                                                                                        
-;                                                                                                                         0035
- ?                                                                                                                      
-                                                                                                                        
-*---                                                                                                                      0036
-*2D QR ANGULAR QUADRATURE IN NXT                                                                                          0037
-*---                                                                                                                      0038
-TRACK TRACK_FIL := NXT: ASSMB2D ::                                                                                        0039
-                                  ?                                                                                     
-                                                                                                                        
-TITLE '2D CARTESIAN BENCHMARK'                                                                                            0040
-                              ?                                                                                         
-                                                                                                                        
-EDIT 10                                                                                                                   0041
-       ?                                                                                                                
-                                                                                                                        
-TSPC EQW2 2 3.0 LONG ;                                                                                                    0042
-                      ?                                                                                                 
-                                                                                                                        
-*       DDDDDD   RRRRRR     AAA     GGGGG    OOOOO   NN     NN
- DDDDDDD  RRRRRRR   AAAAA   GGGGGGG  OOOOOOO  NNN    NN
- DD   DD  RR   RR  AA   AA  GG       OO   OO  NNNN   NN
- DD   DD  RRRRRR   AA   AA  GG  GGG  OO   OO  NN NN  NN
- DD   DD  RRRR     AAAAAAA  GG  GGG  OO   OO  NN  NN NN
- DD   DD  RR RR    AAAAAAA  GG   GG  OO   OO  NN   NNNN
- DDDDDDD  RR  RR   AA   AA  GGGGGGG  OOOOOOO  NN    NNN
- DDDDDD   RR   RR  AA   AA   GGGGG    OOOOO   NN     NN
-
- VERSION dragon 5  Version 5.0.10 ($Revision: 3196 $)                  $Date: 2024-03-06 07:25:15 -0500 (Wed, 06 Mar 2024) $           
- GROUPE D'ANALYSE NUCLEAIRE
- ECOLE POLYTECHNIQUE DE MONTREAL
-
-
-
- COPYRIGHT NOTICE FOR THIS VERSION OF dragon:
- --------------------------------------------
- Copyright (C) 2002 Ecole Polytechnique de Montreal 
- This library is free software; you can redistribute it
- and/or modify it under the terms of the GNU Lesser General
- Public License as published by the Free Software Foundation;
- either version 2.1 of the License, or (at your option) any
- later version 
-
-
-
-
-                                                                                                                   0043
-Lines.m := TLM: TRACK TRACK_FIL ::                                                                                        0044
-                                  ?                                                                                     
-                                                                                                                        
-EDIT 99                                                                                                                   0045
-       ?                                                                                                                
-                                                                                                                        
-NTPO 1                                                                                                                    0046
-      ?                                                                                                                 
-                                                                                                                        
-DIRECTIONS NoPause DIR 0 ;                                                                                                0047
-                          ?                                                                                             
-                                                                                                                        
-SYS := ASM: MACRO TRACK TRACK_FIL :: EDIT 1 PIJ ;                                                                         0048
-                                                 ?                                                                      
-                                                                                                                        
-*                                                                                                                         0049
-FLUX := FLU: SYS MACRO TRACK TRACK_FIL :: TYPE K ;                                                                        0050
-                                                  ?                                                                     
-                                                                                                                        
-ECHO "test 2DGeom_nxt_tspc completed" ;                                                                                   0051
-                                       ?                                                                                
-                                                                                                                        
-END: ;                                                                                                                    0052
-      ?                                                                                                                 
-                                                                                                                        
-QUIT "LIST" .                                                                                                             0053
-             ?                                                                                                          
-                                                                                                                        
- 
-! clepil: ERROR CODE IN >>clelog<< ERROR NUMBER (37)
-cle2000_c: COMPILING _MAIN.c2m FILE (ERROR CODE) IRC=37
- DRAGON: kernel error (code=  666).

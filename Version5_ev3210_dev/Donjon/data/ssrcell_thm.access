@@ -1,9 +1,0 @@
-#!/bin/sh
-if [ $# = 0 ]
-   then
-   echo "usage: ssrcell_thm.access directory" 1>&2
-   exit 1
-fi
-ln -s "$1"/data/ssrcell_thm_proc/*.txt .
-ls -l
-echo "ssrcell_thm access script terminated"

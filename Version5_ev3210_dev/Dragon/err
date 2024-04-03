@@ -1,5 +1,0 @@
-execute 2 with Dragon on system Linux_x86_64 with custom compiler
-use the existing directory Linux_x86_64
-RunDirectory: /tmp/rundir21
-End of execution. Total execution time: 0h 0min 0s
-the listing is located on ./Linux_x86_64

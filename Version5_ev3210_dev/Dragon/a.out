@@ -1,5 +1,0 @@
-execute NXT_tracking_study with Dragon on system Linux_x86_64 with custom compiler
-use the existing directory Linux_x86_64
-RunDirectory: /tmp/rundir21
-use little endian libraries
-NXT_tracking_study.access script terminated
