@@ -18,6 +18,8 @@ Version5_wc/.svn/
 
 Version5*/Donjon/data/history_mphy_proc/
 Version5*/Donjon/data/1Sap_vs_3Sap_proc/
+Version5*/Donjon/tests/data/
+Version5*/Donjon/tests/data/
 Version5*/Dragon/Linux_x86_64/
 Version5*/PyGan/Linux_x86_64/
 Version5*/Dragon/Linux_aarch64/
@@ -41,5 +43,9 @@ Version5_*/Ganlib/src/Ganlib
 Version5_*/Dragon/src/libDragon.a
 Version5_*/Dragon/bin/Linux_x86_64/Dragon
 Version5_*/Dragon/lib/Linux_x86_64/libDragon.a
-Version5_e*/Dragon/src/Dragon
+Version5_*/Dragon/src/Dragon
+Version5_*/Donjon/bin/Linux_x86_64/Donjon
+Version5_*/Donjon/lib/Linux_x86_64/libDonjon.a
+Version5_*/Donjon/src/Donjon
+Version5_*/Donjon/src/libDonjon.a
 
