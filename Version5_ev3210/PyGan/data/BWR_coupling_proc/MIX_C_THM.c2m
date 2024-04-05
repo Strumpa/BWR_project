@@ -62,7 +62,7 @@ IF cell_name "AT10_24UOX" = THEN
   MIX <<COMB0102>> COMB <<COMB0101>> 1.0
   MIX <<COMB0103>> COMB <<COMB0101>> 1.0
   MIX <<COMB0104>> COMB <<COMB0101>> 1.0
-  MIX <<CLAD>> <Tcool> NOEV
+  MIX <<CLAD>> <<Tcool>> NOEV
    Ni60  = Ni60   9.69262E-06
    Zr90  = Zr90   2.18317E-02 2
    Zr91  = Zr91   4.76096E-03 2
