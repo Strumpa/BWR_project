@@ -1,0 +1,149 @@
+*----
+*  TEST CASE TRDR47
+*  15 X 15 PWR ASSEMBLY WITHOUT POISON
+*  SPH EQUIVALENCE WITH SELENGUT NORMALIZATION
+*  172-GROUP JEF2.2 DRAGLIB
+*----
+*  Define STRUCTURES and MODULES used
+*----
+LINKED_LIST LIBRARY LIBRARY2 CP FLUX DISCR DISCR_SS EDITION EIGHTH
+  EIGHTH_SS MACDIR ;
+XSM_FILE LIBRARY_SS ;
+MODULE
+  LIB: GEO: SYBILT: USS: ASM: FLU: EDI: SPH: UTL: DELETE: END: ;
+PROCEDURE assertS ;
+*----
+*  Microscopic cross sections from Jef 2.2 Draglib
+*----
+LIBRARY := LIB: ::
+  EDIT 2 NMIX 6 CTRA APOL SUBG
+  MIXS LIB: DRAGON FIL: DLIB_J2
+  MIX 1 933.6                      O16      = O16      4.49355E-2
+    U235     = U235     7.39237E-4 1
+    U238     = U238     2.17285E-2 1
+  MIX 2 COMB 1 1.0
+  MIX 3 COMB 1 1.0
+  MIX 4 COMB 1 1.0
+  MIX 5 579.9
+    Zr90     = Zr0      4.18621E-2 2
+  MIX 6 579.9
+    H1H2O    = H1_H2O   4.71676E-2   O16H2O   = O16      2.35838E-2
+    B10      = B10      4.66791E-6   B11      = B11      1.89074E-5
+  ;
+*----
+*  Geometry : a 15 X 15 normal PWR assembly
+*  contains   T : guide thimble tube
+*            C1 : normal fuel cell
+*            C2 : peripheral cell
+*            C3 : corner cell
+*----
+REAL Rfuel := 0.4646 ;
+REAL Rfuel1 := Rfuel .50 SQRT * ;
+REAL Rfuel2 := Rfuel .80 SQRT * ;
+REAL Rfuel3 := Rfuel .95 SQRT * ;
+
+EIGHTH_SS := GEO: :: CAR2D 8 8
+X- DIAG X+ REFL
+Y- SYME Y+ DIAG
+  ::: T  := GEO: CARCEL 2
+    MESHX  0. 1.43
+    MESHY  0. 1.43
+    RADIUS 0. 0.55 0.57
+    MIX     6   5   6 ;
+  ::: C1 := GEO: CARCEL 5
+    MESHX  0. 1.43
+    MESHY  0. 1.43
+    RADIUS 0. <<Rfuel1>> <<Rfuel2>> <<Rfuel3>> <<Rfuel>> 0.53594
+    MIX     1    2    3    4    5    6 ;
+  ::: C2 := GEO: C1  MESHX 0. 1.48 MIX 1 2 3 4 5 6 ;
+  ::: C3 := GEO: C2  MESHY 0. 1.48 MIX 1 2 3 4 5 6 ;
+CELL T  C1 C1 C1 T  C1 C1 C2
+        C1 C1 C1 C1 C1 C1 C2
+           C1 C1 C1 T  C1 C2
+              T  C1 C1 C1 C2
+                 C1 C1 C1 C2
+                    T  C1 C2
+                       C1 C2
+                          C3
+MERGE 1  2  2  2  1  2  2  4
+         2  2  2  2  2  2  4
+            2  2  2  1  2  4
+               1  2  2  2  4
+                  2  2  2  4
+                     1  2  4
+                        2  4
+                           3
+;
+*----
+*  Self-Shielding calculation SYBIL
+*----
+DISCR_SS  := SYBILT: EIGHTH_SS :: MAXZ 1000000 MAXR 1000000
+  QUA2 3 3 GAUSS DP01 ;
+LIBRARY_SS := USS: LIBRARY DISCR_SS ;
+*----
+*  Permute mixtures before flux calculation
+*----
+LIBRARY2 := LIB: ::
+  EDIT 2 NMIX 6 CTRA APOL
+  MIXS LIB: MICROLIB FIL: LIBRARY_SS
+  MIX 1 COPY 6
+  MIX 2 COPY 5
+  MIX 3 COPY 4
+  MIX 4 COPY 3
+  MIX 5 COPY 2
+  MIX 6 COPY 1
+  ;
+*----
+*  Transport calculation      SYBIL
+*  Flux calculation for B1 homogeneous leakage
+*----
+EIGHTH := GEO: :: CAR2D 8 8
+X- DIAG X+ REFL
+Y- SYME Y+ DIAG
+  ::: T  := GEO: CARCEL 2
+    MESHX  0. 1.43
+    MESHY  0. 1.43
+    RADIUS 0. 0.55 0.57
+    MIX     1   2   1 ;
+  ::: C1 := GEO: CARCEL 5
+    MESHX  0. 1.43
+    MESHY  0. 1.43
+    RADIUS 0. <<Rfuel1>> <<Rfuel2>> <<Rfuel3>> <<Rfuel>> 0.53594
+    MIX     6    5    4    3    2    1 ;
+  ::: C2 := GEO: C1  MESHX 0. 1.48 MIX 6 5 4 3 2 1 ;
+  ::: C3 := GEO: C2  MESHY 0. 1.48 MIX 6 5 4 3 2 1 ;
+CELL T  C1 C1 C1 T  C1 C1 C2
+        C1 C1 C1 C1 C1 C1 C2
+           C1 C1 C1 T  C1 C2
+              T  C1 C1 C1 C2
+                 C1 C1 C1 C2
+                    T  C1 C2
+                       C1 C2
+                          C3
+;
+DISCR     := SYBILT: EIGHTH :: MAXZ 1000000 MAXR 1000000
+  QUA2 3 3 GAUSS DP01 ;
+CP := ASM: LIBRARY2 DISCR :: ARM ;
+FLUX := FLU: CP LIBRARY2 DISCR :: EDIT 1 TYPE B B1 SIGS ;
+EDITION := EDI: LIBRARY2 DISCR FLUX EIGHTH ::
+  EDIT 1 SAVE MICR RES MERGE COMP COND 0.625 JOUT ;
+EDITION := SPH: EDITION ::  EDIT 2 ALBS SELE_ALB ;
+*
+MACDIR := EDITION :: STEP UP 'REF-CASE0001' STEP UP MACROLIB
+          STEP UP GROUP STEP AT 1 ;
+UTL: MACDIR :: DUMP ;
+assertS MACDIR :: 'NTOT0'  1 5.305629E-01 ;
+assertS MACDIR :: 'NUSIGF' 1 6.686473E-03 ;
+assertS MACDIR :: 'DIFF'   1 1.400524E+00 ;
+assertS MACDIR :: 'SIGW00' 1 5.050910E-01 ;
+MACDIR := DELETE: MACDIR ;
+MACDIR := EDITION :: STEP UP 'REF-CASE0001' STEP UP MACROLIB
+          STEP UP GROUP STEP AT 2 ;
+assertS MACDIR :: 'NTOT0'  1 1.359428E+00 ;
+assertS MACDIR :: 'NUSIGF' 1 1.365678E-01 ;
+assertS MACDIR :: 'DIFF'   1 4.055927E-01 ;
+assertS MACDIR :: 'SIGW00' 1 1.271332E+00 ;
+MACDIR := DELETE: MACDIR ;
+ECHO "test TCDR47 completed" ;
+END: ;
+QUIT "LIST" .

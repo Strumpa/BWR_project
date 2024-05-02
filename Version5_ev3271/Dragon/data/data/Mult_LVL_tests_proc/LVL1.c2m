@@ -1,0 +1,118 @@
+* Deck LVL1
+* CLE-2000 script
+* Author : R. Guasch
+* Purpose : define LVL1 geometry benchmark, perform tracking with NXT and G2S->SALT
+* Compare case with and without DIAG
+* Save geometry post script fig and TLM matlab generated tracking.
+
+
+MODULE GEO: G2S: NXT: SALT: TLM: END: ;
+
+LINKED_LIST GEOM GEOM_D TRACK TRACK_D TRACK_S TRACK_S_D ;
+
+SEQ_BINARY TRACKF TRACKF_S ;
+SEQ_BINARY TRACKF_D TRACKF_S_D ;
+
+SEQ_ASCII GeoG2S GeoG2S_D ;
+
+SEQ_ASCII LVL1.ps :: FILE './FIG_LVL1.ps' ;
+SEQ_ASCII LVL1D.ps :: FILE './FIG_LVL1_DIAG.ps' ;
+
+SEQ_ASCII TLM_NF1 :: FILE 'tracks_NXT_LVL1.m' ;
+SEQ_ASCII TLM_NF1D :: FILE 'tracks_NXT_LVL1_DIAG.m' ;
+
+SEQ_ASCII TLM_SF1 :: FILE 'tracks_SALT_LVL1.m' ;
+SEQ_ASCII TLM_SF1D :: FILE 'tracks_SALT_LVL1_DIAG.m' ;
+
+INTEGER an2d := 8 ;  ! NUMBER OF ANGLES IN 0 TO PI/2
+REAL densur := 1.0 ; ! DENSITY OF INTEGRATION LINES CM^-1 
+
+ECHO "in LVL1" ;
+* Generation of 1st level 4 by 4 geometry with and without DIAG condition
+GEOM := GEO: :: CAR2D 2 2 
+        X- REFL X+ REFL
+        Y- REFL Y+ REFL
+        MIX 
+        1 2 2 4
+        MESHX 0.0 2.0 4.0
+        MESHY 0.0 2.0 4.0
+;
+
+GEOM_D := GEO: :: CAR2D 2 2 
+        X- DIAG X+ REFL
+        Y- REFL Y+ DIAG
+        MIX 1 1
+            1 1 
+        MESHX 0.0 2.0 4.0
+        MESHY 0.0 2.0 4.0
+;
+
+* Tracking both Geomtries with NXT specular tracking
+ECHO "NXT tracking of LVL1" ;
+TRACK TRACKF := NXT: GEOM ::
+  EDIT 10
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+; 
+ECHO "NXT tracking of LVL1 DIAG" ;
+TRACK_D TRACKF_D := NXT: GEOM_D ::
+  EDIT 10
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+; 
+
+* Writing output matlab files to plot the tracks
+TLM_NF1 := TLM: TRACK TRACKF ::
+  EDIT 1
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+TLM_NF1D := TLM: TRACK_D TRACKF_D ::
+  EDIT 1
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+
+* Switching the geometry to a surfacic representation
+GeoG2S LVL1.ps := G2S: GEOM :: ;
+GeoG2S_D LVL1D.ps := G2S: GEOM_D :: ;
+
+* Tracking the surfacic equivalent geometries with SALT specular tracking
+ECHO "SALT tracking of LVL1" ;
+TRACK_S TRACKF_S := SALT: GeoG2S ::
+  EDIT 10
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+;
+
+ECHO "SALT tracking of LVL1 DIAG" ;
+TRACK_S_D TRACKF_S_D := SALT: GeoG2S_D ::
+  EDIT 10
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+;
+
+* Writing output matlab files with TLM
+TLM_SF1 := TLM: TRACK_S TRACKF_S ::
+  EDIT 1
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+TLM_SF1D := TLM: TRACK_S_D TRACKF_S_D ::
+  EDIT 1
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+
+ECHO "LVL1 procedure completed, full and DIAG cases" ;
+
+END: ;
+QUIT .

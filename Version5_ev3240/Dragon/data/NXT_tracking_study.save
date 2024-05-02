@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+if [ $# = 0 ]
+   then
+   echo "usage: NXT_tracking_study.save directory" 1>&2
+   exit 1
+fi
+echo "access NXT_tracking_study.save"
+MACH=`uname -s`
+Sysx="`echo $MACH | cut -b -6`"
+if [ $Sysx = "CYGWIN" ]; then
+   MACH=`uname -o`
+elif [ $Sysx = "AIX" ]; then
+   MACH=`uname -s`
+else
+   MACH=`uname -sm | sed 's/[ ]/_/'`
+fi
+ls -l
+mv tracks_NXT_TSPC_REND.m $1/"$MACH"
+mv tracks_NXT_TSPC.m $1/"$MACH"
+mv tracks_NXT_TISO_REND.m $1/"$MACH"
+mv tracks_NXT_TISO.m $1/"$MACH"
+
+echo "NXT_tracking_study.save"

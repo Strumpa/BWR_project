@@ -1,0 +1,170 @@
+#!/bin/sh
+#
+# author : A. Hebert
+# use    : rpython [-q|-w|-i:] <file.py>
+# note   : <file.py> must be located on directory ./data/
+#          If <file.access> exists, it is executed.
+#          -q quiet execution for regression testing
+#          -w to execute in console (for debug purpose)
+#          -p to use PIP extension modules for lifo, lcm and cle2000
+#          -i name of python dataset (by default, use the last argument)
+#          -p number of parallel threads (=1 by default)
+#
+if [ $# = 0 ]
+   then
+   echo "usage: rpython [-q|-w|-i:] <file.py>" 1>&2
+   exit 1
+fi
+System=`uname -s`
+Sysx="`echo $System | cut -b -6`"
+if [ $Sysx = "CYGWIN" ]; then
+   export MACH=`uname -o`
+elif [ $Sysx = "AIX" ]; then
+   export MACH=`uname -s`
+else
+   export MACH=`uname -sm | sed 's/[ ]/_/'`
+fi
+
+for last; do : ; done
+mydata=${last}
+quiet=0
+term=0
+nomp=0
+pip=0
+
+while getopts ":qwpi:" opt; do
+  case $opt in
+    q) quiet=1
+    ;;
+    w) term=1
+    ;;
+    p) pip=1
+    ;;
+    i) mydata=$OPTARG
+    ;;
+    p) nomp=$OPTARG
+    ;;
+    \?) echo "Invalid option -$OPTARG" >&2
+    exit 1
+    ;;
+  esac
+
+  case $OPTARG in
+    -*) echo "Option $opt needs a valid argument"
+    exit 1
+    ;;
+  esac
+done
+
+xxx=`basename $mydata .py`
+Code=`basename "$PWD"`
+if [ $quiet = 0 ]; then
+  echo 'execute' $xxx 'with' $Code 'on system' $MACH
+fi
+
+if [ -d "$MACH" ]; then
+  if [ $quiet = 0 ]; then
+    echo 'use the existing directory' $MACH
+  fi
+else
+  echo 'creation of directory' $MACH
+  mkdir "$MACH"
+fi
+CodeDir=$PWD
+
+if [ $Sysx = "AIX" ]; then
+  Tmpdir=/usr/tmp
+elif [ $Sysx = "SunOS" ]; then
+  Tmpdir=/var/tmp
+else
+  Tmpdir=/tmp
+fi
+inum=1
+while [ -d $Tmpdir/rundir$inum ]
+  do
+  inum=`expr $inum + 1 `
+done
+Rundir=$Tmpdir/rundir$inum
+mkdir $Rundir
+pyv=`echo $(python3 --version) | cut -d. -f2`
+if [ $quiet = 0 ]; then
+  echo "RunDirectory:" $Rundir
+  echo "Python version= 3."$pyv
+fi
+if [ $pip = 0 ]; then
+  export PYTHONPATH="$(python3 ../script/set_pythonpath.py)"
+fi
+export PYTHONMALLOC=debug
+cd $Rundir
+
+cp "$CodeDir"/data/$mydata ./mydata
+
+if [ -d "$CodeDir"/data/`echo $xxx`_proc ]; then
+  cp "$CodeDir"/data/`echo $xxx`_proc/*.c2m . 2> /dev/null
+  cp "$CodeDir"/data/`echo $xxx`_proc/*.py . 2> /dev/null
+fi
+if [ -f "$CodeDir"/data/$xxx.access ]; then
+  if [ $quiet = 0 ]; then
+    "$CodeDir"/data/$xxx.access "$CodeDir"
+  else
+    "$CodeDir"/data/$xxx.access "$CodeDir" > /dev/null
+  fi
+fi
+if [ -f "$CodeDir"/data/assertS.py ]; then
+  cp "$CodeDir"/data/assertS.py .
+fi
+if [ -f "$CodeDir"/data/assertV.py ]; then
+  cp "$CodeDir"/data/assertV.py .
+fi
+if [ $quiet = 0 ]; then
+  ls -l
+fi
+before=$(date +%s)
+if [ $nomp = 0 ]; then
+  if [ $term = 0 ]; then
+    python3 mydata >$xxx.result
+  elif [ $term = 1 ]; then
+    python3 mydata
+  fi
+else
+  echo 'number of OpenMP threads=' $nomp
+  export OMP_NUM_THREADS=$nomp
+  if [ $term = 0 ]; then
+    python3 mydata >$xxx.result
+  elif [ $term = 1 ]; then
+    python3 mydata
+  fi
+fi
+if [ $quiet = 0 ]; then
+  time=$(( $(date +%s) - before))
+  printf 'End of execution. Total execution time: %dh %dmin %ds\n' \
+    $(($time/3600)) $(($time%3600/60)) $(($time%60))
+fi
+if [ -f "$CodeDir"/data/$xxx.save ]; then
+  if [ $quiet = 0 ]; then
+    "$CodeDir"/data/$xxx.save "$CodeDir"
+  else
+    "$CodeDir"/data/$xxx.save "$CodeDir" > /dev/null
+  fi
+fi
+mv $xxx.result "$CodeDir"/"$MACH"
+if [ $quiet = 0 ]; then
+  echo 'the listing is located on ./'$MACH
+fi
+
+cd "$CodeDir"/"$MACH"
+if [ $quiet = 0 ] && [ $term = 0 ]; then
+  tail -15 $xxx.result
+elif [ $term = 0 ]; then
+  RED='\033[0;31m'
+  GREEN='\033[0;32m'
+  NC='\033[0m' # No Color
+  if tail $xxx.result | grep -q "completed" ; then
+    printf "${GREEN}[OK]${NC}\n"
+  else
+    printf "${RED}[FAILED]${NC}\n"
+  fi
+fi
+chmod -R 777 $Rundir
+/bin/rm -r -f $Rundir
+cd ..

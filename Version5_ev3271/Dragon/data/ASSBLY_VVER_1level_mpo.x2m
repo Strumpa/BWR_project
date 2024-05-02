@@ -1,0 +1,125 @@
+*----
+* case ASSBLY_VVER_1level_mpo
+* 99-group RA60 simple VVER assembly in DRAGON -- 1-level scheme
+* use ALAMOS surfacic geometry file
+* production of an MPO file for reflector feeding
+* Author: A. Hebert
+*----
+HDF5_FILE MyMpo :: FILE './MyMpoVVER.hdf' ;
+LINKED_LIST GEOSS GEON2 TRACKSS TRACKN2 LIBRARY LIBRARY2 SYS FLUX2 EDIOBJ ;
+MODULE SYBILT: G2S: SALT: MCCGT: USS: ASM: FLU: EDI: UTL: DELETE: LIB: MPO: END: ;
+SEQ_ASCII GT_ALA :: FILE './13UAX_ARO_MOC.ap3' ;
+SEQ_ASCII GT_ALA_ZA :: FILE './13UAX_ARO_MOC.za' ;
+SEQ_ASCII alamos.ps :: FILE './13UAX_ARO_MOC.ps' ;
+SEQ_ASCII GT_SAL ;
+SEQ_BINARY TF_EXC_SS TF_EXC_MOC ;
+INTEGER an2d := 8 ;
+REAL densur := 20.0 ;
+PROCEDURE Mix_UOX assertS ;
+
+************************************************************************
+*  BEGIN GEOMETRY                                                      *
+************************************************************************
+GT_SAL alamos.ps := G2S: GT_ALA GT_ALA_ZA :: EDIT 0 ALAMOS 10 ;
+
+************************************************************************
+*  BEGIN TRACKING                                                      *
+************************************************************************
+! Level One
+! PIJ tracking for self-shielding calculation
+TRACKSS TF_EXC_SS := SALT: GT_SAL ::
+  EDIT 3
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  MERGMIX
+;
+TRACKN2 TF_EXC_MOC := SALT: GT_SAL ::
+  EDIT 3
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+;
+TRACKN2 := MCCGT: TRACKN2 TF_EXC_MOC ::
+  CACB 4 AAC 80 TMT EPSI 1E-5 MCU 10000 ;
+
+************************************************************************
+*  END TRACKING                                                        *
+************************************************************************
+************************************************************************
+*  BEGIN LIBRARY READING                                               *
+************************************************************************
+STRING Library := 'CLA99CEA93:CLA99CEA93_SS' ;
+REAL dens_mod := 0.85 ;
+REAL pbore := 375.0 ;
+LIBRARY := Mix_UOX :: <<Library>> <<dens_mod>> <<pbore>> ;
+
+************************************************************************
+*  END LIBRARY READING                                                 *
+************************************************************************
+
+************************************************************************
+*  BEGIN MyMpo INITIALIZATION                                         *
+************************************************************************
+  MyMpo := MPO: LIBRARY ::
+    EDIT 10
+    COMM '99-group feeding assembly'
+    REAC  Total Absorption Fission FissionSpectrum NuFission CaptureEnergyCapture
+          FissionEnergyFission Diffusion Scattering
+    ;
+************************************************************************
+*  END MyMpo INITIALIZATION                                            *
+************************************************************************
+
+************************************************************************
+*  RESONANCE SELF-SHIELDING                                            *
+************************************************************************
+LIBRARY2 := USS: LIBRARY TRACKSS TF_EXC_SS :: EDIT 1 PASS 2 GRMIN 18
+    
+   CALC REGI W1 U235 ALL
+
+        REGI W1 U238 6
+        REGI W2 U238 5
+        REGI W3 U238 4
+        REGI W4 U238 3
+
+        REGI W1 U238 10
+        REGI W2 U238 9
+        REGI W3 U238 8
+        REGI W4 U238 7
+
+        REGI W1 U238 14
+        REGI W2 U238 13
+        REGI W3 U238 12
+        REGI W4 U238 11
+
+        REGI W1 U238 18
+        REGI W2 U238 17
+        REGI W3 U238 16
+        REGI W4 U238 15
+
+        REGI W1 U238 22
+        REGI W2 U238 21
+        REGI W3 U238 20
+        REGI W4 U238 19               
+   ENDC ;  
+
+************************************************************************
+*  BEGIN MOC FLUX CALCULATION                                          *
+************************************************************************
+SYS := ASM: LIBRARY2 TRACKN2 TF_EXC_MOC :: ARM EDIT 1 ;    
+
+FLUX2 := FLU: LIBRARY2 SYS TRACKN2 TF_EXC_MOC :: EDIT 1 TYPE B B1 SIGS ;
+
+EDIOBJ := EDI: FLUX2 LIBRARY2 TRACKN2 :: EDIT 5                              
+  MERG COMP
+  MICR RES
+  SAVE ON COND2                                                        
+  ;
+
+************************************************************************
+*  MyMpo FEEDING                                                       *
+************************************************************************
+MyMpo := MPO: MyMpo EDIOBJ :: EDIT 2 ;
+
+assertS FLUX2 :: K-INFINITY 1 1.115246 ;
+ECHO "test ASSBLY_VVER_1level_mpo completed" ;
+END: ;

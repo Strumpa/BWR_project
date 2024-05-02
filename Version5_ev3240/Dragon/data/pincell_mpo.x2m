@@ -1,0 +1,337 @@
+*----
+*  Nom           : pincell_mpo.x2m
+*  Auteur        : A. Hebert
+*  Pincell branch calculation and production of a MPO file
+*----
+*  Define STRUCTURES and MODULES used
+*----
+************************************************************************
+* BEGIN DECLARATION                                                    *
+************************************************************************
+INTEGER istep iautop ;
+LINKED_LIST
+  GEOM TRACKN FLUX LIBRARY LIBRARY2 DONNEES MICLIB BURN164 EDIOBJ ;
+HDF5_FILE MyMpo :: FILE './MyMpo.hdf' ;
+MODULE
+  GEO: SYBILT: EXCELT: DELETE: GREP: BIVACT: EVO: UTL: MPO: EDI: ABORT: END: ;
+PROCEDURE Mix_UOX CalcFlux BranchFlux ;
+PROCEDURE assertS ;
+*----
+*  Choix des options de calcul
+*----
+STRING Library := "DLIB_J2" ;
+*----
+*  Calculation data
+*----
+REAL Kinf1 Kinf2 Keff2 B2 ;
+REAL Tbeg Tend BUbeg BUend BUnextSS ;
+REAL Fuelpwr := 38.425 ; ! W/g ou kW/kg ou MW/t
+REAL dens_mod ;
+
+************************************************************************
+*  BEGIN VALUES EVALUATION                                             *
+************************************************************************
+REAL pbore_0 := 500. ; ! natural boron concentration in ppm
+REAL temp_comb_0 temp_mode_0 dens_mod_0 := 800.0 600.0 0.8 ;
+
+REAL Rcomb4    := 0.41 ;
+REAL Rcomb1    := 0.5 SQRT Rcomb4 * ;
+REAL Rcomb2    := 0.8 SQRT Rcomb4 * ;
+REAL Rcomb3    := 0.95 SQRT Rcomb4 * ;
+
+REAL R_int_G   := 0.418 ;
+REAL R_ext_G   := 0.48  ;
+
+REAL Cote      := 1.26  ;
+
+REAL RmodeN1   := 0.60  ;
+
+REAL N_U5_UOX := 3.70E-02 ;
+
+REAL densU_UOX := 10.0 ;
+
+************************************************************************
+*  END VALUES EVALUATION                                               *
+************************************************************************
+
+INTEGER maxstep := 21 ;
+INTEGER iDcaMax := 3 ;
+INTEGER iAutopMax := 2 ;
+DONNEES := UTL: ::
+  CREA
+    burn <<maxstep>> =
+            0.0       9.375    18.75     37.5      75.0     150.0
+          237.5     325.0     412.5     500.0     625.0     750.0
+         1000.0    1250.0    1500.0    1750.0    2000.0    2500.0
+         3000.0    3500.0    4000.0
+  CREA
+    dca <<iDcaMax>> =
+        0.500     0.800     1.0
+  CREA
+    autop <<iAutopMax>> =
+          0.0    4000.0
+  ;
+
+************************************************************************
+*  END DECLARATION                                                     *
+************************************************************************
+************************************************************************
+*  BEGIN GEOMETRY                                                      *
+************************************************************************
+GEOM := GEO: :: CARCEL 7
+     MESHX 0.0 <<Cote>>
+     MESHY 0.0 <<Cote>>
+      X- REFL X+ REFL    Y- REFL Y+ REFL
+     RADIUS 0.0 <<Rcomb1>> <<Rcomb2>> <<Rcomb3>> <<Rcomb4>>
+            <<R_int_G>> <<R_ext_G>> <<RmodeN1>>
+     MIX  4 5 6 7 2 1 3 3
+  ;
+************************************************************************
+*  END GEOMETRY                                                        *
+************************************************************************
+************************************************************************
+*  BEGIN TRACKING                                                      *
+************************************************************************
+TRACKN := SYBILT: GEOM ::
+  EDIT 99
+  MAXR 500
+  MAXZ  1000000
+  TITLE 'TRACKING FOR PINCELL'
+  QUA2 20 3
+  DP01 ;
+  
+************************************************************************
+*  END TRACKING                                                        *
+************************************************************************
+
+************************************************************************
+*  REFERENCE BURNUP LOOP WITH DEPLETION                                *
+************************************************************************
+************************************************************************
+*  BEGIN LIBRARY READING                                               *
+************************************************************************
+LIBRARY := Mix_UOX ::
+  <<Library>> <<dens_mod_0>> <<pbore_0>> <<N_U5_UOX>> <<densU_UOX>>
+  <<temp_comb_0>> <<temp_mode_0>> ;
+
+************************************************************************
+*  BEGIN MyMpo INITIALIZATION                                          *
+************************************************************************
+  MyMpo := MPO: LIBRARY ::
+    EDIT 10
+    COMM 'evolution burnup pincell'
+    PARA 'Dmod' VALU REAL
+    PARA 'BURN' IRRA
+    ISOT Pm147 Pm148 Pm148m Pm149 Sm147 Sm148 Sm149 Sm150 Nd146  Nd147
+    Nd148 B10m  B11m   Xe135 I135
+    REAC  Total Absorption Fission FissionSpectrum NuFission CaptureEnergyCapture
+          FissionEnergyFission Diffusion Scattering
+    ;
+************************************************************************
+*  END MyMpo INITIALIZATION                                            *
+************************************************************************
+
+************************************************************************
+*  INITIAL FLUX CALCULATION                                            *
+************************************************************************
+EVALUATE istep iautop := 1 1 ;
+EVALUATE Tend BUend := 0.0 0.0 ;
+GREP: DONNEES :: GETVAL 'autop' <<iautop>> >>BUnextSS<< ;
+ECHO "BUnextSS=" BUnextSS ;
+ECHO "call CalcFlux(1)" ;
+
+LIBRARY2 FLUX := CalcFlux LIBRARY TRACKN :: <<istep>>
+    <<BUend>> <<BUnextSS>> <<Fuelpwr>> ;
+
+BURN164 LIBRARY2 := EVO: LIBRARY2 FLUX TRACKN ::
+  EDIT 0
+  SAVE <<Tend>> DAY POWR <<Fuelpwr>> ;
+
+EVALUATE iautop := iautop 1 + ;
+GREP: DONNEES :: GETVAL 'autop' <<iautop>> >>BUnextSS<< ;
+
+************************************************************************
+*  2-GROUPS ENERGY CONDENSATION AND HOMOGENISATION                     *
+************************************************************************
+EDIOBJ := EDI: FLUX LIBRARY2 TRACKN ::
+  EDIT 2
+  MICR 35 U234  U235  U236  U237  U238  Np237 Np238 Np239 Pu238 Pu239
+    Pu240 Pu241 Pu242  Cm242 Cm243 Cm244 Cm245 Am241 Am242m Am243
+    Pm147 Pm148 Pm148m Pm149 Sm147 Sm148 Sm149 Sm150 Nd146  Nd147
+    Nd148 B10m  B11m   Xe135 I135
+  MERG COMP
+  COND 4.0
+  SAVE ON EDI2B ;
+
+************************************************************************
+*  INITIAL MyMpo FEEDING                                               *
+************************************************************************
+
+EDIOBJ := DELETE: EDIOBJ ;
+
+************************************************************************
+*  DEPLETION - HOMOGENISATION                                          *
+************************************************************************
+WHILE istep maxstep < DO
+  EVALUATE istep := istep 1 + ;
+  ECHO "istep=" istep "/" maxstep ;
+
+  EVALUATE BUbeg Tbeg := BUend Tend ;
+  GREP: DONNEES :: GETVAL 'burn' <<istep>> >>BUend<< ;
+  EVALUATE Tend := BUend Fuelpwr / ;
+
+  BURN164 LIBRARY2 := EVO: BURN164 LIBRARY2 FLUX TRACKN ::
+    EDIT 2 DEPL <<Tbeg>> <<Tend>> DAY POWR <<Fuelpwr>> ;
+
+  ECHO "BURNUP_sortie = " BUend "Next SS = " BUnextSS ;
+
+************************************************************************
+*  FLUX CALCULATION                                                    *
+************************************************************************
+  ECHO "call CalcFlux(2)" ;
+  LIBRARY2 FLUX := CalcFlux LIBRARY2 FLUX LIBRARY TRACKN
+    :: <<istep>> <<BUend>> <<BUnextSS>> <<Fuelpwr>> ;
+
+  BURN164 LIBRARY2 := EVO: BURN164 LIBRARY2 FLUX TRACKN ::
+    EDIT 0
+    SAVE <<Tend>> DAY POWR <<Fuelpwr>>
+  ;
+
+  IF BUend BUnextSS - ABS 1E-5 < THEN
+   EVALUATE iautop := iautop 1 + ;
+   IF iautop iAutopMax <= THEN
+      GREP: DONNEES :: GETVAL 'autop' <<iautop>> >>BUnextSS<< ;
+   ENDIF ;
+  ENDIF ;
+
+************************************************************************
+*  2-GROUPS ENERGY CONDENSATION AND HOMOGENISATION                     *
+************************************************************************
+  EDIOBJ := EDI: FLUX LIBRARY2 TRACKN ::
+    EDIT 0
+    MICR 35 U234  U235  U236  U237  U238  Np237 Np238 Np239 Pu238 Pu239
+      Pu240 Pu241 Pu242  Cm242 Cm243 Cm244 Cm245 Am241 Am242m Am243
+      Pm147 Pm148 Pm148m Pm149 Sm147 Sm148 Sm149 Sm150 Nd146  Nd147
+      Nd148 B10m  B11m   Xe135 I135
+    MERG COMP
+    COND 4.0
+    SAVE ON EDI2B ;
+
+************************************************************************
+*  MyMpo FEEDING                                                       *
+************************************************************************
+
+  EDIOBJ := DELETE: EDIOBJ ;
+
+ENDWHILE ; ! reference burnup loop
+assertS FLUX :: K-INFINITY 1 1.233190 ;
+
+LIBRARY LIBRARY2 := DELETE: LIBRARY LIBRARY2 ;
+FLUX := DELETE: FLUX ;
+************************************************************************
+*  END OF REFERENCE BURNUP LOOP WITH DEPLETION                         *
+************************************************************************
+************************************************************************
+
+************************************************************************
+*  MODERATOR DENSITY LOOP                                              *
+************************************************************************
+ECHO "$$$ Moderator density loop" ;
+INTEGER iDcaStep := 0 ;
+WHILE iDcaStep iDcaMax < DO
+  EVALUATE iDcaStep := iDcaStep 1 + ;
+  ECHO "iDcaStep=" iDcaStep "/" iDcaMax ;
+  GREP: DONNEES :: GETVAL 'dca' <<iDcaStep>> >>dens_mod<< ;
+************************************************************************
+*  BEGIN LIBRARY READING                                               *
+************************************************************************
+  LIBRARY := Mix_UOX ::
+    <<Library>> <<dens_mod>> <<pbore_0>> <<N_U5_UOX>> <<densU_UOX>>
+    <<temp_comb_0>> <<temp_mode_0>> ;
+
+************************************************************************
+*  INITIAL FLUX CALCULATION                                            *
+************************************************************************
+  EVALUATE istep iautop := 0 1 ;
+  EVALUATE Tend BUend := 0.0 0.0 ;
+  GREP: DONNEES :: GETVAL 'autop' <<iautop>> >>BUnextSS<< ;
+  ECHO "BUnextSS=" BUnextSS ;
+
+************************************************************************
+*  DEPLETION - HOMOGENISATION                                          *
+************************************************************************
+  WHILE istep maxstep < DO
+    EVALUATE istep := istep 1 + ;
+    ECHO "branch istep=" istep "/" maxstep ;
+
+    EVALUATE BUbeg Tbeg := BUend Tend ;
+    GREP: DONNEES :: GETVAL 'burn' <<istep>> >>BUend<< ;
+    EVALUATE Tend := BUend Fuelpwr / ;
+
+************************************************************************
+*  FLUX CALCULATION                                                    *
+************************************************************************
+    ECHO "call BranchFlux" ;
+    IF istep 1 = THEN
+      LIBRARY2 FLUX := BranchFlux LIBRARY TRACKN
+      :: <<istep>> <<BUend>> <<BUnextSS>> <<Fuelpwr>> ;
+    ELSE
+      LIBRARY2 FLUX := BranchFlux LIBRARY2 FLUX LIBRARY TRACKN
+      :: <<istep>> <<BUend>> <<BUnextSS>> <<Fuelpwr>> ;
+    ENDIF ;
+    IF BUend BUnextSS - ABS 1E-5 < THEN
+      EVALUATE iautop := iautop 1 + ;
+      IF iautop iAutopMax <= THEN
+        GREP: DONNEES :: GETVAL 'autop' <<iautop>> >>BUnextSS<< ;
+      ENDIF ;
+    ENDIF ;
+
+************************************************************************
+*  2-GROUPS ENERGY CONDENSATION AND HOMOGENISATION                     *
+************************************************************************
+    EDIOBJ := EDI: FLUX LIBRARY2 TRACKN ::
+      EDIT 0
+      MICR 35 U234  U235  U236  U237  U238  Np237 Np238 Np239 Pu238 Pu239
+        Pu240 Pu241 Pu242  Cm242 Cm243 Cm244 Cm245 Am241 Am242m Am243
+        Pm147 Pm148 Pm148m Pm149 Sm147 Sm148 Sm149 Sm150 Nd146  Nd147
+        Nd148 B10m  B11m   Xe135 I135
+      MERG COMP
+      COND 4.0
+      SAVE ON EDI2B ;
+
+************************************************************************
+*  MyMpo FEEDING                                                       *
+************************************************************************
+    IF dens_mod dens_mod_0 = THEN
+      ECHO "Duplicate branch calculation at dens_mod=" dens_mod ;
+    ELSE
+      ECHO "Feed MPO branch with dens_mod=" dens_mod ;
+        MyMpo := MPO: MyMpo EDIOBJ BURN164 LIBRARY ::
+        EDIT 2
+        'Dmod' <<dens_mod>>
+        SET <<Tend>> DAY ;
+    ENDIF ;
+    EDIOBJ := DELETE: EDIOBJ ;
+
+  ENDWHILE ; ! burnup loop
+
+  LIBRARY LIBRARY2 := DELETE: LIBRARY LIBRARY2 ;
+  FLUX := DELETE: FLUX ;
+
+ENDWHILE ; ! moderator density loop
+************************************************************************
+*  END OF MODERATOR DENSITY LOOP                                       *
+************************************************************************
+************************************************************************
+************************************************************************
+BURN164 := DELETE: BURN164 ;
+
+*----
+*  End of calculation - Memory release
+*----
+
+GEOM TRACKN := DELETE: GEOM TRACKN ;
+
+ECHO "Successful end of calculation" ;
+END: ;
+QUIT .

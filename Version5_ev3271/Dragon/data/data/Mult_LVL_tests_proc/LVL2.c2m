@@ -1,0 +1,127 @@
+* Deck LVL2
+* CLE-2000 script
+* Author : R. Guasch
+* Purpose : define LVL2 geometry benchmark, perform tracking with NXT and G2S->SALT
+* Compare case with and without DIAG
+* Save geometry post script fig and TLM matlab generated tracking.
+
+
+MODULE GEO: G2S: NXT: SALT: TLM: END: ;
+
+LINKED_LIST GEOM GEOM_D TRACK TRACK_D TRACK_S TRACK_S_D ;
+
+SEQ_BINARY TRACKF TRACKF_S ;
+SEQ_BINARY TRACKF_D TRACKF_S_D ;
+
+SEQ_ASCII GeoG2S GeoG2S_D ;
+
+SEQ_ASCII LVL2.ps :: FILE './FIG_LVL2.ps' ;
+SEQ_ASCII LVL2D.ps :: FILE './FIG_LVL2_DIAG.ps' ;
+
+SEQ_ASCII TLM_NF2 :: FILE 'tracks_NXT_LVL2.m' ;
+SEQ_ASCII TLM_NF2D :: FILE 'tracks_NXT_LVL2_DIAG.m' ;
+
+SEQ_ASCII TLM_SF2 :: FILE 'tracks_SALT_LVL2.m' ;
+SEQ_ASCII TLM_SF2D :: FILE 'tracks_SALT_LVL2_DIAG.m' ;
+
+INTEGER an2d := 8 ;  ! NUMBER OF ANGLES IN 0 TO PI/2
+REAL densur := 1.0 ; ! DENSITY OF INTEGRATION LINES CM^-1 
+
+* Generation of 1st level 4 by 4 geometry with and without DIAG condition
+GEOM := GEO: :: CAR2D 2 2 
+        X- REFL X+ REFL
+        Y- REFL Y+ REFL
+        CELL C1 C2 C2 C4
+        MESHX 0.0 2.0 4.0
+        MESHY 0.0 2.0 4.0
+        ::: C1 := GEO: CAR2D 2 2 ! Insertion of 2nd level geometry
+               MIX 1 2 3 4
+               MESHX 0.0 1.0 2.0
+               MESHY 0.0 1.0 2.0
+        ;
+        ::: C2 := GEO: C1 ;
+        ::: C4 := GEO: C1 ;
+    ;
+
+GEOM_D := GEO: :: CAR2D 2 2 
+        X- DIAG X+ REFL
+        Y- REFL Y+ DIAG
+        CELL C1 C2
+                C4
+        MESHX 0.0 2.0 4.0
+        MESHY 0.0 2.0 4.0
+        ::: C1 := GEO: CAR2D 2 2 ! Insertion of 2nd level geometry
+               MIX 1 1 1 1
+               MESHX 0.0 1.0 2.0
+               MESHY 0.0 1.0 2.0
+        ;
+        ::: C2 := GEO: C1 ;
+        ::: C4 := GEO: C1 ;
+    ;
+* Tracking both Geomtries with NXT specular tracking
+ECHO "NXT tracking of LVL2" ;
+TRACK TRACKF := NXT: GEOM ::
+  EDIT 10
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+; 
+ECHO "NXT tracking of LVL2 DIAG" ;
+TRACK_D TRACKF_D := NXT: GEOM_D ::
+  EDIT 10
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+; 
+
+* Writing output matlab files to plot the tracks
+TLM_NF2 := TLM: TRACK TRACKF ::
+  EDIT 1
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+TLM_NF2D := TLM: TRACK_D TRACKF_D ::
+  EDIT 1
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+
+* Switching the geometry to a surfacic representation
+GeoG2S LVL2.ps := G2S: GEOM :: ;
+GeoG2S_D LVL2D.ps := G2S: GEOM_D :: ;
+ECHO "SALT tracking of LVL2" ;
+* Tracking the surfacic equivalent geometries with SALT specular tracking
+TRACK_S TRACKF_S := SALT: GeoG2S ::
+  EDIT 10
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+;
+ECHO "SALT tracking of LVL2 DIAG" ;
+TRACK_S_D TRACKF_S_D := SALT: GeoG2S_D ::
+  EDIT 10
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+;
+
+* Writing output matlab files with TLM
+TLM_SF2 := TLM: TRACK_S TRACKF_S ::
+  EDIT 1
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+TLM_SF2D := TLM: TRACK_S_D TRACKF_S_D ::
+  EDIT 1
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+
+ECHO "LVL2 procedure completed, full and DIAG cases" ;
+
+END: ;
+QUIT .

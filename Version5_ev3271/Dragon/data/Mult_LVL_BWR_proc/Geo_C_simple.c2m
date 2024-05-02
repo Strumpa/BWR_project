@@ -1,0 +1,39 @@
+* Deck Geo_C_simple 
+* CLE-2000 procedure
+* Author : R. Guasch
+* Purpose : Generate and return "simple" version of AT10 UOX cell geometry
+* Consists of 4 fuel sub regions, 1 gap, 1 clad and moderator. 
+* No moderator sectorization or subdivision.
+*
+
+* -------------------------------
+*       PROCEDURE OUTPUT
+* -------------------------------
+PARAMETER GEOM_C ::
+::: LINKED_LIST GEOM_C ; ;
+
+
+* -------------------------------
+*    STRUCTURES AND MODULES
+* -------------------------------
+MODULE  GEO: END: ;
+
+
+REAL Rcomb1 Rcomb2 Rcomb3 Rcomb4 := 0.313602 0.396678 0.43227 0.4435 ;
+REAL Rgap Rclad pitch := 0.4520 0.5140 1.29500 ;
+
+INTEGER COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE := 1 2 3 4 5 6 7 ;
+GEOM_C := GEO: :: CARCEL 6 
+    X- REFL X+ REFL
+    Y- REFL Y+ REFL
+    RADIUS 0.0 <<Rcomb1>> <<Rcomb2>>
+               <<Rcomb3>> <<Rcomb4>> <<Rgap>> <<Rclad>>
+    MIX <<COMB0101>> <<COMB0102>> <<COMB0103>> <<COMB0104>>
+        <<GAP>> <<CLAD>> <<MODE>>
+    MESHX 0.0 <<pitch>> MESHY 0.0 <<pitch>>
+;
+ECHO "1 level simple GEOM_C generation done" ;
+END: ;
+QUIT .
+
+

@@ -1,0 +1,48 @@
+* Deck Mult_LVL_study.x2m
+* CLE-2000 script 
+* Author : R. Guasch
+* Purpose : Run "non-regression" tests for tracking between instances of Version5_beta_ev3198/Dragon
+* Noticed potential discrepencies in TLM: outputs
+* same src/ was used, different machine/compiler ?
+*
+* Tests consists of a sequence of SALT/NXT then TLM for 1, 2, 3 level geoms,
+* Collected in the following CLE-2000 procedures :
+* 
+* TRTM_C_NXT : NXT TSPC tracking on pincell "AT10_C_simple" geometry, TLM output.
+* TRTM_C_SALT : SALT TSPC tracking on "AT10_C_simple" geometry, TLM output.
+* TRTM_A_NXT : NXT TSPC tracking on input : 1st level assembly geometry, TLM output.
+* TRTM_A_SALT : SALT TSPC tracking on input : 1st level assembly geometry, TLM output.
+* The same 2 tracking procedures are used Geo_A_2lvl and Geo_A_3lvl
+* TRTM stands for TRack and TLM Matlab output
+*
+
+**** PROCEDURES 
+!PROCEDURE Geo_C_simple TRTM_C_NXT TRTM_C_SALT Geo_A_1lvl TRTM_A_NXT TRTM_A_SALT Geo_A_2lvl Geo_A_3lvl ;
+PROCEDURE Geo_C_simple TRTM_C_SALT TRTM_A_SALT Geo_A_1lvl Geo_A_2lvl Geo_A_3lvl Geo_TDCM32 TRTM_TDCM32 ;
+
+**** MODULES
+MODULE GEO: G2S: SALT: NXT: TLM: END: ;
+
+LINKED_LIST GEOM_C GEOM_A1 GEOM_A2 GEOM_A3 GEO_BWR ; 
+
+GEOM_C := Geo_C_simple ; 
+GEOM_A1 := Geo_A_1lvl ;
+GEOM_A2 := Geo_A_2lvl ;
+GEOM_A3 := Geo_A_3lvl ;
+
+GEO_BWR := Geo_TDCM32 ;
+
+
+TRTM_C_SALT GEOM_A1 ;
+ECHO "after processing cell" ;
+TRTM_A_SALT GEOM_A1 GEOM_A2 GEOM_A3 ;
+
+TRTM_TDCM32 GEO_BWR ;
+
+
+
+
+END: ;
+QUIT .
+
+

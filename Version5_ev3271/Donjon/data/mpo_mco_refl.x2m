@@ -1,0 +1,69 @@
+*----
+*  TEST CASE mpo_mco_refl
+*  Compare a Multicompo and a MPO reflector
+*----
+*  Define STRUCTURES and MODULES used
+*----
+MODULE NCR: MCR: UTL: GREP: ABORT: END: ;
+LINKED_LIST REFL MACRO1 MACRO2 ADF1 ADF2 ;
+SEQ_ASCII _REFL :: FILE './_Multicompo_Refl_MCompRefl.txt' ;
+HDF5_FILE MPOREFL :: FILE './MpoRefl.hdf' ;
+REAL densB1 := 700.0 ; ! reference Boron concentration in ppm
+REAL value1 value2 value3 DELTA ;
+
+************************************************************************
+*  Multicompo reflector                                                *
+************************************************************************
+REFL := _REFL ;
+MACRO1 :=  NCR:  REFL :: EDIT 2 MACRO NMIX 5
+   COMPO REFL Radial MIX  5 FROM 2 SET 'C-BORE' <<densB1>> SET 'Method'
+                     'DF-NEM' SET 'Palier' 'EPR' ENDMIX ;
+UTL: MACRO1 :: DUMP ;
+
+************************************************************************
+*  MPO reflector                                                       *
+************************************************************************
+
+MACRO2 :=  MCR:  MPOREFL :: EDIT 3 MACRO NMIX 5
+   MPO MPOREFL output_0 MIX  5 FROM 2 SET 'C-BORE' <<densB1>> SET 'Method'
+                      'DF-NEM' SET 'Palier' 'EPR' ENDMIX ;
+UTL: MACRO2 :: DUMP ;
+
+************************************************************************
+*  statistics                                                          *
+************************************************************************
+GREP: MACRO1 :: GETVAL 'ALBEDO' 1 >>value1<< ;
+GREP: MACRO2 :: GETVAL 'ALBEDO' 1 >>value2<< ;
+ECHO "alb1=" value1 "alb2=" value2 ;
+EVALUATE DELTA := value1 value2 - value2 / ABS ;
+IF DELTA 5.0E-5 < THEN
+  PRINT "TEST ALBEDO SUCCESSFUL; DELTA=" DELTA ;
+ELSE
+  PRINT "----------------------" ;
+  PRINT "TEST FAILURE ON ALBEDO" ;
+  PRINT "----------------------" ;
+  PRINT "alb(macrolib1)=" value1 "alb(macrolib1)=" value2 ;
+  ABORT: ;
+ENDIF ;
+
+ADF1 := MACRO1 :: STEP UP ADF ;
+ADF2 := MACRO2 :: STEP UP ADF ;
+GREP: ADF1 :: GETVAL "FD_B" 5 >>value1<< ;
+GREP: ADF2 :: GETVAL "FD_00001" 5 >>value2<< ;
+GREP: ADF2 :: GETVAL "AVG_FLUX" 5 >>value3<< ;
+EVALUATE value2 := value2 value3 / ;
+ECHO "adf1=" value1 "adf2=" value2 ;
+EVALUATE DELTA := value1 value2 - value2 / ABS ;
+IF DELTA 5.0E-5 < THEN
+  PRINT "TEST ADF SUCCESSFUL; DELTA=" DELTA ;
+ELSE
+  PRINT "-------------------" ;
+  PRINT "TEST FAILURE ON ADF" ;
+  PRINT "-------------------" ;
+  PRINT "adf(macrolib1)=" value1 "adf(macrolib1)=" value2 ;
+  ABORT: ;
+ENDIF ;
+END: ;
+
+ECHO "mpo_mco_refl completed" ;
+END: ;

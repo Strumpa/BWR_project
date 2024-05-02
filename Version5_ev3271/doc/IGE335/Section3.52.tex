@@ -1,0 +1,70 @@
+\subsection{The {\tt VDG:} module}\label{sect:VDGData}
+
+The {\tt VDG:} module performs a comparison of an approximate self-shielding method with the Autosecol method.
+This module is useful to obtain accuracy results for the Van Der Gucht benchmarks.\cite{vdg}
+The calling specifications are:
+
+\begin{DataStructure}{Structure \dstr{VDG:}}
+\moc{VDG:} \dusa{MICLIB1}  \dusa{MICLIB2} \moc{::} \dstr{descvdg}
+\end{DataStructure}
+
+\vskip -0.5cm
+
+\noindent where
+
+\begin{ListeDeDescription}{mmmmmmmm}
+
+\item[\dusa{MICLIB1}] {\tt character*12} name of the self-shielded \dds{microlib} produced by the
+Autosecol method (module \moc{AUTO:}).
+
+\item[\dusa{MICLIB2}] {\tt character*12} name of the self-shielded \dds{microlib} produced by an
+approximate self-shielding method.
+
+\item[\dstr{descvdg}] structure describing the \moc{VDG:} module options.
+
+\end{ListeDeDescription}
+
+\
+\subsubsection{Data input for module {\tt VDG:}}\label{sect:descvdg}
+
+\begin{DataStructure}{Structure \dstr{descvdg}}
+$[$ \moc{EDIT} \dusa{iprint} $]$ \\
+$[$ \moc{GRMI} \dusa{igrp1} $]~[$ \moc{GRMA} \dusa{igrp2} $]$ \\
+$[$ \moc{PICK} $\{$ \moc{MAXV} $|$ \moc{AVER} $|$ \moc{INTG} $\}$ {\tt >>} \dusa{error} {\tt <<} $]$ \\
+{\tt ;}
+\end{DataStructure}
+
+\vskip -0.5cm
+
+\noindent where
+
+\begin{ListeDeDescription}{mmmmmmmm}
+
+\item[\moc{EDIT}] keyword used to modify the print level \dusa{iprint}.
+
+\item[\dusa{iprint}] index used to control the printing of this module. The
+amount of output produced by this module will vary substantially
+depending on the print level specified. 
+
+\item[\moc{GRMI}] keyword used to set the index of the first group in the microlib. By default, \moc{GRMI} $=$ 1.
+
+\item[\dusa{igrp1}] index of the first resonant group.
+
+\item[\moc{GRMA}] keyword used to set the index of the last group in the microlib. By default, \moc{GRMA} $=$ 9999999.
+
+\item[\dusa{igrp2}] index of the last resonant group.
+
+\item[\moc{PICK}]  keyword used to recover a relative discrepancy value for the absorption rates in
+each DRAGON resonant energy group.
+
+\item[\moc{MAXV}] keyword to select the maximum relative discrepancy.
+
+\item[\moc{AVER}] keyword to select the averaged relative discrepancy.
+
+\item[\moc{INTG}] keyword to select the integrated relative discrepancy.
+
+\item[\dusa{error}] \texttt{character*12} CLE-2000 variable name in which the extracted percent
+discrepancy value will be placed.
+
+\end{ListeDeDescription}
+\eject

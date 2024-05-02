@@ -1,0 +1,375 @@
+*----
+*  TEST CASE TCWU33
+*  CANDU cluster
+*----
+*----
+*  Definicion de Estructuras y Modulos usados
+*----
+*
+LINKED_LIST
+   A2S A2T TRACK_S TRACK_T SYS VectComp 
+   Pij BURNUP Vector burnups Totburns
+   LIBRARY LIBRARY_S 
+   LIBRARY_P
+   LIBRARY_N
+   EDITION0 EDITION1 EDITION2 EDITION3
+   EDITION4 EDITION5 EDITION6 EDITION7
+   FLUX  FLUX1 FLUX2 
+;
+
+MODULE
+  GEO: LIB: SHI: EXCELT: ASM: FLU: EDI: DELETE: END: EVO: PSP: 
+  USS: UTL: GREP: COMPO: ;
+
+SEQ_BINARY
+  INTLIN_S INTLIN_T ;
+  
+PROCEDURE Datos_pertur assertS ;
+
+SEQ_ASCII   CEL37B2G_Bu :: FILE './CEL37B2G_Bu' ;
+SEQ_ASCII   QUEMADO     :: FILE './QUEMADO'     ;
+SEQ_ASCII   GRAF_A2S.PS :: FILE './GRAF_A2S.PS' ;
+SEQ_ASCII   GRAF_A2T.PS :: FILE './GRAF_A2T.PS' ;
+
+* XSref = no perturbada; XSPi = perturbada
+SEQ_ASCII   XS_DcoolP  :: FILE './XS_DcoolP' ;
+SEQ_ASCII   XSref  :: FILE './XSref' ;
+SEQ_ASCII   XS_combP   :: FILE './XS_combP'   ;
+SEQ_ASCII   XS_TrefP   :: FILE './XS_TrefP'   ;
+SEQ_ASCII   XS_DrefP   :: FILE './XS_DrefP'   ;
+SEQ_ASCII   XS_T_DrefP :: FILE './XS_T_DrefP' ;
+SEQ_ASCII   XS_TmodP   :: FILE './XS_TmodP'   ;
+SEQ_ASCII   XS_DmodP   :: FILE './XS_DmodP'   ;
+SEQ_ASCII   XS_T_DmodP :: FILE './XS_T_DmodP' ;
+SEQ_ASCII   XS_vacio    :: FILE './XS_vacio'  ;
+
+*
+*----
+* Definición de variables
+*----
+
+REAL radio PUR_MOL conc_B conc_Li 
+     T_comb1 T_comb2 T_comb3 T_comb4
+     Tvaina Dzry T_cool D_cool Tcanal 
+     T_gap D_gap T_foil T_mod D_mod
+     D_comb
+     W238 W235 W234 W239 WO2 WB potencia
+     PUR_MOL_P conc_B_p conc_Li_p  
+     T_comb1P T_comb2P T_comb3P T_comb4P 
+     T_modP T_coolP D_modP D_coolP D_coolV  
+     buck_geom 
+     ; 
+
+INTEGER perturba ; 
+STRING buckling ;     
+
+Datos_pertur ::
+           >>radio<< >>PUR_MOL<< >>conc_B<< >>conc_Li<< 
+           >>T_comb1<< >>T_comb2<< >>T_comb3<< >>T_comb4<<            
+           >>Tvaina<< >>Dzry<< >>T_cool<< >>D_cool<<
+           >>Tcanal<< >>T_gap<< >>D_gap<< >>T_foil<<
+           >>T_mod<< >>D_mod<< >>D_comb<< 
+           >>W238<< >>W235<< >>W234<< >>W239<< >>WO2<< >>WB<<
+           >>potencia<< 
+           >>PUR_MOL_P<< >>conc_B_p<< >>conc_Li_p<< 
+           >>T_comb1P<< >>T_comb2P<< >>T_comb3P<< >>T_comb4P<<
+           >>T_modP<< >>T_coolP<< >>D_modP<< >>D_coolP<< >>D_coolV<<   
+           >>buck_geom<< >>perturba<< >>buckling<<  
+ ;
+
+ECHO "BUCKLING   = " buckling ;
+ECHO "PERTURBACION   = " perturba ;
+ECHO "GEOMETRICO   = " buck_geom ;
+*----
+* Geometry parameters.
+*----
+
+*---------------------------
+*Constantes de la Nuclear wallet card (Octubre 2011)
+*---------------------------
+REAL JxMeV  := 931.494061 ;             !! uma a Mev
+REAL EM_D   := 13.136 ;                  !! exceso de masa D
+REAL EM_H   :=  7.289 ;                  !! exceso de masa H
+REAL EM_Li6 := 14.087 ;                !! exceso de masa Li6 
+REAL EM_Li7 := 14.907 ;                !! exceso de masa Li7 
+REAL AB_Li6 := 7.59 ;                  !! abundancia Li6 
+REAL AB_Li7 := 92.41 ;                 !! abundancia Li7 
+*------------------------
+REAL MA_D   := EM_D JxMeV / 2.0 + ;  !! masa atomica D
+REAL MA_H   := EM_H JxMeV / 1.0 + ;  !! masa atomica H
+REAL MA_O   := 15.999 ;              !! Masa atomica O
+REAL MA_Li6 := EM_Li6 JxMeV / 6.0 + ;  !! masa atomica Li6 
+REAL MA_Li7 := EM_Li7 JxMeV / 7.0 + ;  !! masa atomica Li7 
+REAL MA_Li  :=  MA_Li6 AB_Li6 * MA_Li7 AB_Li7 * + 100. / ; !! m at Li
+
+*------------ CALCULO DE LOS PORCENTAJES EN PESO ----------------
+REAL M_D  := MA_D PUR_MOL * ;                          !! masa de D
+REAL M_H  := MA_H 100.0 PUR_MOL - *  ;                 !! masa de H 
+REAL M_O  := MA_O 50.0 *    ;                          !! masa de O 
+REAL PP_D := 100.0 M_D M_D M_H + M_O + / * ;           !! % en peso D 
+REAL PP_H := 100.0 M_H M_D M_H + M_O + / * ;           !! % en peso H
+REAL PP_O := 100.0 M_O M_D M_H + M_O + / * ;           !! % en peso O
+REAL PP_B := conc_B 10000.0 / ;                        !! % en peso B
+REAL PP_Li6 := conc_Li MA_Li6 AB_Li6 * MA_Li 100. * / * 10000. / ; 
+                                                       !!% en peso Li6
+REAL PP_Li7 := conc_Li MA_Li7 AB_Li7 * MA_Li 100. * / * 10000. / ; 
+                                                       !!% en peso Li7 
+ECHO "------------- % en peso calculados para D2O -------------------" ;
+ECHO "% en peso de D   = " PP_D ;
+ECHO "% en peso de H   = " PP_H ;
+ECHO "% en peso de O   = " PP_O ;
+ECHO "% en peso de B   = " PP_B ;
+ECHO "% en peso de Li6 = " PP_Li6 ;
+ECHO "% en peso de Li7 = " PP_Li7 ;
+ECHO "---------------------------------------------------------------" ;
+
+LIBRARY  := LIB: ::
+  EDIT 3 
+  NMIX 11 
+  CTRA WIMS
+  DEPL LIB: WIMSD4 FIL: iaea
+  MIXS LIB: WIMSD4 FIL: iaea
+
+ MIX   1  <<T_comb1>> <<D_comb>> 
+  U238 =  '8238'  <<W238>> 1   SHIB '8238.0'
+  U235 =  '2235'  <<W235>> 1   SHIB '2235.0'
+  U234 =   '234'  <<W234>> 1   SHIB  '234.0'
+ Pu239 =  '6239'  <<W239>> 1   SHIB '6239.0'
+    O2 =  '6016'  <<WO2>>
+          '1011'  <<WB>>   
+
+ MIX  2  COMB 1 1.0
+ MIX  3  COMB 1 1.0
+ MIX  4  COMB 1 1.0 
+
+***** vaina
+MIX 5 <<Tvaina>> <<Dzry>> 
+ '91'  98.5 
+ '2056' 0.2 
+ '52'   0.1  
+ '118'  1.4 
+ '6016'  0.12 
+
+***** refrigerante 
+MIX 6 <<T_cool>> <<D_cool>> 
+'6016' <<PP_O>> 
+'3001' <<PP_H>> 
+'3002' <<PP_D>>  
+'1011' <<PP_B>>
+  '6' <<PP_Li6>>  
+  '7' <<PP_Li7>>
+  
+***** tubo * Canal de Zry4 
+ MIX 7 <<Tcanal>> <<Dzry>> 
+ '91'  98.5 
+ '2056' 0.2 
+ '52'   0.1  
+ '118'  1.4 
+ '6016' 0.12 
+
+***** gap 
+MIX 8 <<T_gap>> <<D_gap>> 
+'6016' <<PP_O>> 
+'3001' <<PP_H>> 
+'3002' <<PP_D>>  
+'1011' <<PP_B>>
+  '6' <<PP_Li6>>  
+  '7' <<PP_Li7>>
+  
+***** foil * Tubo de aislacion de Zry4 
+ MIX 9 <<T_foil>> <<Dzry>> 
+ '91'  98.5 
+ '2056' 0.2 
+ '52'   0.1  
+ '118'  1.4 
+ '6016' 0.12 
+
+***** moderador 
+MIX 10 <<T_mod>> <<D_mod>> 
+'6016' <<PP_O>> 
+'3001' <<PP_H>> 
+'3002' <<PP_D>>  
+'1011' <<PP_B>>
+  '6' <<PP_Li6>>  
+  '7' <<PP_Li7>>
+
+***** moderador del borde celda
+MIX 11 <<T_mod>> <<D_mod>> 
+'6016' <<PP_O>> 
+'3001' <<PP_H>> 
+'3002' <<PP_D>>  
+'1011' <<PP_B>>
+  '6' <<PP_Li6>>  
+  '7' <<PP_Li7>>  
+;
+  
+*----
+*  Geometry A2S : GEOMETRY FOR SELF-SHIELDING
+*           A2T : GEOMETRY FOR TRANSPORT
+*----
+A2S := GEO: :: TUBE 5
+  R+ REFL 
+  RADIUS  0.0000
+          5.41850
+          5.59150
+          5.76000
+          5.80000
+          <<radio>>
+  MIX 6 7 8 9 10
+  CLUSTER CORONA_1 CORONA_2 CORONA_3 CORONA_4
+  ::: CORONA_1 := GEO: TUBE 3 
+    RADIUS 0.00000
+           0.41578
+           0.58800
+           0.65200
+    MIX 1 1 5
+    NPIN  1 RPIN 0.0000 APIN 0.000000 ;
+  ::: CORONA_2 := GEO: CORONA_1 MIX 2 2 5
+    NPIN  6 RPIN 1.5475 APIN 0.000000 ;
+  ::: CORONA_3 := GEO: CORONA_1 MIX 3 3 5
+    NPIN 12 RPIN 3.0145 APIN 0.261799 ;
+  ::: CORONA_4 := GEO: CORONA_1 MIX 4 4 5
+    NPIN 18 RPIN 4.4870 APIN 0.000000 ;
+  ;
+ 
+A2T := GEO: :: TUBE 11
+  R+ REFL 
+  RADIUS 0.00000
+         0.86213
+         1.54750
+         2.28100
+         3.01450
+         3.75075
+         4.48700
+         5.41850
+         5.59150
+         5.76000
+         5.80000
+         <<radio>>
+  MIX 6 6 6 6 6 6 6 7 8 9 10
+  SPLITR 1 1 1 1 1 1 1 1 1 1 20
+  CLUSTER CORONA_1 CORONA_2 CORONA_3 CORONA_4
+  ::: CORONA_1 := GEO: TUBE 3 
+    RADIUS 0.00000
+           0.41578
+           0.58800
+           0.65200
+    MIX 1 1 5
+    NPIN  1 RPIN 0.0000 APIN 0.000000 ;
+  ::: CORONA_2 := GEO: CORONA_1 MIX 2 2 5
+    NPIN  6 RPIN 1.5475 APIN 0.000000 ;
+  ::: CORONA_3 := GEO: CORONA_1 MIX 3 3 5
+    NPIN 12 RPIN 3.0145 APIN 0.261799 ;
+  ::: CORONA_4 := GEO: CORONA_1 MIX 4 4 5
+    NPIN 18 RPIN 4.4870 APIN 0.000000 ;  
+  ;  
+
+*----
+*  Graficos
+*----
+ GRAF_A2S.PS := PSP: A2S :: EDIT 2 FILL HSB TYPE MIXTURE ;
+ GRAF_A2T.PS := PSP: A2T :: EDIT 2 FILL HSB TYPE REGION ;
+
+*----
+*  Tracking para Self-Shielding EXCELT
+*----
+
+TRACK_S INTLIN_S := EXCELT: A2S ::
+ TITLE 'CNA-UII: 37 B. UNAT - referencia'
+ EDIT 3 
+ MAXR 60 
+ TRAK TISO 18 20.0 
+ SYMM 12  
+ ;
+
+*----
+* Tracking for Transport: EXCELT
+*----  
+TRACK_T INTLIN_T := EXCELT: A2T :: 
+ TITLE 'CNA-UII: 37 B. UNAT - evolución perturbada'
+ EDIT  3 
+ MAXR 60 
+ TRAK TISO 18 20.0 
+ SYMM 12 
+ ;
+
+LIBRARY_S := SHI: LIBRARY TRACK_S INTLIN_S ::
+ EDIT 3
+ ;
+
+Pij := ASM: LIBRARY_S TRACK_T INTLIN_T ::
+  EDIT 2
+  PIJ        ! default
+  PNOR HELI  ! default
+  ; 
+
+IF buckling "critico" = THEN
+ FLUX := FLU: Pij LIBRARY_S TRACK_T ::
+  EDIT 2  
+  TYPE B  B0TR BUCK 0.0
+  ;
+ELSEIF buckling "geometrico" = THEN
+ FLUX := FLU: Pij LIBRARY_S TRACK_T ::
+  EDIT 2  
+  TYPE K B0TR BUCK <<buck_geom>>
+  ;
+ENDIF ;
+assertS FLUX :: 'K-EFFECTIVE' 1 1.078719 ;
+
+*----
+* Calculo de self-shielding y transporte para el 
+* caso de referencia a quemado Q=0
+*----
+
+ECHO "PERTURBACION DE BIBLIOTECA DE REFERENCIA  " ;
+
+ LIBRARY_N := LIB: LIBRARY_S ::
+    EDIT 3
+    CTRA WIMS 
+    MIXS LIB: WIMSD4 FIL: iaea
+    MIX 6 <<T_cool>> <<D_coolP>> 
+    ;
+
+LIBRARY_N := SHI: LIBRARY LIBRARY_N TRACK_S INTLIN_S ::
+ EDIT 3
+ ;
+ 
+Pij := DELETE: Pij ;
+     
+Pij := ASM: LIBRARY_N TRACK_T INTLIN_T :: 
+      EDIT 0
+      PIJ        
+      PNOR HELI     
+      ;
+      
+FLUX1 := FLUX ;
+FLUX1 := FLU: FLUX1 Pij LIBRARY_N TRACK_T ::
+      TYPE K B0TR BUCK IDEM ; 
+assertS FLUX1 :: 'K-EFFECTIVE' 1 1.079210 ;
+
+*----
+*  Condensacion de XS a 2 grupos y homogenizacion
+*----
+
+EDITION1 := EDI:  FLUX LIBRARY_N TRACK_T ::
+ EDIT 3 
+ SAVE 
+ COND 0.625  ! para 2 grupos
+ MERGE COMP
+ MICR ALL 
+ ;
+
+*----
+*  Se crean los archivos EDIT para extraer las XS
+*----
+XS_DcoolP := EDITION1 ;
+
+*----
+*  Se eliminan bibliotecas del directorio de trabajo
+*----
+FLUX Pij TRACK_T INTLIN_T INTLIN_S := DELETE: 
+FLUX Pij TRACK_T INTLIN_T INTLIN_S ;
+
+END: ;
+
+QUIT "LIST" .

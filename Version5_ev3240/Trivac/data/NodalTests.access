@@ -1,0 +1,5 @@
+#!/bin/sh
+echo access NodalTests.access
+ln -s "$1"/data/NodalTests_proc/_iaea2d_ref.txt .
+ln -s "$1"/data/NodalTests_proc/_iaea3d_ref.txt .
+ls -l

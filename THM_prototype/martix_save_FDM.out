@@ -1,0 +1,265 @@
+i in loop= 1
+i in get_Di_half is = 0
+getting Di for interior fuel points
+A_mesh_bounds is = 1.2315043202071989e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 10.0
+i in get_Di_half is = 0
+getting Di for interior fuel points
+A_mesh_bounds is = 1.2315043202071989e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 10.0
+i in get_Di_half is = 1
+getting Di for interior fuel points
+A_mesh_bounds is = 2.4630086404143978e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 20.0
+i in get_Di_half is = 1
+getting Di for interior fuel points
+A_mesh_bounds is = 2.4630086404143978e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 20.0
+i in loop= 2
+i in get_Di_half is = 1
+getting Di for interior fuel points
+A_mesh_bounds is = 2.4630086404143978e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 20.0
+i in get_Di_half is = 1
+getting Di for interior fuel points
+A_mesh_bounds is = 2.4630086404143978e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 20.0
+i in get_Di_half is = 2
+getting Di for interior fuel points
+A_mesh_bounds is = 3.694512960621597e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 30.000000000000004
+i in get_Di_half is = 2
+getting Di for interior fuel points
+A_mesh_bounds is = 3.694512960621597e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 30.000000000000004
+i in loop= 3
+i in get_Di_half is = 2
+getting Di for interior fuel points
+A_mesh_bounds is = 3.694512960621597e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 30.000000000000004
+i in get_Di_half is = 2
+getting Di for interior fuel points
+A_mesh_bounds is = 3.694512960621597e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 30.000000000000004
+i in get_Di_half is = 3
+getting Di for interior fuel points
+A_mesh_bounds is = 4.9260172808287956e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 40.0
+i in get_Di_half is = 3
+getting Di for interior fuel points
+A_mesh_bounds is = 4.9260172808287956e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 40.0
+i in loop= 4
+i in get_Di_half is = 3
+getting Di for interior fuel points
+A_mesh_bounds is = 4.9260172808287956e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 40.0
+i in get_Di_half is = 3
+getting Di for interior fuel points
+A_mesh_bounds is = 4.9260172808287956e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 40.0
+i in get_Di_half is = 4
+getting Di for interior fuel points
+A_mesh_bounds is = 6.157521601035994e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 50.0
+i in get_Di_half is = 4
+getting Di for interior fuel points
+A_mesh_bounds is = 6.157521601035994e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 50.0
+i in loop= 5
+i in get_Di_half is = 4
+getting Di for interior fuel points
+A_mesh_bounds is = 6.157521601035994e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 50.0
+i in get_Di_half is = 4
+getting Di for interior fuel points
+A_mesh_bounds is = 6.157521601035994e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 50.0
+i in get_Di_half is = 5
+getting Di for interior fuel points
+A_mesh_bounds is = 7.389025921243194e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 60.00000000000001
+i in get_Di_half is = 5
+getting Di for interior fuel points
+A_mesh_bounds is = 7.389025921243194e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 60.00000000000001
+i in loop= 6
+i in get_Di_half is = 5
+getting Di for interior fuel points
+A_mesh_bounds is = 7.389025921243194e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 60.00000000000001
+i in get_Di_half is = 5
+getting Di for interior fuel points
+A_mesh_bounds is = 7.389025921243194e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 60.00000000000001
+i in get_Di_half is = 6
+getting Di for interior fuel points
+A_mesh_bounds is = 8.620530241450393e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 70.0
+i in get_Di_half is = 6
+getting Di for interior fuel points
+A_mesh_bounds is = 8.620530241450393e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 70.0
+i in loop= 7
+i in get_Di_half is = 6
+getting Di for interior fuel points
+A_mesh_bounds is = 8.620530241450393e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 70.0
+i in get_Di_half is = 6
+getting Di for interior fuel points
+A_mesh_bounds is = 8.620530241450393e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 70.0
+I in get_Ei_half is = 8
+I in get_Ei_half is = 8
+i in loop= 8
+I in get_Ei_half is = 8
+I in get_Ei_half is = 8
+i in loop= 9
+Area at I+3/2 0.00012347464438257035
+k used for FI3/2 10.0
+delta Ai used for FI3/2 5.037857979296594e-06
+Fi_half is 980.3741581441751
+Area at I+3/2 0.00012347464438257035
+k used for FI3/2 10.0
+delta Ai used for FI3/2 5.037857979296594e-06
+Fi_half is 980.3741581441751
+i in loop= 10
+i in get_Di_half is = 9
+getting Di for interior fuel points
+A_mesh_bounds is = 0.00012347464438257035
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 197.92124080974932
+i in get_Di_half is = 9
+getting Di for interior fuel points
+A_mesh_bounds is = 0.00012347464438257035
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 197.92124080974932
+i in get_Di_half is = 10
+getting Di for interior fuel points
+A_mesh_bounds is = 0.00012851250236186695
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 510.1870790720876
+i in get_Di_half is = 10
+getting Di for interior fuel points
+A_mesh_bounds is = 0.00012851250236186695
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 510.1870790720876
+i in loop= 11
+i in get_Di_half is = 10
+getting Di for interior fuel points
+A_mesh_bounds is = 0.00012851250236186695
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 510.1870790720876
+i in get_Di_half is = 10
+getting Di for interior fuel points
+A_mesh_bounds is = 0.00012851250236186695
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 510.1870790720876
+i in get_Di_half is = 11
+getting Di for interior fuel points
+A_mesh_bounds is = 0.00013355036034116356
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 530.1870790720877
+i in get_Di_half is = 11
+getting Di for interior fuel points
+A_mesh_bounds is = 0.00013355036034116356
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 530.1870790720877
+i in loop= 12
+i in get_Di_half is = 0
+getting Di for interior fuel points
+A_mesh_bounds is = 1.2315043202071989e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 10.0
+i in get_Di_half is = 0
+getting Di for interior fuel points
+A_mesh_bounds is = 1.2315043202071989e-05
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 10.0
+i in get_Di_half is = 11
+getting Di for interior fuel points
+A_mesh_bounds is = 0.00013355036034116356
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 530.1870790720877
+i in get_Di_half is = 11
+getting Di for interior fuel points
+A_mesh_bounds is = 0.00013355036034116356
+delta Af = 1.2315043202071989e-05
+k_i = [ 5.  5.  5.  5.  5.  5.  5.  5.  0. 10. 10. 10.]
+D_half is = 530.1870790720877
+[[  10.          -10.            0.            0.            0.      0.            0.            0.      0.            0.          0.            0.            0.        ]
+ [ -10.           30.          -20.            0.            0.      0.            0.            0.      0.            0.          0.            0.            0.        ]
+ [   0.          -20.           50.          -30.            0.      0.            0.            0.      0.            0.          0.            0.            0.        ]
+ [   0.            0.          -30.           70.          -40.      0.            0.            0.      0.            0.          0.            0.            0.        ]
+ [   0.            0.            0.          -40.           90.    -50.            0.            0.      0.            0.          0.            0.            0.        ]
+ [   0.            0.            0.            0.          -50.    110.         -60.             0.      0.            0.          0.            0.            0.        ]
+ [   0.            0.            0.            0.            0.    -60.         130.           -70.      0.            0.          0.            0.            0.        ] 
+ [   0.            0.            0.            0.            0.      0.          -70.          210.   -140.            0.          0.            0.            0.        ]
+ [   0.            0.            0.            0.            0.      0.            0.         -140.    198.76206259  -58.76206     0.            0.            0.        ]
+ [   0.            0.            0.            0.            0.      0.            0.            0.     58.76206259 1039.13622  -980.37415814    0.            0.        ]
+ [   0.            0.            0.            0.            0.      0.            0.            0.      0.         -197.92124   708.10831988 -510.18707907    0.        ]
+ [   0.            0.            0.            0.            0.      0.            0.            0.      0.            0.       -510.18707907 1040.37415814 -530.18707907]
+ [   0.            0.            0.            0.            0.      0.            0.            0.      0.            0.          0.         -530.18707907 1590.56123722]]

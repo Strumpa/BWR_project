@@ -1,0 +1,92 @@
+* Mix_UOX procedure
+*----
+*  Name          : Mix_Cell.c2m
+*  Type          : DRAGON procedure
+*  Use           : Microlib generation with Draglibs for
+*                  UOX pincell calculation with 4 fuel regions
+*  Author        : R. Guasch
+
+*  Procedure called as:
+*
+*  LIBRARY := Mix_Cell :: <<Library>> <<COMB0101>> <<COMB0102>> <<COMB0103>> <<COMB0104>> 
+*                                     <<GAP>> <<CLAD>> <<MODE>>;
+*
+*  Where library is SHEM295 and Default composition (option = 1) = PIN1 (UOX) from ATRIUM10
+*  Output data  :
+*    LIBRARY    : Microlib with table of probabilities
+
+PARAMETER  LIBRARY  ::
+  EDIT 0
+    ::: LINKED_LIST LIBRARY  ;
+;
+
+STRING Library ;
+:: >>Library<< ;
+INTEGER COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE ;
+:: >>COMB0101<< >>COMB0102<< >>COMB0103<< >>COMB0104<< >>GAP<< >>CLAD<< >>MODE<< ;
+
+MODULE  LIB: UTL: DELETE: END: ABORT: ;
+
+
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 7    ! MAXIMUM OF MATERIAL MIXTURES
+    PT
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+    CALENDF 3 PT      ! CALENDF TYPE PROBABILITY TABLES
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX <<COMB0101>> 750.0
+    O16     = O16    4.66705E-02
+    U234    = U234   5.15910E-06 1 
+    U235    = U235   5.67035E-04 1 
+    U238    = U238   2.27631E-02 1
+    Pu239   = Pu239  0.0        1
+    Pu240   = Pu240  0.0        1
+    Pu241   = Pu241  0.0        1
+    Pu242   = Pu242  0.0        1
+  MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+  MIX <<CLAD>> 559.0 NOEV
+   Ni60  = Ni60   9.69262E-06
+   Zr90  = Zr90   2.18317E-02 2
+   Zr91  = Zr91   4.76096E-03 2
+   Zr92  = Zr92   7.27723E-03 2
+   Zr94  = Zr94   7.37482E-03 2
+   Zr96  = Zr96   1.18812E-03 2
+   Fe58  = Fe58   2.68895E-07
+   Sn112  = Sn112   4.67343E-06
+   Sn116  = Sn116   7.00535E-05
+   Cr50  = Cr50   3.29613E-06
+   Sn114  = Sn114   3.17985E-06
+   Sn117  = Sn117   3.70020E-05
+   Sn122  = Sn122   2.23073E-05
+   O17  = O17   1.17376E-07
+   Sn124  = Sn124   2.78961E-05
+   Cr54  = Cr54   1.79408E-06
+   Ni62  = Ni62   1.34344E-06
+   Cr53  = Cr53   7.20746E-06
+   Sn115  = Sn115   1.63812E-06
+   Ni61  = Ni61   4.21331E-07
+   Ni64  = Ni64   3.42085E-07
+   Cr52  = Cr52   6.35631E-05
+   O16  = O16   3.08132E-04
+   Sn120  = Sn120   1.56970E-04
+   Ni58  = Ni58   2.51627E-05
+   Fe54  = Fe54   5.57337E-06
+   Fe57  = Fe57   2.02053E-06
+   Fe56  = Fe56   8.74901E-05
+   Sn118  = Sn118   1.16691E-04
+   Sn119  = Sn119   4.13864E-05
+  MIX <<GAP>> 750.0 NOEV
+    He4      = He4 1.50456E-04
+  MIX <<MODE>> 559.0 NOEV
+    H1      = H1_H2O 4.94546E-02  
+    O16     = O16    2.47298E-02 
+;
+END: ;

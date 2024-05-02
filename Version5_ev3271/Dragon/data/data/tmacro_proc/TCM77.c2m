@@ -1,0 +1,198 @@
+LINKED_LIST GEOM MACRO TRACK SYSTEM FLUX EDIT ;
+MODULE GEO: MAC: SNT: ASM: FLU: UTL: OUT: ERROR: END: DELETE: ;
+*
+* Refer to PhD thesis -- Calloo 2022
+*
+PROCEDURE assertS_low ;
+*
+* ang = sn order
+* sca = scattering
+* sch = scheme parameter
+* spa = spatial order
+* spl = region split
+*
+* sigt = total macroscopic cross-section
+* ccc = scattering ratio (= Sig_s / Sig_t)
+*
+INTEGER ang  := 8 ;
+INTEGER sca  := 1 ;
+*
+INTEGER sch  ;
+INTEGER spa  ;
+*
+INTEGER spl  := 10 ;
+*
+REAL sigt := 400.0 ;
+REAL ccc  := 0.99 ;
+*
+REAL sigs := sigt ccc * ;
+*
+REAL cellx   := 10.0 ;
+REAL xcoord1 := 0.0 cellx + ;
+*
+GEOM := GEO: :: CAR1D  1
+           X- REFL X+ VOID
+           MIX  1
+           MESHX 0.0 <<xcoord1>>
+           SPLITX <<spl>> ;
+*
+MACRO := MAC: ::
+ EDIT 2 NGRO 1 NMIX 1
+ READ INPUT
+       MIX  1
+     TOTAL       <<sigt>>
+      SCAT  1 1  <<sigs>>
+      FIXE       1.00 ;
+*
+*----
+* HODD 0 DSA 0 0 2
+*----
+EVALUATE sch := 1 ;
+EVALUATE spa := 0 ;
+TRACK := SNT: GEOM ::
+      TITLE 'FOURIER ANALYSIS INSPIRED BY WANG (2013) XUTHUS CASE'
+      EDIT 2 MAXR 10000000
+      SCHM <<sch>> DIAM <<spa>>
+      SN <<ang>> SCAT <<sca>>
+      EPSI 1.0E-5 MAXI 4 FOUR 60
+      NLIVO DSA 0 0 2
+      NSHT QUAD 2 ;
+SYSTEM := ASM: MACRO TRACK :: EDIT 0 ARM ;
+FLUX :=  FLU: MACRO TRACK SYSTEM ::
+      EDIT 2 TYPE F EXTE 1 1.0E-5 ;
+assertS_low FLUX :: 'SPEC-RADIUS' 1 0.5160 0.5 ;
+TRACK SYSTEM FLUX := DELETE: TRACK SYSTEM FLUX ;
+*----
+* HODD 0 DSA 0 1 2
+*----
+TRACK := SNT: GEOM ::
+      TITLE 'FOURIER ANALYSIS INSPIRED BY WANG (2013) XUTHUS CASE'
+      EDIT 2 MAXR 10000000
+      SCHM <<sch>> DIAM <<spa>>
+      SN <<ang>> SCAT <<sca>>
+      EPSI 1.0E-5 MAXI 4 FOUR 60
+      NLIVO DSA 0 1 2
+      NSHT QUAD 2 ;
+SYSTEM := ASM: MACRO TRACK :: EDIT 0 ARM ;
+FLUX :=  FLU: MACRO TRACK SYSTEM ::
+      EDIT 2 TYPE F EXTE 1 1.0E-5 ;
+assertS_low FLUX :: 'SPEC-RADIUS' 1 27.68 0.5 ;
+TRACK SYSTEM FLUX := DELETE: TRACK SYSTEM FLUX ;
+*----
+* HODD 0 DSA 0 2 2
+*----
+TRACK := SNT: GEOM ::
+      TITLE 'FOURIER ANALYSIS INSPIRED BY WANG (2013) XUTHUS CASE'
+      EDIT 2 MAXR 10000000
+      SCHM <<sch>> DIAM <<spa>>
+      SN <<ang>> SCAT <<sca>>
+      EPSI 1.0E-5 MAXI 4 FOUR 60
+      NLIVO DSA 0 2 2
+      NSHT QUAD 2 ;
+SYSTEM := ASM: MACRO TRACK :: EDIT 0 ARM ;
+FLUX :=  FLU: MACRO TRACK SYSTEM ::
+      EDIT 2 TYPE F EXTE 1 1.0E-5 ;
+assertS_low FLUX :: 'SPEC-RADIUS' 1 1.445 0.5 ;
+TRACK SYSTEM FLUX := DELETE: TRACK SYSTEM FLUX ;
+*----
+* HODD 1 DSA 0 0 2
+*----
+EVALUATE sch := 1 ;
+EVALUATE spa := 1 ;
+TRACK := SNT: GEOM ::
+      TITLE 'FOURIER ANALYSIS INSPIRED BY WANG (2013) XUTHUS CASE'
+      EDIT 2 MAXR 10000000
+      SCHM <<sch>> DIAM <<spa>>
+      SN <<ang>> SCAT <<sca>>
+      EPSI 1.0E-5 MAXI 4 FOUR 60
+      NLIVO DSA 0 0 2
+      NSHT QUAD 2 ;
+SYSTEM := ASM: MACRO TRACK :: EDIT 0 ARM ;
+FLUX :=  FLU: MACRO TRACK SYSTEM ::
+      EDIT 2 TYPE F EXTE 1 1.0E-5 ;
+assertS_low FLUX :: 'SPEC-RADIUS' 1 0.1099 0.5 ;
+TRACK SYSTEM FLUX := DELETE: TRACK SYSTEM FLUX ;
+*----
+* HODD 1 DSA 0 1 2
+*----
+TRACK := SNT: GEOM ::
+      TITLE 'FOURIER ANALYSIS INSPIRED BY WANG (2013) XUTHUS CASE'
+      EDIT 2 MAXR 10000000
+      SCHM <<sch>> DIAM <<spa>>
+      SN <<ang>> SCAT <<sca>>
+      EPSI 1.0E-5 MAXI 4 FOUR 60
+      NLIVO DSA 0 1 2
+      NSHT QUAD 2 ;
+SYSTEM := ASM: MACRO TRACK :: EDIT 0 ARM ;
+FLUX :=  FLU: MACRO TRACK SYSTEM ::
+      EDIT 2 TYPE F EXTE 1 1.0E-5 ;
+assertS_low FLUX :: 'SPEC-RADIUS' 1 0.7952 0.5 ;
+TRACK SYSTEM FLUX := DELETE: TRACK SYSTEM FLUX ;
+*----
+* HODD 1 DSA 0 2 2
+*----
+TRACK := SNT: GEOM ::
+      TITLE 'FOURIER ANALYSIS INSPIRED BY WANG (2013) XUTHUS CASE'
+      EDIT 2 MAXR 10000000
+      SCHM <<sch>> DIAM <<spa>>
+      SN <<ang>> SCAT <<sca>>
+      EPSI 1.0E-5 MAXI 4 FOUR 60
+      NLIVO DSA 0 2 2
+      NSHT QUAD 2 ;
+SYSTEM := ASM: MACRO TRACK :: EDIT 0 ARM ;
+FLUX :=  FLU: MACRO TRACK SYSTEM ::
+      EDIT 2 TYPE F EXTE 1 1.0E-5 ;
+assertS_low FLUX :: 'SPEC-RADIUS' 1 1.481 0.5 ;
+TRACK SYSTEM FLUX := DELETE: TRACK SYSTEM FLUX ;
+*----
+* DG 1 DSA 0 0 2
+*----
+EVALUATE sch := 2 ;
+EVALUATE spa := 1 ;
+TRACK := SNT: GEOM ::
+      TITLE 'FOURIER ANALYSIS INSPIRED BY WANG (2013) XUTHUS CASE'
+      EDIT 2 MAXR 10000000
+      SCHM <<sch>> DIAM <<spa>>
+      SN <<ang>> SCAT <<sca>>
+      EPSI 1.0E-5 MAXI 4 FOUR 60
+      NLIVO DSA 0 0 2
+      NSHT QUAD 2 ;
+SYSTEM := ASM: MACRO TRACK :: EDIT 0 ARM ;
+FLUX :=  FLU: MACRO TRACK SYSTEM ::
+      EDIT 2 TYPE F EXTE 1 1.0E-5 ;
+assertS_low FLUX :: 'SPEC-RADIUS' 1 0.1528 0.5 ;
+TRACK SYSTEM FLUX := DELETE: TRACK SYSTEM FLUX ;
+*----
+* DG 1 DSA 0 1 2
+*----
+TRACK := SNT: GEOM ::
+      TITLE 'FOURIER ANALYSIS INSPIRED BY WANG (2013) XUTHUS CASE'
+      EDIT 2 MAXR 10000000
+      SCHM <<sch>> DIAM <<spa>>
+      SN <<ang>> SCAT <<sca>>
+      EPSI 1.0E-5 MAXI 4 FOUR 60
+      NLIVO DSA 0 1 2
+      NSHT QUAD 2 ;
+SYSTEM := ASM: MACRO TRACK :: EDIT 0 ARM ;
+FLUX :=  FLU: MACRO TRACK SYSTEM ::
+      EDIT 2 TYPE F EXTE 1 1.0E-5 ;
+assertS_low FLUX :: 'SPEC-RADIUS' 1 0.1663 0.5 ;
+TRACK SYSTEM FLUX := DELETE: TRACK SYSTEM FLUX ;
+*----
+* DG 1 DSA 0 2 2
+*----
+TRACK := SNT: GEOM ::
+      TITLE 'FOURIER ANALYSIS INSPIRED BY WANG (2013) XUTHUS CASE'
+      EDIT 2 MAXR 10000000
+      SCHM <<sch>> DIAM <<spa>>
+      SN <<ang>> SCAT <<sca>>
+      EPSI 1.0E-5 MAXI 4 FOUR 60
+      NLIVO DSA 0 2 2
+      NSHT QUAD 2 ;
+SYSTEM := ASM: MACRO TRACK :: EDIT 0 ARM ;
+FLUX :=  FLU: MACRO TRACK SYSTEM ::
+      EDIT 2 TYPE F EXTE 1 1.0E-5 ;
+assertS_low FLUX :: 'SPEC-RADIUS' 1 0.3895 0.5 ;
+TRACK SYSTEM FLUX := DELETE: TRACK SYSTEM FLUX ;
+*
+END: ;

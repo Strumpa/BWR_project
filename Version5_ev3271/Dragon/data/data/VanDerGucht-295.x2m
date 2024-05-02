@@ -1,0 +1,10 @@
+* Regression tests for 295g Van Der Gucht self-shielding tests
+* A. Hebert and C. Van Der Gucht
+*
+PROCEDURE svdg0_295 svdg0c_295 svdg1c_295 ;
+*
+svdg0_295 ;
+svdg0c_295 ;
+svdg1c_295 ;
+ECHO "test VanDerGucht-295 completed" ;
+QUIT "LIST" .

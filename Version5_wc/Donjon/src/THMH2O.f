@@ -246,6 +246,11 @@
             CALL XABORT(HSMG)
           ENDIF
           HA=0.023*(ZKONE/HD)*REL**0.8*PRL**0.4
+          WRITE(*,*) 'The value of HA is:', HA
+          WRITE(*,*) 'The value of DH is:', HD
+          WRITE(*,*) 'The value of k is:', ZKONE
+          WRITE(*,*) 'The value of Re is:', REL
+          WRITE(*,*) 'The value of Pr is:', PRL
           F=1.0
           S=1.0
           IF((XFL.EQ.XFL0).OR.(TSCLAD.LE.TSAT).OR.(KWA.EQ.0)) THEN
@@ -364,5 +369,6 @@
         DHSUB=CPL*DTSUB
         LFIRST=.FALSE.
       ENDIF
+      WRITE(*,*) 'The value of HA is:', HA
       RETURN
       END

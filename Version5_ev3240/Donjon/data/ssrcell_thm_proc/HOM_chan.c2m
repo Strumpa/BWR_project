@@ -1,0 +1,128 @@
+*=====================================================================*
+* FILE:           HOM_chan.c2m
+* TYPE:           DRAGON/DONJON proc file
+* AUTHOR:         Cristian Garrido Tamm (cristian.garrido@idom.com)
+* PURPOSE:        TODO
+* CREATION DATE:  Fri 07 Apr 2023 08:47:43 PM CEST
+* LAST MODIFIED:  Fri 07 Apr 2023 09:32:36 PM CEST
+*---------------------------------------------------------------------*
+* INPUT:
+*     TYPE        | NAME    | DEFINITION
+*     ------------|---------|-----------------------------
+*     REAL        | Hside   | Side of Hexagon (cm)
+*     REAL        | maxh    | total channel height (cm)
+*     REAL        | Nz      | Number of Axial Nodes
+* OUTPUT:
+*     TYPE        | NAME    | DEFINITION
+*     ------------|---------|-----------------------------
+*     LINKED_LIST | GEOM | Dummy output linked list
+* CALL:
+*     GEOM := HOM_chan ::
+*               <<Hside>> <<maxh>> <<Nz>> ;
+*=====================================================================*
+*---
+* RECOVER INPUT DATA STRUCTURES
+*---
+
+PARAMETER GEOM ::
+  EDIT 0
+    ::: LINKED_LIST GEOM ;
+  ;  
+*---
+* RECOVER INPUT PARAMETERS
+*---
+REAL Hside maxh ;
+:: >>Hside<< >>maxh<< ;
+*---
+* DEFINE MODULES
+*---
+MODULE END: GEO: ;
+*---
+* DEFINE DATA STRUCTURES
+*---
+
+*---
+* DEFINE VARIABLES
+*---
+* Constants
+STRING DOUBLE_LINE := 
+"====================================================================" ;
+STRING SINGLE_LINE := 
+"--------------------------------------------------------------------" ;
+LOGICAL True False := $True_L $False_L ;
+STRING FILENAME := 'HOM_chan' ;
+* Options
+INTEGER int ;
+REAL rea ;
+STRING str ;
+
+*---
+* BEGIN CALCULATION
+*---
+ECHO DOUBLE_LINE ;
+ECHO 'BEGIN PROCEDURE ' FILENAME ;
+ECHO DOUBLE_LINE ;
+
+REAL z1 := maxh 20.0 / ;
+REAL z2 := maxh 20.0 / z1 + ;
+REAL z3 := maxh 20.0 / z2 + ;
+REAL z4 := maxh 20.0 / z3 + ;
+REAL z5 := maxh 20.0 / z4 + ;
+REAL z6 := maxh 20.0 / z5 + ;
+REAL z7 := maxh 20.0 / z6 + ;
+REAL z8 := maxh 20.0 / z7 + ;
+REAL z9 := maxh 20.0 / z8 + ;
+REAL z10 := maxh 20.0 / z9 + ;
+REAL z11 := maxh 20.0 / z10 + ;
+REAL z12 := maxh 20.0 / z11 + ;
+REAL z13 := maxh 20.0 / z12 + ;
+REAL z14 := maxh 20.0 / z13 + ;
+REAL z15 := maxh 20.0 / z14 + ;
+REAL z16 := maxh 20.0 / z15 + ;
+REAL z17 := maxh 20.0 / z16 + ;
+REAL z18 := maxh 20.0 / z17 + ;
+REAL z19 := maxh 20.0 / z18 + ;
+REAL z20 := maxh 20.0 / z19 + ;
+
+GEOM := GEO: :: HEXZ 1 20
+    EDIT 3
+    Z- VOID Z+ VOID
+    HBC COMPLETE REFL
+    SIDE <<Hside>>
+    SPLITL 1
+    MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>>
+          <<z9>> <<z10>> <<z11>> <<z12>> <<z13>> <<z14>> <<z15>> <<z16>>
+          <<z17>> <<z18>> <<z19>> <<z20>>
+    MIX
+    PLANE 1
+       1
+    PLANE 2  SAME 1
+    PLANE 3  SAME 1
+    PLANE 4  SAME 1
+    PLANE 5  SAME 1
+    PLANE 6  SAME 1
+    PLANE 7  SAME 1
+    PLANE 8  SAME 1
+    PLANE 9  SAME 1
+    PLANE 10 SAME 1
+    PLANE 11 SAME 1
+    PLANE 12 SAME 1
+    PLANE 13 SAME 1
+    PLANE 14 SAME 1
+    PLANE 15 SAME 1
+    PLANE 16 SAME 1
+    PLANE 17 SAME 1
+    PLANE 18 SAME 1
+    PLANE 19 SAME 1
+    PLANE 20 SAME 1
+    ;
+
+*---
+* END CALCULATION
+*---
+ECHO DOUBLE_LINE ;
+ECHO 'END PROCEDURE ' FILENAME ;
+ECHO DOUBLE_LINE ;
+
+END: ;
+QUIT .

@@ -1,0 +1,73 @@
+*----
+* TEST CASE TDCM09
+* MACROSCOPIC CROSS SECTIONS
+* Undermoderated assembly in hexagonal geometry
+* SYME is not working
+*----
+*  Define STRUCTURES and MODULES used
+*----
+LINKED_LIST MACRO GEOM TRACK SYS FLUX ;
+SEQ_BINARY SEQTRK ;
+MODULE GEO: G2S: SALT: MAC: ASM: FLU: DELETE: END: ;
+SEQ_ASCII Fil_SAL09 ;
+SEQ_ASCII Fil_SAL09.ps :: FILE './Fil_SAL09.ps' ;
+REAL densur := 40.0 ;
+INTEGER an2d := 12 ;
+PROCEDURE assertS ;
+*----
+* Macroscopic XS
+*----
+MACRO :=  MAC: ::
+ EDIT 2 NGRO 1 NMIX 5 NIFI 1
+     READ INPUT
+     MIX 1 (*void*)
+       TOTAL 0.0 SCAT 1 1 0.0
+     MIX 2 (*med*)
+       TOTAL 1.0 SCAT 1 1 0.9
+     MIX 3 (*mod*)
+       TOTAL 1.0E-4 SCAT 1 1 0.0
+     MIX 4 (*fuel*)
+       TOTAL 1.0 SCAT 1 1 1.71
+       NUSIGF 1.1 CHI 1.0
+     MIX 5 (*black*)
+       TOTAL 1.0E5 SCAT 1 1 0.0
+;
+*----
+GEOM := GEO: ::
+       HEX 36
+          EDIT 2
+          HBC S30 ALBE 1.0
+          CELL  C1 C3 C3 C3 C3 C3 C1 C3 C3 C3 C1 C3 C3 C3 C3 C3 C3 C1
+                C3 C3 C1 C3 C3 C3 C3 C3 C3 C3 C3 C3 C4 C4 C4 C4 C4 C4
+          MERGE  1  2  3  4  5  4  6  7  8  7  9  8 10  7  7  4  7 11
+                12 13 14 15 12 16 17 12 16 18 18 19 20 21 21 22 22 23
+          ::: C1 := GEO: HEXCEL 2 (*no-fuel cell*)
+               SIDE 0.707297
+               RADIUS 0.0 0.412282 0.475917
+               MIX 1 2 3
+          ;
+          ::: C3 := GEO: C1 (*fuel cell*)
+               MIX 4 5 3
+          ;
+          ::: C4 := GEO: C3 (*boundary cell*)
+               MIX 4 5 3
+          ;
+          ;
+Fil_SAL09 Fil_SAL09.ps := G2S: GEOM ;
+*----
+TRACK SEQTRK := SALT: Fil_SAL09 ::
+     EDIT 3
+     ALLG
+     TISO EQW <<an2d>> <<densur>> REND
+;
+SYS := ASM: MACRO TRACK SEQTRK :: EDIT 1 ;
+*---- 
+*  Solution : K-EFFECTIVE
+*  Editing  : Compute reference reaction rates
+*----
+FLUX := FLU: SYS MACRO TRACK SEQTRK ::
+  TYPE K
+  ;
+assertS FLUX :: 'K-EFFECTIVE' 1 1.002202 ;
+ECHO "test TDCM09 completed" ;
+END: ;

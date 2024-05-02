@@ -1,0 +1,30 @@
+* Deck NXT_tracking_study
+* CLE2000 main script
+* Author : R. Guasch
+* Purpose : Test different NXT tracking procedures
+* All ssh trackings are done with SYBILT, all main flux trackings are done with NXT
+* Testing TISO EQW with and without REND options in both MOC and PIJ
+* Testing TSPC EQW2 options with and withour REND in both MOC and PIJ
+*
+* 295-group JEF3.1.1 DRAGLIB
+*
+* Pin 1 of AT10 : AT10_24UOX, composition from t=0, no BU evolution.
+
+
+* Procedures :
+PROCEDURE SPC_MOC SPC_MOC_R ISO_MOC ISO_MOC_R SPC_PIJ SPC_PIJ_R ISO_PIJ ISO_PIJ_R ;
+
+MODULE END: ;
+
+ISO_MOC_R ;
+ISO_MOC ;
+ISO_PIJ_R ;
+ISO_PIJ ;
+SPC_MOC_R ;
+SPC_MOC ;
+SPC_PIJ_R ;
+SPC_PIJ ;
+
+ECHO "NXT tracking study run" ;
+END: ; 
+QUIT .

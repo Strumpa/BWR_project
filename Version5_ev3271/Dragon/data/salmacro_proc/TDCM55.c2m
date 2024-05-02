@@ -1,0 +1,78 @@
+*----
+*  TEST CASE TDCM55
+*  MACROSCOPIC CROSS SECTIONS
+*  HEXAGONAL CELL WITH PINS
+*----
+*  Define STRUCTURES and MODULES used
+*----
+LINKED_LIST  MacLib GlobalGeo Tracking Pij Flux ;
+SEQ_ASCII LTMID1_TDT :: FILE './LTMID1_TDT.tdt' ;
+SEQ_ASCII LTMID1.ps :: FILE './LTMID1.ps' ;
+SEQ_BINARY Lines ;
+INTEGER an2d := 8 ;
+REAL densur := 20.0 ;
+MODULE       MAC: GEO: ASM: FLU: G2S: SALT: END: ;
+PROCEDURE assertS ;
+*----
+*  Macroscopic XS
+*----
+MacLib := MAC: ::
+  NGRO 2 NMIX 4 NIFI 1
+  READ INPUT
+  MIX  1   TOTAL 0.166667 1.111111
+    SCAT   2 2  0.00015 0.126667 2 2 1.10111 0.039 
+  MIX  2  TOTAL 0.166667 1.111111
+    SCAT   2 2  0.00015 0.126667 2 2 1.10111 0.039 
+  MIX  3   TOTAL 0.222222 0.833333
+    SCAT   1 1  0.19222          2 2 0.75333 0.02
+    NUSIGF  0.0  0.170 CHI 1.0 0.0
+  MIX  4   TOTAL 0.222222 0.833333
+    SCAT   1 1  0.19222          2 2 0.75333 0.02
+    NUSIGF  0.0  0.280 CHI 1.0 0.0
+  ;
+*----
+*  Geometry :  Hexagonal assembly containing fuel pins
+*----
+GlobalGeo := GEO: ::  HEX 7
+  HBC COMPLETE ALBE 1.0
+  CELL  C1 C2 C1 C2 C1 C1 C1
+  ::: C1 := GEO: HEXCEL 1
+  SIDE 13.62547
+     RADIUS 0.0 11.0
+     MIX   1  2
+  CLUSTER ROD1 ROD2
+  ::: ROD1 := GEO: TUBE 2 MIX 3 4
+    NPIN 35 RPIN 8.0 APIN 0.0
+    RADIUS 0.00000 0.6122 0.6540 ;
+  ::: ROD2 := GEO: ROD1
+    NPIN 5 RPIN 3.0 ;
+  ;
+  ::: C2 := GEO: HEXCEL 1
+  SIDE 13.62547
+     RADIUS 0.0 9.0
+     MIX   1  2
+  CLUSTER ROD1 ROD2
+  ::: ROD1 := GEO: TUBE 2 MIX 3 4
+     NPIN  1 CPINX 3.0 CPINY 0.5
+    RADIUS 0.00000 0.6122 2.5940 ;
+  ::: ROD2 := GEO: TUBE 2 MIX 3 4
+     NPIN  1 CPINX 5.0 CPINY -5.0
+    RADIUS 0.00000 0.5122 1.5540 ;
+  ;
+;
+*---- 
+*  Tracking : G2S/SALT
+*  Solution : PIJ
+*----
+LTMID1_TDT LTMID1.ps := G2S: GlobalGeo ;
+Tracking Lines := SALT: LTMID1_TDT ::
+     EDIT 1
+     TISO <<an2d>> <<densur>> ;
+
+Pij := ASM: MacLib Tracking Lines ;
+Flux := FLU: Pij MacLib Tracking :: TYPE K ;
+
+assertS Flux :: 'K-INFINITY' 1 1.023352 ;
+ECHO "test TDCM55 completed" ;
+END: ;  
+QUIT "LIST" .

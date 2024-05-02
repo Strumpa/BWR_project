@@ -1,0 +1,144 @@
+*DECK Mix_UOX
+*----
+*  Name          : Mix_UOX.c2m
+*  Type          : DRAGON procedure
+*  Use           : Microlib generation with Apolib3 for
+*                  UOX calculation with 20 fuel regions
+*  Author        : A. Hebert
+*
+*  Procedure called as: 
+*
+*  LIBRARY := Mix_UOX ::
+*    <<library>> <<dens_mod>> <<pbore>> ;
+*
+*  Input data   :
+*    Library    : Cross-section library name
+*    dens_mod   : Coolant density
+*    pbore      : Natural boron concentration (ppm)
+*
+*  Output data  :
+*    LIBRARY    : Microlib with table of probabilities
+
+
+PARAMETER  LIBRARY  ::  
+       EDIT 0 
+           ::: LINKED_LIST LIBRARY  ; 
+   ;
+
+*----
+*  Input data recovery
+*----
+STRING Library ;
+:: >>Library<< ;
+
+REAL dens_mod pbore   ;
+:: >>dens_mod<< >>pbore<< ;
+
+*----
+*  Modules used in this procedure
+*----
+MODULE  LIB: UTL: DELETE: END: ABORT: ;
+    
+* Calculation of moderator data
+REAL A := 6.022094E-1 ; ! Avogadro number
+
+REAL P_B10 P_B11 := 0.202 0.798 ;
+REAL M_H2O := 15.9994 2.0 1.00794 * + ;
+REAL M_B := P_B10 10.012938 * P_B11 11.009276 * + ;
+REAL f1 := 1.0 1.0E-06 pbore * - ;
+REAL f2 := 1.0E-06 pbore * ;
+REAL N_H2O := dens_mod f1 A * * M_H2O / ;
+REAL N_B10 := P_B10 dens_mod f2 A * * * M_B / ;
+REAL N_B11 := P_B11 dens_mod f2 A * * * M_B / ;
+ECHO "Mix_UOX H2O=" N_H2O ;
+ECHO "Mix_UOX B10=" N_B10 ;
+ECHO "Mix_UOX B11=" N_B11 ;
+                          
+LIBRARY := LIB: ::
+ EDIT 2
+ NMIX 24  (*MAXIMUM OF MATERIAL MIXTURES*)
+ CTRA APOL (*APOLLO TYPE TRANSPORT CORRECTION*)
+ ANIS 2
+ ADED 4 NELAS N4N N2N N3N
+ SUBG      (*HELIOS TYPE PROBABILITY TABLES*)
+
+*----
+*  Depletion Chain
+*----
+ MIXS LIB: APLIB3 FIL: <<Library>>
+*----
+*    Cladding
+*----
+   MIX 1 600.0 NOEV
+    Zr90     = Zr90     2.16576E-2 2
+    Zr91     = Zr91     4.72300E-3 2
+    Zr92     = Zr92     7.21921E-3 2
+    Zr94     = Zr94     7.31603E-3 2
+    Zr96     = Zr96     1.17864E-3 2
+*----
+*    Moderator
+*----
+  MIX 2 600.0 NOEV
+    H2O       = H2O      <<N_H2O>>
+    B10       = B10      <<N_B10>>
+    B11       = B11      <<N_B11>>
+*----
+*    Fuel -> 5 * 4 evolving mixes
+*----
+* C1 Cell
+  MIX 3 900.0
+    U235  = U235  4.08785E-4 1
+    U238  = U238  2.20157E-2 1
+    O16   = O16   4.48565E-2
+  MIX 4
+    COMB 3 1.0
+  MIX 5
+    COMB 3 1.0
+  MIX 6
+    COMB 3 1.0
+  MIX 7
+    COMB 3 1.0
+  MIX 8
+    COMB 3 1.0
+  MIX 9
+    COMB 3 1.0
+  MIX 10
+    COMB 3 1.0
+  MIX 11
+    COMB 3 1.0
+  MIX 12
+    COMB 3 1.0
+  MIX 13
+    COMB 3 1.0
+  MIX 14
+    COMB 3 1.0
+  MIX 15
+    COMB 3 1.0
+  MIX 16
+    COMB 3 1.0
+  MIX 17
+    COMB 3 1.0
+  MIX 18
+    COMB 3 1.0
+  MIX 19
+    COMB 3 1.0
+  MIX 20
+    COMB 3 1.0
+  MIX 21
+    COMB 3 1.0
+  MIX 22
+    COMB 3 1.0
+*----
+*    Tube
+*----
+  MIX 23
+    COMB 1 1.0
+*----
+*    Stiffner
+*----
+  MIX 24
+    COMB 1 1.0
+;
+
+END: ;
+QUIT .

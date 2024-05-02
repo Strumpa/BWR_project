@@ -1,0 +1,75 @@
+************************************************************************************************************************
+*                                                                                                                      *
+* Procedure :  NXT_TSPC.c2m                                                                                            *
+* Purpose   :  Tracking SYBILT for SS and NXT TSPC for FLX + MOC Flux calculation                                      *
+* Author    :  R. Guasch                                                                                               *
+*                                                                                                                      *
+* CALL      :  NXT_TSPC                                                                                                *
+*                                                                                                                      *
+************************************************************************************************************************
+
+* ---
+* STRUCTURES AND MODULES
+* ---
+MODULE GEO: NXT: TLM: END: ;
+
+
+LINKED_LIST GEOM GEOM_SS TRACK_SS TRACK LIBRARY LIBRARY2 SYS FLUX ;
+
+SEQ_BINARY TF_EXC ;
+SEQ_ASCII TLM_F :: FILE 'tracks_NXT_san_TSPC.m' ;
+
+* ---
+* TRACKING PARAMETERS FOR MOC FLX
+* ---
+INTEGER an2d := 2 ;  ! ANGULAR QUADRATURE PARAMETER 18 
+REAL densur := 5.0 ; ! DENSITY OF INTEGRATION LINES CM^-1 35.0
+
+
+! GEOMETRY DEFINITION
+REAL Rcomb1 Rcomb2 Rcomb3 Rcomb4 := 0.313602 0.396678 0.43227 0.4435 ;
+REAL Rgap Rclad pitch := 0.4520 0.5140 1.29500 ;
+REAL Rmode := 0.60 ;
+
+INTEGER COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+            1 2 3 4 5 6 7 ; !  DISTRIBUTED SELF-SHIELDING
+ 
+
+GEOM := GEO: :: CARCEL 6 
+    X- REFL X+ REFL
+    Y- REFL Y+ REFL
+    RADIUS 0.0 <<Rcomb1>> <<Rcomb2>>
+               <<Rcomb3>> <<Rcomb4>> <<Rgap>> <<Rclad>>
+    MIX <<COMB0101>> <<COMB0102>> <<COMB0103>> <<COMB0104>>
+        <<GAP>> <<CLAD>> <<MODE>>
+    MESHX 0.0 <<pitch>> MESHY 0.0 <<pitch>>
+;
+
+
+
+* ---
+* FLUX CALC TRACKING
+* ---
+
+TRACK TF_EXC := NXT: GEOM ::
+  EDIT 100
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+  !TISO EQW <<an2d>> <<densur>> REND
+;
+
+TLM_F := TLM: TRACK TF_EXC ::
+  EDIT 10
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+
+! No self-shielding or flux calculation : just checking NXT tracking
+
+
+ECHO "AT10_24UOX NXT TSPC completed" ;
+
+
+END: ;

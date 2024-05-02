@@ -1,0 +1,73 @@
+************************************************************************************************************************
+*                                                                                                                      *
+* Procedure :  vverTRACK.c2m                                                                                           *
+* Purpose   :  Tracking and figure                                                                                     *
+* Author    :  L.Fede                                                                                                  *
+*                                                                                                                      *
+* CALL      :                                                                                                          *
+* UOX_TBH FIG1.ps TRACK TF_EXC UOX_TBH_SS FIG_SS.ps TRACK_SS TF_EXC_SS := vverTRACK GEOM GEOM_SS                       *
+*                                                                                                                      *
+************************************************************************************************************************
+
+* ---
+* INPUT & OUTPUT PARAMETERS
+* ---
+PARAMETER UOX_TBH    FIG1.ps   TRACK    TF_EXC
+          UOX_TBH_SS FIG_SS.ps TRACK_SS TF_EXC_SS
+          GEOM       GEOM_SS ::
+::: SEQ_ASCII UOX_TBH ;
+::: SEQ_ASCII FIG1.ps ;
+::: LINKED_LIST TRACK ;
+::: SEQ_BINARY TF_EXC ;
+::: SEQ_ASCII UOX_TBH_SS ;
+::: SEQ_ASCII FIG_SS.ps ;
+::: LINKED_LIST TRACK_SS ;
+::: SEQ_BINARY TF_EXC_SS ;
+::: LINKED_LIST GEOM ;
+::: LINKED_LIST GEOM_SS ; ;
+
+* ---
+* STRUCTURES AND MODULES
+* ---
+MODULE G2S: SALT: MCCGT: PSP: END: ;
+
+SEQ_ASCII _BURN :: FILE './_BURN_rowland.txt' ;
+SEQ_ASCII _LIBR :: FILE './_LIB_rowland.txt' ;
+SEQ_ASCII _EDIT :: FILE './_EDIT_rowland.txt' ;
+
+INTEGER an2d := 18 ;  ! ANGULAR QUADRATURE PARAMETER
+REAL densur := 30.0 ; ! DENSITY OF INTEGRATION LINES CM^-1
+
+INTEGER an2d_SS := 18 ;
+REAL densur_SS := 30.0 ;
+
+INTEGER mcu := 50000 ;
+
+* ---
+* FLUX CALC TRACKING
+* ---
+UOX_TBH FIG1.ps := G2S: GEOM :: DRAWMIX ;
+
+TRACK TF_EXC := SALT: UOX_TBH ::
+  EDIT 3
+  ALLG
+  TSPC <<an2d>> <<densur>> REND
+;
+
+TRACK := MCCGT: TRACK TF_EXC ::
+  CACB 4 AAC 80 TMT EPSI 1E-5 MCU <<mcu>> 
+;
+* ---
+* SELF-SHIELDING TRACKING
+* ---
+UOX_TBH_SS FIG_SS.ps := G2S: GEOM_SS :: DRAWMIX ;
+
+TRACK_SS TF_EXC_SS := SALT: UOX_TBH_SS ::
+  EDIT 3
+  ANIS 2
+  ALLG
+  TISO <<an2d_SS>> <<densur_SS>> REND
+;
+
+END: ;
+QUIT .

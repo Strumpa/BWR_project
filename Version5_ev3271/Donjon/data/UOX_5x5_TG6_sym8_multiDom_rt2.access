@@ -1,0 +1,10 @@
+#!/bin/sh
+if [ $# = 0 ]
+   then
+   echo "usage: UOX_5x5_TG6_sym8_multiDom_rt2.access directory" 1>&2
+   exit 1
+fi
+cp $1/../Dragon/data/UOX_5x5_TG6_sym8_multiDom_proc/UOX_5x5_TG6_sym8_multiDom.h5 .
+chmod 644 *.h5
+ls -l
+echo "UOX_5x5_TG6_sym8_multiDom_rt2 access script terminated"

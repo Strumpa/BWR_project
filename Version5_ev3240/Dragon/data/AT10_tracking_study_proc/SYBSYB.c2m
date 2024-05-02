@@ -1,0 +1,91 @@
+************************************************************************************************************************
+*                                                                                                                      *
+* Procedure :  AT10SYBSYB.c2m                                                                                          *
+* Purpose   :  Tracking SYBILT for SS and SYBILT for FLX + PIJ Flux calculation                                        *
+* Author    :  R. Guasch adapted from L.Fede                                                                           *
+*                                                                                                                      *
+* CALL      :   AT10SYBSYB                                                                                             *
+*                                                                                                                      *
+************************************************************************************************************************
+
+* ---
+* STRUCTURES AND MODULES
+* ---
+MODULE SYBILT: PSP: USS: ASM: FLU: GREP: END: ;
+
+* ---
+* PROCEDURES
+PROCEDURE Mix_Cell Geom_FLX Geom_SS ; 
+* ---
+
+LINKED_LIST GEOMFLX_sub GEOMSS TRACK_SS TRACK LIBRARY LIBRARY2 SYS FLUX ;
+
+INTEGER COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+        1 2 3 4 5 6 7 ; !  DISTRIBUTED SELF-SHIELDING 
+
+! Geometric Parameter definition : 
+REAL Rcomb1 Rcomb2 Rcomb3 Rcomb4 := 0.313602 0.396678 0.43227 0.4435 ;
+REAL Rgap Rclad pitch := 0.4520 0.5140 1.295 ;
+REAL Rmode := 0.64 ;
+REAL Kinf1 Keff1 ;
+
+* ---
+* TRACKING PARAMETERS FOR SSH with SYBILT:
+* ---
+INTEGER iqua2_ss := 24 ;
+INTEGER nseg_ss := 5 ;
+
+* ---
+* TRACKING PARAMETERS FOR PIJ FLX with SYBILT:
+* ---
+INTEGER iqua2 := 32 ;  ! ANGULAR QUADRATURE PARAMETER
+INTEGER nseg := 10 ; ! NUMBER OF INTEGRATION LINES
+
+! GEOMETRY DEFINITION
+
+GEOMSS := Geom_SS :: <<Rcomb1>> <<Rcomb2>> <<Rcomb3>> <<Rcomb4>> 
+    <<Rgap>> <<Rclad>> <<pitch>> ;
+
+GEOMFLX_sub := Geom_FLX :: <<Rcomb1>> <<Rcomb2>> <<Rcomb3>> <<Rcomb4>>
+        <<Rgap>> <<Rclad>> <<Rmode>> <<pitch>> ;
+
+* ---
+* SELF-SHIELDING TRACKING
+* ---
+
+TRACK_SS := SYBILT: GEOMSS ::
+    TITLE 'TRACKING FOR PINCELL SS'
+    MAXR 50 QUA2 <<iqua2_ss>> <<nseg_ss>> DP01 MAXZ 200000 
+;
+
+* ---
+* FLUX CALC TRACKING
+* ---
+
+TRACK := SYBILT: GEOMFLX_sub ::
+    MAXR 50 QUA2 <<iqua2>> <<nseg>> DP01 MAXZ 200000
+;
+
+! XS Library
+LIBRARY := Mix_Cell :: J311_295 <<COMB0101>> <<COMB0102>> <<COMB0103>> <<COMB0104>> 
+                                <<GAP>> <<CLAD>> <<MODE>> ;
+
+
+! UNIVERSAL SELF-SHIELDING 
+LIBRARY2 := USS: LIBRARY TRACK_SS ::
+          EDIT 0
+          PASS 2
+          GRMIN 52
+;
+
+SYS := ASM: LIBRARY2 TRACK :: PIJ EDIT 0 ; 
+    FLUX := FLU: LIBRARY2 SYS TRACK :: 
+            EDIT 1 TYPE K B1 SIGS ;
+
+GREP: FLUX :: GETVAL 'K-EFFECTIVE  ' 1 1 1 >>Keff1<< ;
+ECHO "SS tracking = SYBILT and FLX tracking = SYBILT, SYBILT used on subdivided geom Keff9=" Keff1 ;
+
+ECHO "AT10SYBSYB completed" ;
+
+
+END: ;

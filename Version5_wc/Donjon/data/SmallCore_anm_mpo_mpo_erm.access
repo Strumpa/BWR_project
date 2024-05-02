@@ -1,0 +1,13 @@
+#!/bin/sh
+if [ $# = 0 ]
+   then
+   echo "usage: SmallCore_anm_mpo_mpo_erm.access directory" 1>&2
+   exit 1
+fi
+ln -s "$1"/data/SmallCore_anm_mpo_mpo_proc/Ass_3GLE_210-mpo.hdf .
+ln -s "$1"/data/SmallCore_anm_mpo_mpo_proc/Ass_3GLE_210_8Gd-mpo.hdf .
+ln -s "$1"/data/SmallCore_anm_mpo_mpo_proc/Ass_3GLE_320_16Gd-mpo.hdf .
+ln -s "$1"/data/SmallCore_anm_mpo_mpo_proc/Ass_3GLE_420_16Gd-mpo.hdf .
+ln -s "$1"/data/SmallCore_anm_mpo_mpo_erm_proc/reflector_beavrs_ERM-ANM_mpo.hdf .
+ls -l
+echo "SmallCore_anm_mpo_mpo_erm access script terminated"

@@ -1,0 +1,68 @@
+*----
+*  TEST CASE TCM76
+*  MACROSCOPIC CROSS SECTIONS
+*  HEXAGONAL CELL WITH PINS
+*----
+*  Define STRUCTURES and MODULES used
+*----
+MODULE MAC: GEO: NXT: PSP: ASM: FLU: END: ;
+LINKED_LIST  MacLib GlobalGeo Tracking Pij Flux ;
+SEQ_ASCII LTMID1_Fig :: FILE './LTMID1.ps' ;
+SEQ_BINARY   Lines ;
+INTEGER an2d := 8 ;
+REAL densur := 20.0 ;
+PROCEDURE assertS ;
+*----
+*  Macroscopic XS
+*----
+MacLib := MAC: ::
+  NGRO 2 NMIX 4 NIFI 1
+  READ INPUT
+  MIX  1   TOTAL 0.166667 1.111111
+    SCAT   2 2  0.00015 0.126667 2 2 1.10111 0.039
+  MIX  2  TOTAL 0.166667 1.111111
+    SCAT   2 2  0.00015 0.126667 2 2 1.10111 0.039
+  MIX  3   TOTAL 0.222222 0.833333
+    SCAT   1 1  0.19222          2 2 0.75333 0.02
+    NUSIGF  0.0  0.170 CHI 1.0 0.0
+  MIX  4   TOTAL 0.222222 0.833333
+    SCAT   1 1  0.19222          2 2 0.75333 0.02
+    NUSIGF  0.0  0.280 CHI 1.0 0.0
+  ;
+*----
+*  Geometry :  Hexagonal assembly containing fuel pins
+*----
+GlobalGeo := GEO: ::  HEX 7
+HBC COMPLETE REFL
+CELL
+C1 C2 C1 C2 C1 C1 C1
+::: C1 := GEO: HEXTCEL 1 1
+SIDE  13.62547
+RADIUS 0.0 11.0
+MIX   1  2
+CLUSTER ROD1 ROD2
+::: ROD1 := GEO: TUBE 2 MIX 3 4 NPIN 1
+    CPINX 4.0 CPINY 4.0
+    RADIUS 0.00000 0.6122 2.2940 ;
+::: ROD2 := GEO: ROD1   MIX 3 4 NPIN 1
+    CPINX 8.0 CPINY -2.0 ;
+;
+::: C2 := GEO: HEXTCEL 1 1
+SIDE  13.62547
+RADIUS 0.0 3.0
+MIX   1  2 ;
+;
+*----
+*  Tracking : NXT
+*  Solution : PIJ
+*----
+Lines Tracking := NXT: GlobalGeo ::
+     EDIT 2 TISO <<an2d>> <<densur>> ;
+LTMID1_Fig := PSP: Tracking ;
+Pij := ASM: MacLib Tracking Lines ;
+Flux := FLU: Pij MacLib Tracking :: TYPE K ;
+
+assertS Flux :: 'K-INFINITY' 1 0.9006696 ;
+ECHO "test TCM76 completed" ;
+END: ;
+QUIT "LIST" .

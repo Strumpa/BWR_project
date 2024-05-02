@@ -1,0 +1,418 @@
+*----
+* case OSC_CASEA_1level_rse
+* 99 group eighth assembly in DRAGON -- 1-level scheme
+* Author: A. Hebert
+*----
+LINKED_LIST GEOSS GEON2 TRACKSS TRACKN2 LIBRARY LIBRARY2
+            SYS FLUX FLUX2 EDITION DONNEES LIBHOM BURNUP 
+	    EDIOBJ COMPO ;
+MODULE SYBILT: G2S: SALT: MCCGT: USS: ASM: FLU: EDI: UTL: DELETE:
+       END: EVO: GREP: LIB: COMPO: ABORT: ;
+REAL Rcomb1 Rcomb2 Rcomb3 Rcomb4 R_int_TG R_ext_TG R_int_TI R_ext_TI
+     R_int_G R_ext_G Cote CoteL RmodeN1 Lame ;
+SEQ_ASCII TDT_CASEA ;
+SEQ_ASCII FIGASB_CASEA :: FILE './FIGASB_CASEA_1level.ps' ;
+SEQ_BINARY TF_EXC ;
+INTEGER an2d := 8 ;
+REAL densur := 20.0 ;
+INTEGER istep istepNext iAutop iCompo := 0 0 1 1 ;
+REAL delr BUbeg BUend Tbeg Tend pbore := 0.01 0.0 0.0 0.0 0.0 0.0 ;
+REAL Fuelpwr Kinf := 39.0 0.0 ;
+REAL BU BUautop BUcompo := 0.0 0.0 0.0 ;
+STRING Library := "DLIB_99" ;
+PROCEDURE Geo_SS Geo_N2 Mix_UOX ;
+SEQ_ASCII _COMPO :: FILE './_COMPO_CASEA.txt' ;
+PROCEDURE assertS ;
+
+************************************************************************
+*  REFERENCE LOCAL PARAMETERS                                          *
+************************************************************************
+REAL pbore_0 := 700.0 ;  ! reference Boron concentration in ppm
+REAL dens_mod_0 := 0.7 ; ! reference coolant density (g/cc)
+
+************************************************************************
+*  BEGIN GEOMETRY                                                      *
+************************************************************************
+EVALUATE Rcomb4 := 0.4096 ;
+EVALUATE Rcomb1 := 0.5 SQRT Rcomb4 * ;
+EVALUATE Rcomb2 := 0.8 SQRT Rcomb4 * ;
+EVALUATE Rcomb3 := 0.95 SQRT Rcomb4 * ;
+EVALUATE R_int_TG := 0.5605 ;
+EVALUATE R_ext_TG := 0.6225 ;
+EVALUATE R_int_TI := 0.5725 ;
+EVALUATE R_ext_TI := 0.6225 ;
+EVALUATE R_int_G := 0.4180 ;
+EVALUATE R_ext_G := 0.4750 ;
+EVALUATE Cote := 1.26 ;
+EVALUATE CoteL := 1.302 ;
+EVALUATE Lame := CoteL Cote - ;
+EVALUATE RmodeN1 := 0.670 ;
+
+GEOSS := Geo_SS :: <<Rcomb1>> <<Rcomb2>> <<Rcomb3>> <<Rcomb4>>
+                      <<R_int_TG>> <<R_ext_TG>> <<R_int_TI>> 
+                      <<R_ext_TI>> <<R_int_G>> <<R_ext_G>> <<Cote>>
+                      <<CoteL>> ;
+
+GEON2 := Geo_N2 :: <<Rcomb1>> <<Rcomb2>> <<Rcomb3>> <<Rcomb4>>
+                      <<R_int_TG>> <<R_ext_TG>> <<R_int_TI>> 
+                      <<R_ext_TI>> <<R_int_G>> <<R_ext_G>> <<Cote>>
+                      <<Lame>> ;
+TDT_CASEA FIGASB_CASEA := G2S: GEON2 ;
+************************************************************************
+*  END GEOMETRY                                                        *
+************************************************************************
+ 
+************************************************************************
+*  BEGIN DECLARATION                                                   *
+************************************************************************
+INTEGER maxstep := 9 ;
+DONNEES := UTL: ::
+    CREA
+      BURN <<maxstep>> =
+             0.0      10.0      30.0      50.0      75.0     150.0
+           250.0     375.0     500.0
+    ;
+INTEGER maxautop := 1 ;
+DONNEES := UTL: DONNEES ::
+    CREA
+          AUTOP <<maxautop>> =
+          500.0
+    ;
+INTEGER maxcompo := 5 ;
+DONNEES := UTL: DONNEES ::
+    CREA
+          BCOMPO <<maxcompo>> =
+             0.0      50.0      75.0     150.0     500.0
+    ;
+INTEGER iBoreMax := 2 ;
+DONNEES := UTL: DONNEES ::
+    CREA
+          PPMBORE <<iBoreMax>> =
+             0.0     500.0   
+    ;
+************************************************************************
+*  END DECLARATION                                                     *
+************************************************************************
+************************************************************************
+*  BEGIN TRACKING                                                      *
+************************************************************************
+! Level One
+TRACKSS := SYBILT: GEOSS ::
+  EDIT 0
+  MAXR 500
+  MAXZ  1000000
+  TITLE 'TRACKING FOR ASSEMBLY SS'
+  QUA2 20 3
+  DP01  ;
+! MOC tracking for flux calculation
+TRACKN2 TF_EXC := SALT: TDT_CASEA ::
+  EDIT 3
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+;
+TRACKN2 := MCCGT: TRACKN2 TF_EXC ::
+  CACB 4 AAC 80 TMT EPSI 1E-5 MCU 10000 ;
+
+************************************************************************
+*  END TRACKING                                                        *
+************************************************************************
+************************************************************************
+*  BEGIN COMPO INITIALIZATION                                          *
+************************************************************************
+COMPO := COMPO: ::
+  EDIT 10
+  STEP UP 'COND2'
+  MAXCAL 5
+  COMM 'evolution burnup CASEA Assembly' ENDC
+  PARA 'burnup' IRRA
+  PARA 'ppmBore' VALU REAL 
+  INIT
+;
+************************************************************************
+*  END COMPO INITIALIZATION                                            *
+************************************************************************
+************************************************************************
+*  BEGIN LIBRARY READING                                               *
+************************************************************************
+LIBRARY := Mix_UOX :: <<Library>> <<dens_mod_0>> <<pbore_0>> ;
+
+************************************************************************
+*  END LIBRARY READING                                                 *
+************************************************************************
+
+************************************************************************
+*  NOMINAL REFERENCE CALCULATION                                       *
+************************************************************************
+************************************************************************
+*  BEGIN DEPLETION                                                     *
+************************************************************************
+WHILE istep maxstep < DO
+
+ EVALUATE istep := istep 1 + ;
+ ECHO "burnup step: " istep "/" maxstep ;
+ 
+ EVALUATE BUbeg Tbeg := BUend Tend ;
+ GREP: DONNEES :: GETVAL 'BURN' <<istep>> >>BUend<< ;
+ EVALUATE Tend := BUend Fuelpwr / ;
+ ECHO "Nominal depletion between" Tbeg " and" Tend "days" ;
+
+*----
+* USS
+*----
+  IF istep 1 = THEN
+      LIBRARY2 := USS: LIBRARY TRACKSS :: EDIT 1 PASS 2 ARM GRMIN 18
+      CALC  REGI W1 U235   ALL
+            REGI W1 U236   ALL
+            REGI W1 Pu239  ALL
+            REGI W1 Pu240  ALL
+            REGI W1 Pu241  ALL
+            REGI W1 Pu242  ALL
+      ENDC ;
+  ELSE
+    GREP: DONNEES :: GETVAL "AUTOP" <<iAutop>> >>BUautop<< ;
+    GREP: DONNEES :: GETVAL "BURN" <<istep>> >>BU<< ;
+    IF BUautop BU = THEN
+         LIBRARY2 := USS: LIBRARY LIBRARY2 TRACKSS BURNUP :: EDIT 0 PASS 2
+                     GRMIN 18
+         CALC  REGI W1 U235   ALL
+               REGI W1 U236   ALL
+               REGI W1 Pu239  ALL
+               REGI W1 Pu240  ALL
+               REGI W1 Pu241  ALL
+               REGI W1 Pu242  ALL
+         ENDC ;
+       EVALUATE iAutop := iAutop 1 + ;
+     ENDIF ;
+  ENDIF ;
+
+************************************************************************
+*  BEGIN MOC FLUX CALCULATION                                          *
+************************************************************************
+SYS := ASM: LIBRARY2 TRACKN2 TF_EXC :: ARM EDIT 1 ;    
+
+IF istep 1 = THEN     
+FLUX2 := FLU: LIBRARY2 SYS TRACKN2 TF_EXC :: 
+     EDIT 1 TYPE B B1 SIGS ;
+ELSE
+   FLUX2 := FLU: FLUX2 LIBRARY2 SYS TRACKN2 TF_EXC :: 
+     EDIT 1 TYPE B B1 SIGS ;
+ENDIF ;
+ 
+SYS := DELETE: SYS ;
+
+IF istep 1 = THEN
+  BURNUP LIBRARY2 := EVO: LIBRARY2 FLUX2 TRACKN2 ::
+    EDIT 0
+    SAVE <<Tbeg>> DAY POWR <<Fuelpwr>>
+  ;
+ELSE
+  BURNUP LIBRARY2 := EVO: BURNUP LIBRARY2 FLUX2 TRACKN2 ::
+    EDIT 0
+    SAVE <<Tbeg>> DAY POWR <<Fuelpwr>>
+  ;
+ENDIF ;
+
+GREP: DONNEES :: GETVAL "BCOMPO" <<iCompo>> >>BUcompo<< ;
+GREP: DONNEES :: GETVAL "BURN" <<istep>> >>BU<< ;
+IF BUcompo BU = THEN
+  EDIOBJ := EDI: FLUX2 LIBRARY2 TRACKN2 :: EDIT 5                              
+  MICR 35 U234  U235  U236  U237  U238  Np237 Np238 Np239 Pu238 Pu239
+    Pu240 Pu241 Pu242  Cm242 Cm243 Cm244 Cm245 Am241 Am242m Am243
+    Pm147 Pm148 Pm148m Pm149 Sm147 Sm148 Sm149 Sm150 Nd146  Nd147
+    Nd148 B10   B11    Xe135 I135
+  MERG COMP                                                               
+  COND 0.625
+  ADF * 'FD_B' MIX 162 ENDM
+  SAVE ON COND2                                                        
+  ;
+
+************************************************************************
+*  MULTICOMPO FEEDING                                                  *
+************************************************************************
+  COMPO := COMPO: COMPO EDIOBJ BURNUP LIBRARY ::
+    EDIT 2
+    STEP UP 'COND2'
+    'ppmBore' <<pbore_0>>
+    SET <<Tbeg>> DAY ;
+  EDIOBJ := DELETE: EDIOBJ ;
+  EVALUATE iCompo := iCompo 1 + ;
+ENDIF ;
+
+GREP: FLUX2 :: GETVAL 'K-INFINITY  ' 1 1 1 >>Kinf<< ;
+ECHO "+++ Burnup=" BUend " Kinf=" Kinf " at step" istep ;
+
+ IF istep maxstep < THEN
+  EVALUATE istepNext := istep 1 + ;
+  GREP: DONNEES :: GETVAL 'BURN' <<istepNext>> >>BUend<< ;
+  EVALUATE Tend := BUend Fuelpwr / ;
+  
+  BURNUP LIBRARY2 := EVO: BURNUP LIBRARY2 FLUX2 TRACKN2 ::
+   EDIT 3 DEPL <<Tbeg>> <<Tend>> DAY POWR <<Fuelpwr>> 
+   EXPM 1.0E15 GLOB ;
+  
+ ENDIF ;
+ 
+************************************************************************
+*  END FLUX CALCULATION                                                *
+************************************************************************
+
+ENDWHILE ;
+assertS FLUX2 :: K-INFINITY 1 1.039910 ;
+LIBRARY LIBRARY2 := DELETE: LIBRARY LIBRARY2 ;
+
+************************************************************************
+*  END OF REFERENCE BURNUP LOOP WITH DEPLETION                         *
+************************************************************************
+
+************************************************************************
+*  BRANCH BORON LOOP                                                   *
+************************************************************************
+ECHO "$$$ Branch Boron loop" ;
+INTEGER iBoreStep := 0 ;
+WHILE iBoreStep iBoreMax < DO
+  EVALUATE iBoreStep := iBoreStep 1 + ;
+  GREP: DONNEES :: GETVAL 'PPMBORE' <<iBoreStep>> >>pbore<< ;
+  IF pbore pbore_0 <> THEN ! test no to repeat reference case
+  ECHO "Boron step: " iBoreStep "/" iBoreMax " Boron=" pbore " ppm" ;
+************************************************************************
+*  BEGIN LIBRARY READING                                               *
+************************************************************************
+  LIBRARY := Mix_UOX :: <<Library>> <<dens_mod_0>> <<pbore>> ;
+
+************************************************************************
+*  INITIAL FLUX CALCULATION                                  *
+************************************************************************
+  EVALUATE istep iAutop iCompo := 0 1 1 ;
+  GREP: DONNEES :: GETVAL 'AUTOP' <<iAutop>> >>BUautop<< ;
+
+************************************************************************
+*  BRANCH BURNUP LOOP                                                  *
+************************************************************************
+  WHILE istep maxstep < DO
+    EVALUATE istep := istep 1 + ;
+    GREP: DONNEES :: GETVAL 'BURN' <<istep>> >>BUbeg<< ;
+    EVALUATE Tbeg := BUbeg Fuelpwr / ;
+    ECHO "branch burnup step: " istep "/" maxstep " BUbeg=" BUbeg ;
+
+************************************************************************
+*  RECOVER NUMBER DENSITIES FOR THE CURRENT BURNUP STEP                *
+************************************************************************
+    IF istep 1 > THEN
+      LIBRARY2 := LIB: LIBRARY2 BURNUP ::
+      EDIT 0
+      BURN <<istep>>
+      MIX   3 MIX   4 MIX   5 MIX   6
+      MIX   9 MIX  10 MIX  11 MIX  12 MIX  13 MIX  14 MIX  15 MIX  16
+      MIX  17 MIX  18 MIX  19 MIX  20 MIX  21 MIX  22 MIX  23 MIX  24
+              MIX  26 MIX  27 MIX  28 MIX  29 MIX  30 MIX  31 MIX  32
+      MIX  33 MIX  34 MIX  35 MIX  36 MIX  37 MIX  38 MIX  39 MIX  40
+      MIX  41 MIX  42 MIX  43 MIX  44 MIX  45 MIX  46 MIX  47 MIX  48
+      MIX  49 MIX  50 MIX  51 MIX  52 MIX  53 MIX  54 MIX  55 MIX  56
+      MIX  57 MIX  58 MIX  59 MIX  60 MIX  61 MIX  62 MIX  63 MIX  64
+      MIX  65 MIX  66 MIX  67 MIX  68 MIX  69 MIX  70 MIX  71 MIX  72
+      MIX  73 MIX  74 MIX  75 MIX  76 MIX  77 MIX  78 MIX  79 MIX  80
+      MIX  81 MIX  82 MIX  83 MIX  84 MIX  85 MIX  86 MIX  87 MIX  88
+      MIX  89 MIX  90 MIX  91 MIX  92 MIX  93 MIX  94 MIX  95 MIX  96
+      MIX  97 MIX  98 MIX  99 MIX 100 MIX 101 MIX 102 MIX 103 MIX 104
+      MIX 105 MIX 106 MIX 107 MIX 108 MIX 109 MIX 110 MIX 111 MIX 112
+      MIX 113 MIX 114 MIX 115 MIX 116 MIX 117 MIX 118 MIX 119 MIX 120
+      MIX 121 MIX 122 MIX 123 MIX 124 MIX 125 MIX 126 MIX 127 MIX 128
+      MIX 129 MIX 130 MIX 131 MIX 132 MIX 133 MIX 134 MIX 135 MIX 136
+      MIX 137 MIX 138 MIX 139 MIX 140 MIX 141 MIX 142 MIX 143 MIX 144
+      MIX 145 MIX 146 MIX 147 MIX 148 MIX 149 MIX 150 MIX 151 MIX 152
+      MIX 153 MIX 154 MIX 155 MIX 156 MIX 157 MIX 158 MIX 159 MIX 160
+      MIX 161
+      ;
+    ENDIF ;
+
+*----
+* USS
+*----
+    IF istep 1 = THEN
+      LIBRARY2 := USS: LIBRARY TRACKSS :: EDIT 1 PASS 2 ARM GRMIN 18
+      CALC  REGI W1 U235   ALL
+            REGI W1 U236   ALL
+            REGI W1 Pu239  ALL
+            REGI W1 Pu240  ALL
+            REGI W1 Pu241  ALL
+            REGI W1 Pu242  ALL
+      ENDC ;
+    ELSE
+      GREP: DONNEES :: GETVAL "AUTOP" <<iAutop>> >>BUautop<< ;
+      GREP: DONNEES :: GETVAL "BURN" <<istep>> >>BU<< ;
+      IF BUautop BU = THEN
+         LIBRARY2 := USS: LIBRARY LIBRARY2 TRACKSS BURNUP :: EDIT 0 PASS 2
+                     GRMIN 18
+         CALC  REGI W1 U235   ALL
+               REGI W1 U236   ALL
+               REGI W1 Pu239  ALL
+               REGI W1 Pu240  ALL
+               REGI W1 Pu241  ALL
+               REGI W1 Pu242  ALL
+         ENDC ;
+         EVALUATE iAutop := iAutop 1 + ;
+       ENDIF ;
+    ENDIF ;   
+
+************************************************************************
+*  BEGIN MOC FLUX CALCULATION                                          *
+************************************************************************
+  SYS := ASM: LIBRARY2 TRACKN2 TF_EXC :: ARM EDIT 1 ;    
+
+  FLUX2 := FLU: FLUX2 LIBRARY2 SYS TRACKN2 TF_EXC :: 
+    EDIT 1 TYPE B B1 SIGS ;
+  
+  SYS := DELETE: SYS ;
+
+  GREP: DONNEES :: GETVAL "BCOMPO" <<iCompo>> >>BUcompo<< ;
+  GREP: DONNEES :: GETVAL "BURN" <<istep>> >>BU<< ;
+  IF BUcompo BU = THEN
+    EDIOBJ := EDI: FLUX2 LIBRARY2 TRACKN2 :: EDIT 5                              
+    MICR 35 U234  U235  U236  U237  U238  Np237 Np238 Np239 Pu238 Pu239
+      Pu240 Pu241 Pu242  Cm242 Cm243 Cm244 Cm245 Am241 Am242m Am243
+      Pm147 Pm148 Pm148m Pm149 Sm147 Sm148 Sm149 Sm150 Nd146  Nd147
+      Nd148 B10   B11    Xe135 I135
+    MERG COMP                                                               
+    COND 0.625
+    ADF * 'FD_B' MIX 162 ENDM
+    SAVE ON COND2                                                        
+    ;
+
+************************************************************************
+*  MULTICOMPO FEEDING                                                  *
+************************************************************************
+    COMPO := COMPO: COMPO EDIOBJ BURNUP LIBRARY ::
+      EDIT 2
+      STEP UP 'COND2'
+      'ppmBore' <<pbore>>
+      SET <<Tbeg>> DAY ;
+
+    EDIOBJ := DELETE: EDIOBJ ;
+    EVALUATE iCompo := iCompo 1 + ;
+  ENDIF ;
+
+  GREP: FLUX2 :: GETVAL 'K-INFINITY  ' 1 1 1 >>Kinf<< ;
+  ECHO "+++ Boron=" pbore " Burnup=" BUend "(" Tbeg " days) Kinf=" Kinf
+  " at step" istep ;
+
+  ENDWHILE ; ! burnup loop
+
+  LIBRARY LIBRARY2 := DELETE: LIBRARY LIBRARY2 ;
+
+ENDIF ; ! test no to repeat reference case
+
+ENDWHILE ; ! boron loop
+assertS FLUX2 :: K-INFINITY 1 1.039910 ;
+************************************************************************
+*  END OF BORON LOOP                                                   *
+************************************************************************
+************************************************************************
+************************************************************************
+
+************************************************************************
+*  EXPORT MULTICOMPO IN ASCII FORMAT                                   *
+************************************************************************
+_COMPO := COMPO ;
+
+ECHO "test OSC_CASEA_1level_rse completed" ;
+END: ;

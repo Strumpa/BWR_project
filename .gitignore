@@ -9,6 +9,9 @@
 *.result
 *.eps
 *.png
+*.out
+
+*/__pycache__/
 
 Serpent2_para_bateman/src
 Serpent2_para_bateman/Linux_aarch64
@@ -47,5 +50,4 @@ Version5_*/Dragon/src/Dragon
 Version5_*/Donjon/bin/Linux_x86_64/Donjon
 Version5_*/Donjon/lib/Linux_x86_64/libDonjon.a
 Version5_*/Donjon/src/Donjon
-Version5_*/Donjon/src/libDonjon.a
 

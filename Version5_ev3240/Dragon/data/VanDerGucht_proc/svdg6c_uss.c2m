@@ -1,0 +1,62 @@
+PARAMETER XSM :: ::: XSM_FILE XSM ; ;
+LINKED_LIST BENCH4 DISCRF LIBRARY LIBRARY2 CP CALC ;
+MODULE GEO: SYBILT: LIB: MAC: USS: ASM: FLU: EDI: DELETE: ;
+*
+BENCH4 := GEO: :: CAR2D 3 3 (*ASSEMBLAGE 7 X 7*)
+          X- DIAG X+ REFL
+          Y- SYME Y+ DIAG
+          CELL C1 C2 C3
+                  C2 C3
+                     C4
+          ::: C1 := GEO: CAR2D 1 1 (*CELLULE HOMOGENE*)
+                MESHX 0.0 1.25
+                MESHY 0.0 1.25
+                MIX 4
+          ;
+          ::: C2 := GEO: CARCEL 2 (*CELLULE NORMALE*)
+                MESHX 0.0 1.25
+                MESHY 0.0 1.25
+                RADIUS 0.0 0.410 0.455
+                MIX 1 2 4
+          ;
+          ::: C3 := GEO: C2 (*CELLULE PERIPHERIQUE*)
+                MESHX 0.0 1.50
+          ;
+          ::: C4 := GEO: C3 (*CELLULE DE COIN*)
+                MESHY 0.0 1.50
+                RADIUS 0.0 0.510 0.555
+          ;
+;
+DISCRF := SYBILT: BENCH4 ::
+      TITLE 'SECOL - BENCHMARK 6   U238 EN ASSEMBLAGE 3 X 3   25-04-89'
+      MAXR 16 ;
+LIBRARY := LIB: ::
+     EDIT 1 ANIS 1 NMIX 4 PTSL (*SUBG*)
+     MIXS LIB: DRAGON FIL: DUMMYDA
+     MIX 1 973.16
+       u238 = '2387001' 2.2E-02 CORR 1 IRSET PTSL 1
+       pu240 = '2407001' 8.7E-04 CORR 1 IRSET PTSL 1
+       '16'       4.574E-2
+     MIX 2 973.16
+       '52'       1.48E-2
+       '55'       9.0E-4
+       '56'       5.3E-2
+       '58'       6.9E-3
+     MIX 4 973.16
+       '1'        5.0E-2
+       '16'       2.5E-2
+     ;
+LIBRARY2 := USS: LIBRARY DISCRF :: EDIT 2 PASS 4 ;
+LIBRARY2 := MAC: LIBRARY2 ::
+     READ INPUT
+     MIX 4 FIXE
+     1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+     0.0 0.0 0.0 0.0 0.0 0.0 0.0
+     ;
+CP := ASM: LIBRARY2 DISCRF :: PIJ ;
+CALC := FLU: CP LIBRARY2 DISCRF :: TYPE S EXTE 1 ;
+XSM := EDI: CALC LIBRARY2 DISCRF ::
+     EDIT 2 SAVE
+     MERG  MIX 1 0 0 0
+     SAVE MICR 2 u238 pu240 ;
+QUIT "LIST" .

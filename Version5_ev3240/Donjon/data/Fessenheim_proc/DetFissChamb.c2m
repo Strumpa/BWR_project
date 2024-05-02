@@ -1,0 +1,652 @@
+*****************************************************************
+*                                                               *
+* Procedure :  DetFissChamb.c2m                                 *
+* Purpose   :  Compute detector mobile fission chambers         *
+*              activities for a 157-assemblies PWR.             *
+* Author    :  V. Salino                                        *
+* Date      :  09/2021                                          *
+*                                                               *
+* CALL      :                                                   *
+*   Idetec := DetFissChamb Track Flux MicroFuel Fmap ::         *
+*                          <<dx>> <<z1>> <<z2>> ;               *
+*                                                               *
+* Parameters: input                                             *
+*  Track     tracking object, as produced by TRIVAT: module     *
+*  Flux      flux object, as produced by FLUD: module           *
+*  MicroFuel object containing interpolated cross sections      *
+*  Fmap      fuel map                                           *
+*                                                               *
+* Parameters: output                                            *
+*  Idetec    object containing fission chambers activities      *
+*                                                               *
+* Sources :                                                     *
+* - "Exploitation des coeurs REP", Collection Génie Atomique,   *
+*   EDP Sciences, N. Kerkar and P. Paulin, 2008.                *
+* - "Détection de rayonnements et instrumentation nucléaire",   *
+*   Collection Génie Atomique, EDP Sciences, A. Lyoussi, 2010.  *
+* - "Système de mesures neutroniques internes pour réacteur à   *
+*   eau sous pression", IAEA-SM-226/55 in Proceedings of        *
+*   Nuclear Power Plant Control and Instrumentation, Vol. II,   *
+*   Cannes (France), J.P. Brecy and J. Duchene, 1978.           *
+*   Link : https://inis.iaea.org/                               *
+*   collection/NCLCollectionStore/_Public/11/500/11500221.pdf   *
+*                                                               *
+*****************************************************************
+PARAMETER Idetec Track Flux MicroFuel Fmap ::
+  ::: LINKED_LIST Idetec Track Flux MicroFuel Fmap ; ;
+MODULE IDET: END: ;
+
+REAL dx z1 z2 ;
+:: >>dx<< >>z1<< >>z2<< ;
+* Numerical (rounding) problems can be encountered at the meshes'
+* boundaries. To avoid that, a negligible portion is removed on each
+* side.
+EVALUATE z1 := z1 1.0E-6 + ;
+EVALUATE z2 := z2 1.0E-6 - ;
+
+* On a plane, the response surface of the (CFUF 43 P) detector is
+* simulated as a square with the same area as a 4.7 mm diameter disk.
+REAL SqurHalfSide := $Pi_R SQRT 0.47 * 4.0 / ;
+
+* Number of meshes dedicated to the reflector
+REAL NbRefl := 1.0 ;
+
+REAL xpR := 0.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmR := 0.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpP := 1.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmP := 1.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpN := 2.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmN := 2.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpM := 3.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmM := 3.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpL := 4.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmL := 4.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpK := 5.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmK := 5.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpJ := 6.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmJ := 6.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpH := 7.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmH := 7.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpG := 8.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmG := 8.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpF := 9.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmF := 9.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpE := 10.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmE := 10.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpD := 11.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmD := 11.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpC := 12.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmC := 12.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpB := 13.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmB := 13.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL xpA := 14.5 NbRefl + dx * SqurHalfSide + ;
+REAL xmA := 14.5 NbRefl + dx * SqurHalfSide - ;
+*---------------------------------------------
+REAL yp15 := 0.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym15 := 0.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp14 := 1.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym14 := 1.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp13 := 2.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym13 := 2.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp12 := 3.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym12 := 3.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp11 := 4.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym11 := 4.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp10 := 5.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym10 := 5.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp09 := 6.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym09 := 6.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp08 := 7.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym08 := 7.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp07 := 8.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym07 := 8.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp06 := 9.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym06 := 9.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp05 := 10.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym05 := 10.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp04 := 11.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym04 := 11.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp03 := 12.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym03 := 12.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp02 := 13.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym02 := 13.5 NbRefl + dx * SqurHalfSide - ;
+
+REAL yp01 := 14.5 NbRefl + dx * SqurHalfSide + ;
+REAL ym01 := 14.5 NbRefl + dx * SqurHalfSide - ;
+
+Idetec := IDET: Track Flux MicroFuel Fmap ::
+  EDIT 1
+  DETNAME 'U5DET'
+  DETECTOR
+    ! R column
+    POSITION INTEG <<xmR>> <<xpR>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmR>> <<xpR>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmR>> <<xpR>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+
+    ! P column
+    POSITION INTEG <<xmP>> <<xpP>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmP>> <<xpP>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmP>> <<xpP>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmP>> <<xpP>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmP>> <<xpP>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmP>> <<xpP>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmP>> <<xpP>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+
+    ! N column
+    POSITION INTEG <<xmN>> <<xpN>>
+             INTEG <<ym12>> <<yp12>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmN>> <<xpN>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmN>> <<xpN>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmN>> <<xpN>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmN>> <<xpN>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmN>> <<xpN>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmN>> <<xpN>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmN>> <<xpN>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmN>> <<xpN>>
+             INTEG <<ym04>> <<yp04>>
+             INTEG <<z1>>  <<z2>>
+
+    ! M column
+    POSITION INTEG <<xmM>> <<xpM>>
+             INTEG <<ym13>> <<yp13>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmM>> <<xpM>>
+             INTEG <<ym12>> <<yp12>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmM>> <<xpM>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmM>> <<xpM>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmM>> <<xpM>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmM>> <<xpM>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmM>> <<xpM>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmM>> <<xpM>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmM>> <<xpM>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmM>> <<xpM>>
+             INTEG <<ym04>> <<yp04>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmM>> <<xpM>>
+             INTEG <<ym03>> <<yp03>>
+             INTEG <<z1>>  <<z2>>
+
+    ! L column
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym14>> <<yp14>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym13>> <<yp13>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym12>> <<yp12>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym04>> <<yp04>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym03>> <<yp03>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmL>> <<xpL>>
+             INTEG <<ym02>> <<yp02>>
+             INTEG <<z1>>  <<z2>>
+
+    ! K column
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym14>> <<yp14>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym13>> <<yp13>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym12>> <<yp12>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym04>> <<yp04>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym03>> <<yp03>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmK>> <<xpK>>
+             INTEG <<ym02>> <<yp02>>
+             INTEG <<z1>>  <<z2>>
+
+    ! J column
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym15>> <<yp15>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym14>> <<yp14>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym13>> <<yp13>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym12>> <<yp12>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym04>> <<yp04>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym03>> <<yp03>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym02>> <<yp02>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmJ>> <<xpJ>>
+             INTEG <<ym01>> <<yp01>>
+             INTEG <<z1>>  <<z2>>
+
+    ! H column
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym15>> <<yp15>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym14>> <<yp14>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym13>> <<yp13>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym12>> <<yp12>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym04>> <<yp04>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym03>> <<yp03>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym02>> <<yp02>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmH>> <<xpH>>
+             INTEG <<ym01>> <<yp01>>
+             INTEG <<z1>>  <<z2>>
+
+    ! G column
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym15>> <<yp15>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym14>> <<yp14>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym13>> <<yp13>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym12>> <<yp12>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym04>> <<yp04>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym03>> <<yp03>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym02>> <<yp02>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmG>> <<xpG>>
+             INTEG <<ym01>> <<yp01>>
+             INTEG <<z1>>  <<z2>>
+
+    ! F column
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym14>> <<yp14>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym13>> <<yp13>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym12>> <<yp12>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym04>> <<yp04>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym03>> <<yp03>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmF>> <<xpF>>
+             INTEG <<ym02>> <<yp02>>
+             INTEG <<z1>>  <<z2>>
+
+    ! E column
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym14>> <<yp14>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym13>> <<yp13>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym12>> <<yp12>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym04>> <<yp04>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym03>> <<yp03>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmE>> <<xpE>>
+             INTEG <<ym02>> <<yp02>>
+             INTEG <<z1>>  <<z2>>
+
+    ! D column
+    POSITION INTEG <<xmD>> <<xpD>>
+             INTEG <<ym13>> <<yp13>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmD>> <<xpD>>
+             INTEG <<ym12>> <<yp12>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmD>> <<xpD>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmD>> <<xpD>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmD>> <<xpD>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmD>> <<xpD>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmD>> <<xpD>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmD>> <<xpD>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmD>> <<xpD>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmD>> <<xpD>>
+             INTEG <<ym04>> <<yp04>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmD>> <<xpD>>
+             INTEG <<ym03>> <<yp03>>
+             INTEG <<z1>>  <<z2>>
+
+    ! C column
+    POSITION INTEG <<xmC>> <<xpC>>
+             INTEG <<ym12>> <<yp12>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmC>> <<xpC>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmC>> <<xpC>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmC>> <<xpC>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmC>> <<xpC>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmC>> <<xpC>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmC>> <<xpC>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmC>> <<xpC>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmC>> <<xpC>>
+             INTEG <<ym04>> <<yp04>>
+             INTEG <<z1>>  <<z2>>
+
+    ! B column
+    POSITION INTEG <<xmB>> <<xpB>>
+             INTEG <<ym11>> <<yp11>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmB>> <<xpB>>
+             INTEG <<ym10>> <<yp10>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmB>> <<xpB>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmB>> <<xpB>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmB>> <<xpB>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmB>> <<xpB>>
+             INTEG <<ym06>> <<yp06>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmB>> <<xpB>>
+             INTEG <<ym05>> <<yp05>>
+             INTEG <<z1>>  <<z2>>
+
+    ! A column
+    POSITION INTEG <<xmA>> <<xpA>>
+             INTEG <<ym09>> <<yp09>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmA>> <<xpA>>
+             INTEG <<ym08>> <<yp08>>
+             INTEG <<z1>>  <<z2>>
+    POSITION INTEG <<xmA>> <<xpA>>
+             INTEG <<ym07>> <<yp07>>
+             INTEG <<z1>>  <<z2>>
+
+    ENDD ;
+
+END: ;
+QUIT "LIST" .

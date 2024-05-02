@@ -1,0 +1,48 @@
+*----
+*  Define STRUCTURES and MODULES used
+*----
+MODULE
+  G2S: SALT: TLM: DELETE: END: ;
+LINKED_LIST TRACK ; 
+SEQ_ASCII isocel_r60 :: FILE './isocel_r60.tdt' ;
+SEQ_ASCII lozenge_r120 :: FILE './lozenge_r120.tdt' ;
+SEQ_ASCII salomon.ps ;
+SEQ_ASCII Lines_r60.m :: FILE './Lines_r60.m' ;
+SEQ_ASCII Lines_r120.m :: FILE './Lines_r120.m' ;
+SEQ_BINARY TF_EXC ;
+INTEGER an2d := 3 ;
+REAL densur := 100.0 ;
+*----
+* R60 geometry
+*----
+salomon.ps := G2S: isocel_r60 :: DRAWNOD ;
+
+TRACK TF_EXC := SALT: isocel_r60 ::
+  EDIT 6
+  TISO <<an2d>> <<densur>> REND LONG
+;
+
+Lines_r60.m := TLM: TRACK TF_EXC ::
+  EDIT 99
+  NTPO 1
+  DIRECTIONS NoPause DIR 0 ;
+
+salomon.ps TRACK TF_EXC := DELETE: salomon.ps TRACK TF_EXC ;
+*----
+* R120 geometry
+*----
+salomon.ps := G2S: lozenge_r120 :: DRAWNOD ;
+
+TRACK TF_EXC := SALT: lozenge_r120 ::
+  EDIT 6
+  TISO <<an2d>> <<densur>> REND LONG
+;
+
+Lines_r120.m := TLM: TRACK TF_EXC ::
+  EDIT 99
+  NTPO 1
+  DIRECTIONS NoPause DIR 0 ;
+
+ECHO "test tst2023_1 completed" ;
+
+END: ;

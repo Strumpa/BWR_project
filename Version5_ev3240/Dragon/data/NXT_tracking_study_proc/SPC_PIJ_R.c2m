@@ -1,0 +1,90 @@
+* Deck SPC_PIJ_R.c2m
+* CLE2000 procedure
+* Author : R. Guasch
+* Purpose : Track CARCEL with NXT TSPC + REND option, PIJ flux solution
+* All self-shielding in this bactch of procedures is performed with SYBILT:
+* 
+* Goal : assess impact of changing NXTTLC.f to fix the normalization error with REND option
+
+* MODULES
+* ---
+* STRUCTURES AND MODULES
+* ---
+MODULE SYBILT: NXT: TLM: USS: ASM: FLU: GREP: END: ;
+
+* ---
+* PROCEDURES
+PROCEDURE Mix_Cell Geom_C ; 
+* ---
+
+LINKED_LIST GEOM GEOM_SS TRACK_SS TRACK LIBRARY LIBRARY2 SYS FLUX ;
+
+SEQ_BINARY TF_EXC ;
+SEQ_ASCII TLM_F :: FILE 'tracks_NXT_TSPC_REND.m' ;
+
+STRING cell_name := "AT10_24UOX" ; ! "AT10_24/32/42/45/48/50UOX" for UOX pins (1 to 6), 
+! "AT10_45Gd" / "AT10_42Gd" for AT10_UOX_Gd2O3 pins (7,8)
+
+REAL Kinf1 Keff1 ;
+
+! GEOMETRY DEFINITION
+GEOM GEOM_SS := Geom_C ;
+
+! XS MIX DEFINITION
+LIBRARY := Mix_Cell :: J311_295 <<cell_name>> ;
+
+
+* ---
+* TRACKING PARAMETERS FOR SSH
+* ---
+INTEGER iqua2 := 24 ;
+INTEGER nseg := 5 ;
+
+* ---
+* TRACKING PARAMETERS FOR MOC FLX
+* ---
+INTEGER an2d := 18 ;  ! ANGULAR QUADRATURE PARAMETER 18 
+REAL densur := 35.0 ; ! DENSITY OF INTEGRATION LINES CM^-1 35.0
+
+* polar angles for MCCGT:
+INTEGER nmu := 4 ;
+
+! GEOMETRY DEFINITION
+
+* ---
+* SELF-SHIELDING TRACKING
+* ---
+
+TRACK_SS := SYBILT: GEOM_SS ::
+    TITLE 'TRACKING FOR PINCELL SS'
+    MAXR 50 QUA2 <<iqua2>> <<nseg>> DP01 MAXZ 200000 
+;
+
+
+* ---
+* FLUX CALC TRACKING
+* ---
+
+TRACK TF_EXC := NXT: GEOM ::
+  EDIT 10
+  TSPC EQW2 <<an2d>> <<densur>> REND
+;
+
+! UNIVERSAL SELF-SHIELDING 
+LIBRARY2 := USS: LIBRARY TRACK_SS ::
+          EDIT 0
+          PASS 2
+          GRMIN 52
+;
+
+SYS := ASM: LIBRARY2 TRACK TF_EXC :: PIJ EDIT 0 ; 
+FLUX := FLU: LIBRARY2 SYS TRACK TF_EXC :: 
+        EDIT 1 TYPE K ;
+
+GREP: FLUX :: GETVAL 'K-EFFECTIVE  ' 1 1 1 >>Keff1<< ;
+ECHO "SS tracking = SYBILT and FLX tracking = NXT TSPC, PIJ REND, on simple geom  Keff1=" Keff1 ;
+
+ECHO "AT10_24UOX NXT TSPC PIJ REND completed" ;
+
+
+END: ;

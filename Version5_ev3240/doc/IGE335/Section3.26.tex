@@ -1,0 +1,409 @@
+\subsection{The {\tt MPO:} module}\label{sect:MPOData}
+
+This component of the lattice code is dedicated to the constitution of the
+reactor database in MPO format, similar to the file produced by APOLLO3.\cite{Apollo3}
+The MPO file intended to store {\sl all} the nuclear data, produced in
+the lattice code, that is useful
+in reactor calculations including fuel management and space-time kinetics.
+Multigroup lattice calculations are too expensive to be executed dynamically
+from the driver of the global reactor calculation. A more feasible
+approach is to create a reactor database where a finite number of lattice
+calculation results are tabulated against selected {\sl global parameters}
+chosen so as to represent expected operating conditions of the reactor. The
+\moc{MPO:} operator is used to create and construct a {\sc MPO} file.
+The MPO file is written in {\sc hdf5} format, allowing full portability and hierarchical
+data organization. It can be edited and modified using the HDFView tool.
+
+\vskip 0.1cm
+
+Each elementary calculation is characterized by a tuple of {\sl global parameters}.
+These global parameters are of different types, depending on the nature of the
+study under consideration: type of assembly, power, temperature in a mixture,
+concentration of an isotope, time, burnup or exposure rate in a depletion calculation,
+etc. Each step of a depletion calculation represents an elementary calculation.
+The {\sc MPO} file is often presented as a {\sl multi-parameter reactor database}.
+
+\vskip 0.1cm
+
+For each elementary calculation, the results are recovered from the output of the
+\moc{EDI:} operator and stored in a set of {\sl homogenized mixture}
+directories. The \moc{EDI:} operator is responsible for performing condensation
+in energy and homogenization in space of the macroscopic and microscopic cross
+sections. All the elementary calculations gathered in a single {\sc mpo} file are
+characterized by a single output geometry and a unique output energy-group
+structure. The {\sc mpo} file may contain many geometry/energy-group combinations.
+
+\vskip 0.1cm
+
+In each homogenized mixture directory, the \moc{MPO:} operator recover
+cross sections for a number of {\sl particularized isotopes} and {\sl macroscopic
+residual sets}, a collection of isotopic cross sections weighted by isotopic number densities.
+Cross sections for particularized isotopes and macroscopic sets are recovered for
+{\sl selected reactions}. Other information is also recovered: multigroup neutron
+fluxes, isotopic number densities, fission spectrum and a set
+of {\sl local variables}. The local variables are values that characterize each
+homogenized mixture: local power, burnup, exposure rate, etc. Some local variables
+are arrays of values (eg: SPH equivalence factors). Discontinuity factors and equivalent albedos
+are written in group {\tt flux}, as described in Sect.~\ref{sect:adf}. Finally, note that cross section
+information written on the {\sc mpo} file is {\sl not} transport corrected and {\sl not}
+SPH corrected.
+
+\vskip 0.1cm
+
+A different specification of the \moc{MPO:} function call is used for
+creation and construction of the {\sc mpo} file.
+\begin{itemize}
+\item The first specification is used to initialize the {\sc mpo} data structure
+as a function of the \dds{microlib} used in the reference calculation. Optionnally,
+the homogenized geometry is also provided. The initialization call is also used to
+set the choice of global parameters, local variables, particularized isotopes,
+macroscopic sets and selected reactions.
+\item A modification call to the \moc{MPO:} function is performed after each
+elementary calculation in order to recover output information processed by \moc{EDI:}
+(condensed and homogenized cross sections) and \moc{EVO:} (burnup dependant values).
+Global parameters and local variables can optionnally be recovered from \dds{microlib}
+objects. The \moc{EDI:} calculation is generally performed with option {\tt MICR ALL}.
+\end{itemize}
+
+The calling specifications are:
+
+\vskip -0.5cm
+
+\begin{DataStructure}{Structure \dstr{MPO:}}
+$\{$~\dusa{MPONAM} \moc{:=} \moc{MPO:} $[$ \dusa{MPONAM} $]~[$~\dusa{HMIC} $]$ \moc{::} \dstr{mpo\_data1} \\
+~~$|$~\dusa{MPONAM} \moc{:=} \moc{MPO:} \dusa{MPONAM}~\dusa{EDINAM}~$[$ \dusa{BRNNAM} $]~[$ \dusa{HMIC1}~$[$~\dusa{HMIC2} $]~]$ \moc{::} \dstr{mpo\_data2} \\
+~~$|$~\dusa{MPONAM} \moc{:=} \moc{MPO:} \dusa{MPONAM} \dusa{MPORHS} \moc{::} \dstr{mpo\_data3} $\}$ \\
+\end{DataStructure}
+
+\noindent where
+\begin{ListeDeDescription}{mmmmmmm}
+
+\item[\dusa{MPONAM}] {\tt character*12} name of the {\sc lcm} object containing the
+{\sl master} {\sc mpo} data structure.
+
+\item[\dusa{HMIC}] {\tt character*12} name of the reference \dds{microlib} (type {\tt
+L\_LIBRARY}) containing the microscopic cross sections.
+
+\item[\dusa{EDINAM}] {\tt character*12} name of the {\sc lcm} object (type {\tt
+L\_EDIT}) containing the {\sc edition} data structure corresponding to an elementary
+calculation. The {\sc edition} data produced by the last call to the {\tt EDI:} module
+is used.
+
+\item[\dusa{BRNNAM}] {\tt character*12} name of the {\sc lcm} object (type {\tt
+L\_BURNUP}) containing the {\sc burnup} data structure. This object is compulsory if one
+of the following parameters is used: \moc{IRRA}, \moc{FLUB} and/or \moc{TIME}.
+
+\item[\dusa{HMIC1}] {\tt character*12} name of a \dds{microlib} (type {\tt
+L\_LIBRARY}) containing global parameter information.
+
+\item[\dusa{HMIC2}] {\tt character*12} name of a \dds{microlib} (type {\tt
+L\_LIBRARY}) containing global parameter information.
+
+\item[\dusa{MPORHS}] {\tt character*12} name of the {\sl read-only} {\sc mpo} data structure. This
+data structure is concatenated to \dusa{MPONAM} using the \dusa{mpo\_data3} data structure,
+as presented in \Sect{descmpo3}. \dusa{MPORHS} must be defined with the same number of energy
+groups and the same number of homogeneous regions as \dusa{MPONAM}. Moreover, all the
+global and local parameters of \dusa{MPORHS} must be defined in \dusa{MPONAM}. \dusa{MPONAM}
+may be defined with {\sl global} parameters not defined in \dusa{MPORHS}.
+
+\item[\dusa{mpo\_data1}] input data structure containing initialization information (see \Sect{descmpo1}).
+
+\item[\dusa{mpo\_data2}] input data structure containing information related to the recovery of an
+elementary calculation (see \Sect{descmpo2}).
+
+\item[\dusa{mpo\_data3}] input data structure containing information related to the catenation of a
+{\sl read-only} {\sc mpo} file (see \Sect{descmpo3}).
+
+\end{ListeDeDescription}
+
+\newpage
+
+\subsubsection{Initialization data input for module {\tt MPO:}}\label{sect:descmpo1}
+
+\begin{DataStructure}{Structure \dstr{mpo\_data1}}
+$[$~\moc{EDIT} \dusa{iprint}~$]$ \\
+$[$~\moc{COMM}~\dusa{comment}~$]$ \\
+$[[$~\moc{PARA}~\dusa{parkey} \\
+~~~\{~\moc{TEMP}~\dusa{micnam}~\dusa{imix}~$|$~\moc{CONC}~\dusa{isonam1}~\dusa{micnam}~\dusa{imix}~$|$~\moc{IRRA}~$|$~\moc{FLUB}~$|$ \\
+~~~~~~\moc{PUIS}~$|$~\moc{MASL}~$|$~\moc{FLUX}~$|$~\moc{TIME}~$|$~\moc{VALU}~\{~\moc{REAL}~$|$~\moc{CHAR}~$|$~\moc{INTE}~\}~\} \\
+$]]$ \\
+$[[$~\moc{LOCA}~\dusa{parkey} \\
+~~~\{~\moc{TEMP}~$|$~\moc{CONC}~\dusa{isonam2}~$|$~\moc{IRRA}~$|$~\moc{FLUB}~$|$~~\moc{FLUG}~$|$~\moc{PUIS}~$|$~\moc{MASL}~$|$~\moc{FLUX}~$|$~\moc{EQUI}~\} \\
+$]]$ \\
+$[$~\moc{ISOT}~\{~\moc{TOUT}~$|$ \moc{MILI}~\dusa{imil}~$|~[$~\moc{FISS}~$]~[$~\moc{PF}~$]~[$~(\dusa{HNAISO}(i),~i=1,$N_{\rm iso}$) $]$~\}~$]$ \\
+$[$~\moc{REAC}~(\dusa{HNAREA}(i),~i=1,$N_{\rm reac}$) $]$ \\
+{\tt ;}
+\end{DataStructure}
+
+\goodbreak
+\noindent where
+\begin{ListeDeDescription}{mmmmmmmm}
+
+\item[\moc{EDIT}] keyword used to set \dusa{iprint}.
+
+\item[\dusa{iprint}] index used to control the printing in module {\tt
+MPO:}. =0 for no print; =1 for minimum printing (default value).
+
+\item[\moc{COMM}] keyword used to input a general comment for the {\sc mpo} file.
+
+\item[\dusa{comment}] {\tt character*132} user-defined comment.
+
+\item[\moc{PARA}] keyword used to define a single global parameter.
+
+\item[\moc{LOCA}] keyword used to define a single local variable (a local variable
+may be a single value or an array of values).
+
+\item[\dusa{parkey}] {\tt character*24} user-defined keyword associated to a global
+parameter or local variable.
+
+\item[\dusa{micnam}] {\tt character*12} name of the \dds{microlib} (type {\tt
+L\_LIBRARY}) associated to a global parameter. The corresponding \dds{microlib} will be required on
+RHS of the \moc{MPO:} call described in Sect.~\ref{sect:descmpo2}.
+
+\item[\dusa{imix}] index of the mixture associated to a global parameter. This mixture is
+located in \dds{microlib} named \dusa{micnam}.
+
+\item[\dusa{isonam1}] {\tt character*8} alias name of the isotope associated to a global
+parameter. This isotope is located in \dds{microlib} data structure named \dusa{micnam}.
+
+\item[\dusa{isonam2}] {\tt character*8} alias name of the isotope associated to a local
+variable. This isotope is located in the \dds{microlib} directory of the {\sc edition}
+data structure named \dusa{EDINAM}.
+
+\item[\moc{TEMP}] keyword used to define a temperature (in Kelvin) as global parameter or
+local variable.
+
+\item[\moc{CONC}] keyword used to define a number density as global parameter or
+local variable.
+
+\item[\moc{IRRA}] keyword used to define a burnup (in MWday/Tonne) as global
+parameter or local variable.
+
+\item[\moc{FLUB}] keyword used to define a {\sl fuel-only} exposure rate (in n/kb) as global
+parameter or local variable. The exposure rate is recovered from the \dusa{BRNNAM}
+LCM object.
+
+\item[\moc{FLUG}] keyword used to define an exposure rate in global homogenized mixtures (in n/kb) as
+local variable. The exposure rate is recovered from the \dusa{BRNNAM}
+LCM object.
+
+\item[\moc{PUIS}] keyword used to define the power as global parameter or
+local variable.
+
+\item[\moc{MASL}] keyword used to define the mass density of heavy isotopes as
+global parameter or local variable.
+
+\item[\moc{FLUX}] keyword used to define the volume-averaged, energy-integrated flux as
+global parameter or local variable.
+
+\item[\moc{TIME}] keyword used to define the time (in seconds) as global parameter.
+
+\item[\moc{EQUI}] keyword used to define the SPH equivalence factors as
+local variable. A set of SPH factors can be defined as local
+variables. Note that the cross sections and fluxes stored in the {\sc mpo} file are
+{\sl not} SPH corrected.
+
+\item[\moc{VALU}] keyword used to define a user-defined quantity as global parameter.
+This keyword must be followed by the type of parameter.
+
+\item[\moc{REAL}] keyword used to indicate that the user-defined global parameter
+is a floating point value.
+
+\item[\moc{CHAR}] keyword used to indicate that the user-defined global parameter
+is a {\tt character*12} value.
+
+\item[\moc{INTE}] keyword used to indicate that the user-defined global parameter
+is an integer value.
+
+\item[\moc{ISOT}] keyword used to select the set of particularized isotopes. The macroscopic
+residual {\tt 'TotalResidual\_mix'} is always included as the last isotope in the list.
+
+\item[\moc{TOUT}] keyword used to select all the available isotopes in the reference
+\dds{microlib} named \dusa{HMIC} as particularized isotopes.
+
+\item[\moc{MILI}] keyword used to select the isotopes in the reference
+\dds{microlib} named \dusa{HMIC} from a specific mixture as particularized isotopes.
+
+\item[\dusa{imil}] index of the mixture where the particularized isotopes are recovered.
+
+\item[\moc{FISS}] keyword used to select all the available fissile isotopes in the reference
+\dds{microlib} named \dusa{HMIC} as particularized isotopes.
+
+\item[\moc{PF}] keyword used to select all the available fission products in the reference
+\dds{microlib} named \dusa{HMIC} as particularized isotopes.
+
+\item[\dusa{HNAISO}(i)] {\tt character*12} user-defined isotope name. $N_{\rm iso}$ is the
+total number of explicitely--selected particularized isotopes.
+
+\item[\moc{REAC}] keyword used to select the set of nuclear reactions. By fefault, the following reactions are selected:
+
+\begin{tabular}{p{3.5cm} p{12.5cm}|}
+\moc{Total} & Total cross sections as $\sigma_g^{\rm absorption}+\sigma_{0,g}^{\rm diffusion}$\\
+\moc{Absorption} & Absorption cross sections $\sigma_g^{\rm absorption}$\\
+\moc{Diffusion} & Scattering cross section for each available Legendre order \\
+& $\sigma_{\ell,g}^{\rm diffusion}$. These cross sections are {\sl not} multiply by the $2\ell+1$ \\
+& factor.\\
+\moc{Fission} & Fission cross section \\
+\moc{FissionSpectrum} & Steady-state fission spectrum \\
+\moc{Nexcess} & Excess cross section due to (n,$x$n) reactions \\
+\moc{NuFission} & $\nu\Sigma_{\rm f}$ cross sections \\
+\moc{Scattering} & Scattering reaction as $\sigma_{\ell,g\rightarrow g'}=\sigma_{\ell,g\rightarrow g'}^{\rm elastic}+
+\sigma_{\ell,g\rightarrow g'}^{\rm inelastic}+\sigma_{\ell,g\rightarrow g'}^{({\rm n},x{\rm n})}$\\
+\moc{CaptureEnergyCapture} &  Energy production cross section for (n,$\gamma$) reaction only \\
+\moc{FissionEnergyFission} & Energy production cross section for (n,f) reaction only \\
+\end{tabular}
+
+\item[\dusa{HNAREA}] {\tt character*20} name of a user-selected reaction in addition to default set. \dusa{HNAREA} is
+selected among the following values:
+
+\begin{tabular}{p{3.3cm} p{12.7cm}|}
+\moc{TotalP1} & Total $P_1$-weighted cross sections \\
+\moc{ElasticDiffusion} & Elastic scattering cross section for each available Legendre order \\
+\moc{InelasticDiffusion} & Inelastic scattering cross section for each available Legendre order \\
+\moc{NxnDiffusion} & (n,$x$n) scattering cross section for each available Legendre order \\
+\moc{ElasticScattering} & Elastic scattering reaction $\sigma_{\ell,g\rightarrow g'}^{\rm elastic}$ \\
+\moc{InelasticScattering} & Inelastic scattering reaction $\sigma_{\ell,g\rightarrow g'}^{\rm inelastic}$ \\
+\moc{NxnScattering} & (n,$x$n) scattering reaction $\sigma_{\ell,g\rightarrow g'}^{({\rm n},x{\rm n})}$ \\
+\moc{MT16}   & (n,2n) production cross sections \\
+\moc{MT17}   & (n,3n) production cross sections \\
+\moc{MT28}   & (n,np) production cross sections \\
+\moc{MT37}   & (n,4n) production cross sections \\
+\moc{MT103}   & (n,p) production cross sections \\
+\moc{MT104}   & (n,d) production cross sections \\
+\moc{MT105}   & (n,t) production cross sections \\
+\moc{MT107}   & (n,$\alpha$) production cross sections \\
+\moc{MT108}   & (n,2$\alpha$) production cross sections \\
+\moc{Capture}   & (n,$\gamma$) production cross sections \\
+\end{tabular}
+
+\end{ListeDeDescription}
+
+\subsubsection{Modification data input for module {\tt MPO:}}\label{sect:descmpo2}
+
+\begin{DataStructure}{Structure \dstr{mpo\_data2}}
+$[$ \moc{EDIT} \dusa{iprint} $]$ \\
+$[$ \moc{STEP} \dusa{NAMDIR} $]$ \\
+$[[$ \dusa{parkey} \dusa{value} $]]$ \\
+$[$ \moc{SET} \dusa{xtr} $\{$ \moc{S} $|$ \moc{DAY} $|$ \moc{YEAR} $\}$ $]$ \\
+{\tt ;}
+\end{DataStructure}
+
+\goodbreak
+\noindent where
+\begin{ListeDeDescription}{mmmmmmmm}
+
+\item[\moc{EDIT}] keyword used to set \dusa{iprint}.
+
+\item[\dusa{iprint}] index used to control the printing in module {\tt
+MPO:}. =0 for no print; =1 for minimum printing (default value).
+
+\item[\moc{STEP}] keyword used to access the {\sc mpo} database from a group named \dusa{NAMDIR}.
+The default value is {\tt 'output\_0'}.
+
+\item[\dusa{NAMDIR}] access the {\sc mpo} database in the group named \dusa{NAMDIR}. This name is
+the concatenation of prefix {\tt 'output\_'} with an integer $\ge 0$.
+
+\item[\dusa{parkey}] {\tt character*24} keyword associated to a user-defined global
+parameter.
+
+\item[\dusa{value}] floating-point, integer or {\tt character*12} value of a user-defined
+global parameter.
+
+\item[\moc{SET}] keyword used to recover the flux normalization factor already
+stored on \dusa{BRNNAM} from a sub-directory corresponding to a specific time.
+
+\item[\dusa{xtr}] time associated with the current flux calculation. The
+name of the sub-directory where this information is stored will be given by
+`{\tt DEPL-DAT}'//{\tt CNN} where {\tt CNN} is a  {\tt character*4} variable
+defined by  {\tt WRITE(CNN,'(I4)') INN} where {\tt INN} is an index associated
+with the time \dusa{xtr}.
+
+\item[\moc{S}] keyword to specify that the time is given in seconds.
+
+\item[\moc{DAY}] keyword to specify that the time is given in days.
+
+\item[\moc{YEAR}] keyword to specify that the time is given in years.
+
+\end{ListeDeDescription}
+
+\subsubsection{Modification (catenate) data input for module {\tt MPO:}}\label{sect:descmpo3}
+
+\vskip -0.5cm
+
+\begin{DataStructure}{Structure \dstr{mpo\_data3}}
+$[$ \moc{EDIT} \dusa{iprint} $]$ \\
+$[$ \moc{STEP} \dusa{NAMDIR} $]$ \\
+$[[$ \dusa{parkey} \dusa{value} $]]$ \\
+$[$ \moc{WARNING-ONLY} $]$ \\
+{\tt ;}
+\end{DataStructure}
+
+\noindent where
+\begin{ListeDeDescription}{mmmmmmmm}
+
+\item[\moc{EDIT}] keyword used to set \dusa{iprint}.
+
+\item[\dusa{iprint}] index used to control the printing in module {\tt
+MPO:}. =0 for no print; =1 for minimum printing (default value).
+
+\item[\moc{STEP}] keyword used to access the {\sc mpo} database from a group named \dusa{NAMDIR}.
+The default value is {\tt 'output\_0'}.
+
+\item[\dusa{NAMDIR}] access the {\sc mpo} database in the group named \dusa{NAMDIR}. This name is
+the concatenation of prefix {\tt 'output\_'} with an integer $\ge 0$.
+
+\item[\dusa{parkey}] {\tt character*24} keyword associated to a
+global parameter that is specific to \dusa{MPONAM} (not defined in \dusa{MPORHS}).
+
+\item[\dusa{value}] floating-point, integer or {\tt character*12} value of a user-defined
+global parameter.
+
+\item[\moc{WARNING-ONLY}] This option is useful if an elementary calculation in \dusa{MPORHS} 
+is already present in \dusa{MPONAM}. If this keyword is set, a warning is send and the \dusa{MPONAM} values
+are kept, otherwise the run is aborted (default).
+
+\end{ListeDeDescription}
+
+\subsubsection{Specification of discontinuity factor and equivalent albedo information}\label{sect:adf}
+
+Discontinuity factors and equivalent albedos are written in group {\tt flux} included in each state point group of the MPO file.
+Specification of some datasets in group  {\tt flux} are slightly modified to hold this new information:
+
+\begin{DescriptionEnregistrement}{Group /flux/ of the MPO file}{7.5cm}
+\label{tabl:tabiso202}
+\IntEnr
+  {NALBP}{$1$}
+  {Number $N_{\rm alb}$ of physical albedo (index $a$) values in each energy group.}
+\IntEnr
+  {NSURF}{$1$}
+  {Number $N_{\rm surf}$ of external surfaces (index $b$) where discontinuity factors are defined.}
+\OptRealEnr
+  {ALBEDOG}{$N_{\rm alb},N_{\rm grp}$}{$N_{\rm alb}\ge 1$}{1}
+  {Multigroup albedos $\beta_{a,g}$ obtained with a nodal equivalence procedure.}
+\OptRealEnr
+  {ALBEDOGxG}{$N_{\rm alb},N_{\rm grp}^2$}{$N_{\rm alb}\ge 1$}{1}
+  {Matrix albedos $\beta_{a,g\to h}$ obtained with the equivalent reflector model (ERM).}
+\OptRealEnr
+  {SURF}{$N_{\rm surf}$}{$N_{\rm surf}\ge 1$}{cm$^2$}
+  {Area $S_b$ of external surfaces.}
+\OptRealEnr
+  {SURFFLUX}{$N_{\rm surf},N_{\rm mil}\times N_{\rm grp}$}{$N_{\rm surf}\ge 1$}{$\phi \,$cm$^2$}
+  {Multigroup fluxes $\phi^{\rm s}_{b,i,g}$ on external surfaces obtained with a nodal equivalence procedure in each output mixture $i$.}
+\OptRealEnr
+  {SURFFLUXGxG}{$N_{\rm surf},N_{\rm mil}\times N_{\rm grp}^2$}{$N_{\rm surf}\ge 1$}{$\phi \,$cm$^2$}
+  {Matrix fluxes $\phi^{\rm s}_{b,i,g\to h}$ on external surfaces obtained with the equivalent reflector model (ERM) in each output mixture $i$.}
+\RealEnr
+  {TOTALFLUX}{$N_{\rm mil}\times N_{\rm grp}$}{$\phi$}
+  {Multigroup fluxes $\phi_{i,g}$ in each output mixture $i$.}
+\end{DescriptionEnregistrement}
+
+\noindent where $N_{\rm mil}$ is the number of output mixtures and $N_{\rm grp}$ is the number of energy groups. Discontinuity factors are obtained from equations:
+$$
+ADF_{b,i,g}={\phi^{\rm s}_{b,i,g} \over S_b \, \phi_{i,g}} \ \  {\rm for \ multigroup \ discontinuity \ factors}
+$$
+\noindent and
+$$
+ADF_{b,i,g\to h}={\phi^{\rm s}_{b,i,g\to h} \over S_b \, \phi_{i,g}} \ \  {\rm for \ matrix \ discontinuity \ factors.}
+$$
+
+\clearpage

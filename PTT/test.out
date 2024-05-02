@@ -1,2 +1,193 @@
-Parsing geometry of type : MCNP, from input file : MCNP_AT10_sanitized.inp
-{'pin cell ( 1, 1)': '1 23 -10.461000  -40  38 -39   imp:n=1  $ FUE m23 2 22  -0.001000  40 -41  38 -39   imp:n=1  $ HEL m22 3  5  -6.550000  41 -42  38 -39   imp:n=1  $ CAN m05 4  2  -0.458426  5  -6  22 -23  42 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 2, 1)': '5 24 -10.461000  -43  38 -39   imp:n=1  $ FUE m24 6 22  -0.001000  43 -44  38 -39   imp:n=1  $ HEL m22 7  5  -6.550000  44 -45  38 -39   imp:n=1  $ CAN m05 8  2  -0.458426  6  -7  22 -23  45 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 3, 1)': '9 25 -10.461000  -46  38 -39   imp:n=1  $ FUE m25 10 22  -0.001000  46 -47  38 -39   imp:n=1  $ HEL m22 11  5  -6.550000  47 -48  38 -39   imp:n=1  $ CAN m05 12  2  -0.458426  7  -8  22 -23  48 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 4, 1)': '13 26 -10.461000  -49  38 -39   imp:n=1  $ FUE m26 14 22  -0.001000  49 -50  38 -39   imp:n=1  $ HEL m22 15  5  -6.550000  50 -51  38 -39   imp:n=1  $ CAN m05 16  2  -0.458426  8  -9  22 -23  51 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 5, 1)': '17 26 -10.461000  -52  38 -39   imp:n=1  $ FUE m26 18 22  -0.001000  52 -53  38 -39   imp:n=1  $ HEL m22 19  5  -6.550000  53 -54  38 -39   imp:n=1  $ CAN m05 20  2  -0.458426  9 -10  22 -23  54 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 6, 1)': '21 26 -10.461000  -55  38 -39   imp:n=1  $ FUE m26 22 22  -0.001000  55 -56  38 -39   imp:n=1  $ HEL m22 23  5  -6.550000  56 -57  38 -39   imp:n=1  $ CAN m05 24  2  -0.458426  10 -11  22 -23  57 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 7, 1)': '25 26 -10.461000  -58  38 -39   imp:n=1  $ FUE m26 26 22  -0.001000  58 -59  38 -39   imp:n=1  $ HEL m22 27  5  -6.550000  59 -60  38 -39   imp:n=1  $ CAN m05 28  2  -0.458426  11 -12  22 -23  60 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 8, 1)': '29 25 -10.461000  -61  38 -39   imp:n=1  $ FUE m25 30 22  -0.001000  61 -62  38 -39   imp:n=1  $ HEL m22 31  5  -6.550000  62 -63  38 -39   imp:n=1  $ CAN m05 32  2  -0.458426  12 -13  22 -23  63 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 9, 1)': '33 24 -10.461000  -64  38 -39   imp:n=1  $ FUE m24 34 22  -0.001000  64 -65  38 -39   imp:n=1  $ HEL m22 35  5  -6.550000  65 -66  38 -39   imp:n=1  $ CAN m05 36  2  -0.458426  13 -14  22 -23  66 38 -39   imp:n=1  $ COO m02 ', 'pin cell (10, 1)': '37 23 -10.461000  -67 -37  38 -39  imp:n=1  $ FUE m23 38 22  -0.001000  67 -68 -37  38 -39  imp:n=1  $ HEL m22 39  5  -6.550000  68 -69 -37  38 -39  imp:n=1  $ CAN m05 40  2  -0.458426  14 -15  22 -23  69 -37 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 1, 2)': '41 24 -10.461000  -70  38 -39   imp:n=1  $ FUE m24 42 22  -0.001000  70 -71  38 -39   imp:n=1  $ HEL m22 43  5  -6.550000  71 -72  38 -39   imp:n=1  $ CAN m05 44  2  -0.458426  5  -6  23 -24  72 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 2, 2)': '45 26 -10.461000  -73  38 -39   imp:n=1  $ FUE m26 46 22  -0.001000  73 -74  38 -39   imp:n=1  $ HEL m22 47  5  -6.550000  74 -75  38 -39   imp:n=1  $ CAN m05 48  2  -0.458426  6  -7  23 -24  75 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 3, 2)': '49 29 -10.308000  -76  38 -39   imp:n=1  $ FUE m29 50 22  -0.001000  76 -77  38 -39   imp:n=1  $ HEL m22 51  5  -6.550000  77 -78  38 -39   imp:n=1  $ CAN m05 52  2  -0.458426  7  -8  23 -24  78 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 4, 2)': '53 27 -10.461000  -79  38 -39   imp:n=1  $ FUE m27 54 22  -0.001000  79 -80  38 -39   imp:n=1  $ HEL m22 55  5  -6.550000  80 -81  38 -39   imp:n=1  $ CAN m05 56  2  -0.458426  8  -9  23 -24  81 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 5, 2)': '57 28 -10.461000  -82  38 -39   imp:n=1  $ FUE m28 58 22  -0.001000  82 -83  38 -39   imp:n=1  $ HEL m22 59  5  -6.550000  83 -84  38 -39   imp:n=1  $ CAN m05 60  2  -0.458426  9 -10  23 -24  84 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 6, 2)': '61 29 -10.308000  -85  38 -39   imp:n=1  $ FUE m29 62 22  -0.001000  85 -86  38 -39   imp:n=1  $ HEL m22 63  5  -6.550000  86 -87  38 -39   imp:n=1  $ CAN m05 64  2  -0.458426  10 -11  23 -24  87 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 7, 2)': '65 26 -10.461000  -88  38 -39   imp:n=1  $ FUE m26 66 22  -0.001000  88 -89  38 -39   imp:n=1  $ HEL m22 67  5  -6.550000  89 -90  38 -39   imp:n=1  $ CAN m05 68  2  -0.458426  11 -12  23 -24  90 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 8, 2)': '69 30 -10.308000  -91  38 -39   imp:n=1  $ FUE m30 70 22  -0.001000  91 -92  38 -39   imp:n=1  $ HEL m22 71  5  -6.550000  92 -93  38 -39   imp:n=1  $ CAN m05 72  2  -0.458426  12 -13  23 -24  93 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 9, 2)': '73 26 -10.461000  -94 -37  38 -39  imp:n=1  $ FUE m26 74 22  -0.001000  94 -95 -37  38 -39  imp:n=1  $ HEL m22 75  5  -6.550000  95 -96 -37  38 -39  imp:n=1  $ CAN m05 76  2  -0.458426  13 -14  23 -24  96 -37 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 1, 3)': '77 25 -10.461000  -97  38 -39   imp:n=1  $ FUE m25 78 22  -0.001000  97 -98  38 -39   imp:n=1  $ HEL m22 79  5  -6.550000  98 -99  38 -39   imp:n=1  $ CAN m05 80  2  -0.458426  5  -6  24 -25  99 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 2, 3)': '81 29 -10.308000 -100  38 -39   imp:n=1  $ FUE m29 82 22  -0.001000 100 -101  38 -39   imp:n=1  $ HEL m22 83  5  -6.550000 101 -102  38 -39   imp:n=1  $ CAN m05 84  2  -0.458426  6  -7  24 -25 102 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 3, 3)': '85 28 -10.461000 -103  38 -39   imp:n=1  $ FUE m28 86 22  -0.001000 103 -104  38 -39   imp:n=1  $ HEL m22 87  5  -6.550000 104 -105  38 -39   imp:n=1  $ CAN m05 88  2  -0.458426  7  -8  24 -25 105 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 4, 3)': '89 28 -10.461000 -106  38 -39   imp:n=1  $ FUE m28 90 22  -0.001000 106 -107  38 -39   imp:n=1  $ HEL m22 91  5  -6.550000 107 -108  38 -39   imp:n=1  $ CAN m05 92  2  -0.458426  8  -9  24 -25 108 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 5, 3)': '93 26 -10.461000 -109  38 -39   imp:n=1  $ FUE m26 94 22  -0.001000 109 -110  38 -39   imp:n=1  $ HEL m22 95  5  -6.550000 110 -111  38 -39   imp:n=1  $ CAN m05 96  2  -0.458426  9 -10  24 -25 111 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 6, 3)': '97 25 -10.461000 -112  38 -39   imp:n=1  $ FUE m25 98 22  -0.001000 112 -113  38 -39   imp:n=1  $ HEL m22 99  5  -6.550000 113 -114  38 -39   imp:n=1  $ CAN m05 100  2  -0.458426  10 -11  24 -25 114 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 7, 3)': '101 26 -10.461000 -115  38 -39   imp:n=1  $ FUE m26 102 22  -0.001000 115 -116  38 -39   imp:n=1  $ HEL m22 103  5  -6.550000 116 -117  38 -39   imp:n=1  $ CAN m05 104  2  -0.458426  11 -12  24 -25 117 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 8, 3)': '105 26 -10.461000 -118 -37  38 -39  imp:n=1  $ FUE m26 106 22  -0.001000 118 -119 -37  38 -39  imp:n=1  $ HEL m22 107  5  -6.550000 119 -120 -37  38 -39  imp:n=1  $ CAN m05 108  2  -0.458426  12 -13  24 -25 120 -37 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 1, 4)': '109 26 -10.461000 -121  38 -39   imp:n=1  $ FUE m26 110 22  -0.001000 121 -122  38 -39   imp:n=1  $ HEL m22 111  5  -6.550000 122 -123  38 -39   imp:n=1  $ CAN m05 112  2  -0.458426  5  -6  25 -26 123 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 2, 4)': '113 28 -10.461000 -124  38 -39   imp:n=1  $ FUE m28 114 22  -0.001000 124 -125  38 -39   imp:n=1  $ HEL m22 115  5  -6.550000 125 -126  38 -39   imp:n=1  $ CAN m05 116  2  -0.458426  6  -7  25 -26 126 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 3, 4)': '117 28 -10.461000 -127  38 -39   imp:n=1  $ FUE m28 118 22  -0.001000 127 -128  38 -39   imp:n=1  $ HEL m22 119  5  -6.550000 128 -129  38 -39   imp:n=1  $ CAN m05 120  2  -0.458426  7  -8  25 -26 129 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 4, 4)': '121 29 -10.308000 -130  38 -39   imp:n=1  $ FUE m29 122 22  -0.001000 130 -131  38 -39   imp:n=1  $ HEL m22 123  5  -6.550000 131 -132  38 -39   imp:n=1  $ CAN m05 124  2  -0.458426  8  -9  25 -26 132 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 1, 5)': '134 27 -10.461000 -133  38 -39   imp:n=1  $ FUE m27 135 22  -0.001000 133 -134  38 -39   imp:n=1  $ HEL m22 136  5  -6.550000 134 -135  38 -39   imp:n=1  $ CAN m05 137  2  -0.458426  5  -6  26 -27 135 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 2, 5)': '138 28 -10.461000 -136  38 -39   imp:n=1  $ FUE m28 139 22  -0.001000 136 -137  38 -39   imp:n=1  $ HEL m22 140  5  -6.550000 137 -138  38 -39   imp:n=1  $ CAN m05 141  2  -0.458426  6  -7  26 -27 138 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 3, 5)': '142 29 -10.308000 -139  38 -39   imp:n=1  $ FUE m29 143 22  -0.001000 139 -140  38 -39   imp:n=1  $ HEL m22 144  5  -6.550000 140 -141  38 -39   imp:n=1  $ CAN m05 145  2  -0.458426  7  -8  26 -27 141 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 4, 5)': '146 28 -10.461000 -142  38 -39   imp:n=1  $ FUE m28 147 22  -0.001000 142 -143  38 -39   imp:n=1  $ HEL m22 148  5  -6.550000 143 -144  38 -39   imp:n=1  $ CAN m05 149  2  -0.458426  8  -9  26 -27 144 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 1, 6)': '156 28 -10.461000 -145  38 -39   imp:n=1  $ FUE m28 157 22  -0.001000 145 -146  38 -39   imp:n=1  $ HEL m22 158  5  -6.550000 146 -147  38 -39   imp:n=1  $ CAN m05 159  2  -0.458426  5  -6  27 -28 147 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 2, 6)': '160 29 -10.308000 -148  38 -39   imp:n=1  $ FUE m29 161 22  -0.001000 148 -149  38 -39   imp:n=1  $ HEL m22 162  5  -6.550000 149 -150  38 -39   imp:n=1  $ CAN m05 163  2  -0.458426  6  -7  27 -28 150 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 3, 6)': '164 28 -10.461000 -151  38 -39   imp:n=1  $ FUE m28 165 22  -0.001000 151 -152  38 -39   imp:n=1  $ HEL m22 166  5  -6.550000 152 -153  38 -39   imp:n=1  $ CAN m05 167  2  -0.458426  7  -8  27 -28 153 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 4, 6)': '168 28 -10.461000 -154  38 -39   imp:n=1  $ FUE m28 169 22  -0.001000 154 -155  38 -39   imp:n=1  $ HEL m22 170  5  -6.550000 155 -156  38 -39   imp:n=1  $ CAN m05 171  2  -0.458426  8  -9  27 -28 156 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 1, 7)': '175 27 -10.461000 -157  38 -39   imp:n=1  $ FUE m27 176 22  -0.001000 157 -158  38 -39   imp:n=1  $ HEL m22 177  5  -6.550000 158 -159  38 -39   imp:n=1  $ CAN m05 178  2  -0.458426  5  -6  28 -29 159 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 2, 7)': '179 28 -10.461000 -160  38 -39   imp:n=1  $ FUE m28 180 22  -0.001000 160 -161  38 -39   imp:n=1  $ HEL m22 181  5  -6.550000 161 -162  38 -39   imp:n=1  $ CAN m05 182  2  -0.458426  6  -7  28 -29 162 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 3, 7)': '183 28 -10.461000 -163  38 -39   imp:n=1  $ FUE m28 184 22  -0.001000 163 -164  38 -39   imp:n=1  $ HEL m22 185  5  -6.550000 164 -165  38 -39   imp:n=1  $ CAN m05 186  2  -0.458426  7  -8  28 -29 165 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 4, 7)': '187 28 -10.461000 -166 -37  38 -39  imp:n=1  $ FUE m28 188 22  -0.001000 166 -167 -37  38 -39  imp:n=1  $ HEL m22 189  5  -6.550000 167 -168 -37  38 -39  imp:n=1  $ CAN m05 190  2  -0.458426  8  -9  28 -29 168 -37 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 1, 8)': '191 25 -10.461000 -169  38 -39   imp:n=1  $ FUE m25 192 22  -0.001000 169 -170  38 -39   imp:n=1  $ HEL m22 193  5  -6.550000 170 -171  38 -39   imp:n=1  $ CAN m05 194  2  -0.458426  5  -6  29 -30 171 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 2, 8)': '195 29 -10.308000 -172  38 -39   imp:n=1  $ FUE m29 196 22  -0.001000 172 -173  38 -39   imp:n=1  $ HEL m22 197  5  -6.550000 173 -174  38 -39   imp:n=1  $ CAN m05 198  2  -0.458426  6  -7  29 -30 174 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 3, 8)': '199 28 -10.461000 -175 -37  38 -39  imp:n=1  $ FUE m28 200 22  -0.001000 175 -176 -37  38 -39  imp:n=1  $ HEL m22 201  5  -6.550000 176 -177 -37  38 -39  imp:n=1  $ CAN m05 202  2  -0.458426  7  -8  29 -30 177 -37 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 1, 9)': '203 24 -10.461000 -178  38 -39   imp:n=1  $ FUE m24 204 22  -0.001000 178 -179  38 -39   imp:n=1  $ HEL m22 205  5  -6.550000 179 -180  38 -39   imp:n=1  $ CAN m05 206  2  -0.458426  5  -6  30 -31 180 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 2, 9)': '207 26 -10.461000 -181 -37  38 -39  imp:n=1  $ FUE m26 208 22  -0.001000 181 -182 -37  38 -39  imp:n=1  $ HEL m22 209  5  -6.550000 182 -183 -37  38 -39  imp:n=1  $ CAN m05 210  2  -0.458426  6  -7  30 -31 183 -37 38 -39   imp:n=1  $ COO m02 ', 'pin cell ( 1,10)': '211 23 -10.461000 -184 -37  38 -39  imp:n=1  $ FUE m23 212 22  -0.001000 184 -185 -37  38 -39  imp:n=1  $ HEL m22 213  5  -6.550000 185 -186 -37  38 -39  imp:n=1  $ CAN m05 214  2  -0.458426  5  -6  31 -32 186 -37 38 -39   imp:n=1  $ COO m02 ', 'inner water gap:   COO  m02': '215  2  -0.458426  4  21  -5 -32  38 -39  imp:n=1  $ west side 216  2  -0.458426  5  21 -16 -22 -37  38 -39 imp:n=1  $ south side 217  2  -0.458426  4  32 -15 -33 -37  38 -39 imp:n=1  $ north side ', '  BOX  m06': '218  6  -6.550000  3  20  -4 -33  38 -39  imp:n=1  $ west side 219  6  -6.550000  4  20 -17 -21  38 -39  imp:n=1  $ south side 220  6  -6.550000  3  33 -16 -34 -37  38 -39 imp:n=1  $ north side ', 'outer water gaps:  MOD  m03': '221  3  -0.739605  2  19  -3 -34  38 -39  imp:n=1  $ west side 222  3  -0.739605  3 -18  19 -20 -37  38 -39 imp:n=1  $ south side 223  3  -0.739605  2  34 -17 -35 -37  38 -39 imp:n=1  $ north side ', 'water box centered at ( 8.267, 6.973)': '224  3  -0.739605 187 -188 189 -190 -37  38 -39 imp:n=1  $ MOD m03 225  6  -6.550000 191 -192 193 -194 -37  38 -39 #224   imp:n=1  $ BOX m06 226  2  -0.458426  9 -12  25 -28 -37  38 -39 #224 #225   imp:n=1  $ COO m02 ', 'absorber cylinders of the cruciform control blade (south wing)': '227  8  -7.900000 -214  1  38 -39   imp:n=1  $ CRS m08 228  8  -7.900000 -215  1  38 -39   imp:n=1  $ CRS m08 229  8  -7.900000 -216  1  38 -39   imp:n=1  $ CRS m08 230  8  -7.900000 -217  1  38 -39   imp:n=1  $ CRS m08 231  8  -7.900000 -218  1  38 -39   imp:n=1  $ CRS m08 232  8  -7.900000 -219  1  38 -39   imp:n=1  $ CRS m08 233  8  -7.900000 -220  1  38 -39   imp:n=1  $ CRS m08 234  8  -7.900000 -221  1  38 -39   imp:n=1  $ CRS m08 235  8  -7.900000 -222  1  38 -39   imp:n=1  $ CRS m08 236  8  -7.900000 -223  1  38 -39   imp:n=1  $ CRS m08 237  8  -7.900000 -224  1  38 -39   imp:n=1  $ CRS m08 238  8  -7.900000 -225  1  38 -39   imp:n=1  $ CRS m08 239  8  -7.900000 -226  1  38 -39   imp:n=1  $ CRS m08 240  8  -7.900000 -227  1  38 -39   imp:n=1  $ CRS m08 241  8  -7.900000 -228  1  38 -39   imp:n=1  $ CRS m08 242  8  -7.900000 -229  1  38 -39   imp:n=1  $ CRS m08 243  8  -7.900000 -230  1  38 -39   imp:n=1  $ CRS m08 244  8  -7.900000 -231  1  38 -39   imp:n=1  $ CRS m08 ', 'structure of the cruciform control blade (south wing)': '245  3  -0.739605  1  -2  19 -195  38 -39  imp:n=1  $ MOD m03 246  8  -7.900000  1  -2 195 -196 214  38 -39 imp:n=1  $ CRS m08 247  8  -7.900000  1  -2 196 -197 215  38 -39 imp:n=1  $ CRS m08 248  8  -7.900000  1  -2 197 -198 216  38 -39 imp:n=1  $ CRS m08 249  8  -7.900000  1  -2 198 -199 217  38 -39 imp:n=1  $ CRS m08 250  8  -7.900000  1  -2 199 -200 218  38 -39 imp:n=1  $ CRS m08 251  8  -7.900000  1  -2 200 -201 219  38 -39 imp:n=1  $ CRS m08 252  8  -7.900000  1  -2 201 -202 220  38 -39 imp:n=1  $ CRS m08 253  8  -7.900000  1  -2 202 -203 221  38 -39 imp:n=1  $ CRS m08 254  8  -7.900000  1  -2 203 -204 222  38 -39 imp:n=1  $ CRS m08 255  8  -7.900000  1  -2 204 -205 223  38 -39 imp:n=1  $ CRS m08 256  8  -7.900000  1  -2 205 -206 224  38 -39 imp:n=1  $ CRS m08 257  8  -7.900000  1  -2 206 -207 225  38 -39 imp:n=1  $ CRS m08 258  8  -7.900000  1  -2 207 -208 226  38 -39 imp:n=1  $ CRS m08 259  8  -7.900000  1  -2 208 -209 227  38 -39 imp:n=1  $ CRS m08 260  8  -7.900000  1  -2 209 -210 228  38 -39 imp:n=1  $ CRS m08 261  8  -7.900000  1  -2 210 -211 229  38 -39 imp:n=1  $ CRS m08 262  8  -7.900000  1  -2 211 -212 230  38 -39 imp:n=1  $ CRS m08 263  8  -7.900000  1  -2 212 -213 231  38 -39 imp:n=1  $ CRS m08 264  9  -7.900000  1  -2 213 -35  38 -39  imp:n=1  $ CRC m09 ', 'structure of the cruciform control blade (nw corner)': '265  9  -7.900000  1  -2  35 -36 -37  38 -39 imp:n=1  $ CRC m09 '}
+% --- Material volumes:
+
+% Produced Mon Apr 8 10:07:42 2024 by MC volume calculation routine by
+% sampling 1000000000000 random points in the geometry.
+
+set mvol
+
+24UOx_A 1 2.47173E+00 % (0.000)
+24UOx_B 1 1.48306E+00 % (0.000)
+24UOx_C 1 7.41502E-01 % (0.000)
+24UOx_D 1 2.47172E-01 % (0.000)
+32UOx_A 1 4.94341E+00 % (0.000)
+32UOx_B 1 2.96604E+00 % (0.000)
+32UOx_C 1 1.48303E+00 % (0.000)
+32UOx_D 1 4.94353E-01 % (0.000)
+42UOx_A 1 6.17927E+00 % (0.000)
+42UOx_B 1 3.70752E+00 % (0.000)
+42UOx_C 1 1.85380E+00 % (0.000)
+42UOx_D 1 6.17948E-01 % (0.000)
+45UOx_A 1 1.29764E+01 % (0.000)
+45UOx_B 1 7.78582E+00 % (0.000)
+45UOx_C 1 3.89292E+00 % (0.000)
+45UOx_D 1 1.29768E+00 % (0.000)
+48UOx_A 1 3.70749E+00 % (0.000)
+48UOx_B 1 2.22449E+00 % (0.000)
+48UOx_C 1 1.11225E+00 % (0.000)
+48UOx_D 1 3.70774E-01 % (0.000)
+50UOx_A 1 1.60662E+01 % (0.000)
+50UOx_B 1 9.63953E+00 % (0.000)
+50UOx_C 1 4.81981E+00 % (0.000)
+50UOx_D 1 1.60666E+00 % (0.000)
+45GADO_A 1 3.46040E+00 % (0.000)
+45GADO_B 1 3.46023E+00 % (0.000)
+45GADO_C 1 3.46039E+00 % (0.000)
+45GADO_D 1 3.46079E+00 % (0.000)
+45GADO_E 1 2.59514E+00 % (0.000)
+45GADO_F 1 8.65111E-01 % (0.000)
+42GADO_A 1 4.94335E-01 % (0.000)
+42GADO_B 1 4.94314E-01 % (0.000)
+42GADO_C 1 4.94334E-01 % (0.000)
+42GADO_D 1 4.94386E-01 % (0.000)
+42GADO_E 1 3.70753E-01 % (0.000)
+42GADO_F 1 1.23588E-01 % (0.000)
+clad 0 3.42445E+01 % (0.000)
+box 0 2.06440E+01 % (0.000)
+cool 0 1.83561E+02 % (0.000)
+moder 0 1.09251E+02 % (0.000)
+gap 0 4.35220E+00 % (0.000)
+U235 0 0.00000E+00 % (0.000)
+U238 0 0.00000E+00 % (0.000)
+Pu239 0 0.00000E+00 % (0.000)
+Pu241 0 0.00000E+00 % (0.000)
+Xe135 0 0.00000E+00 % (0.000)
+Sm149 0 0.00000E+00 % (0.000)
+GD155 0 0.00000E+00 % (0.000)
+GD157 0 0.00000E+00 % (0.000)
+24UOx_A with volume 2.47173E+00 cm3 processed
+24UOx_B with volume 1.48306E+00 cm3 processed
+24UOx_C with volume 7.41502E-01 cm3 processed
+24UOx_D with volume 2.47172E-01 cm3 processed
+32UOx_A with volume 4.94341E+00 cm3 processed
+32UOx_B with volume 2.96604E+00 cm3 processed
+32UOx_C with volume 1.48303E+00 cm3 processed
+32UOx_D with volume 4.94353E-01 cm3 processed
+42UOx_A with volume 6.17927E+00 cm3 processed
+42UOx_B with volume 3.70752E+00 cm3 processed
+42UOx_C with volume 1.85380E+00 cm3 processed
+42UOx_D with volume 6.17948E-01 cm3 processed
+45UOx_A with volume 1.29764E+01 cm3 processed
+45UOx_B with volume 7.78582E+00 cm3 processed
+45UOx_C with volume 3.89292E+00 cm3 processed
+45UOx_D with volume 1.29768E+00 cm3 processed
+48UOx_A with volume 3.70749E+00 cm3 processed
+48UOx_B with volume 2.22449E+00 cm3 processed
+48UOx_C with volume 1.11225E+00 cm3 processed
+48UOx_D with volume 3.70774E-01 cm3 processed
+50UOx_A with volume 1.60662E+01 cm3 processed
+50UOx_B with volume 9.63953E+00 cm3 processed
+50UOx_C with volume 4.81981E+00 cm3 processed
+50UOx_D with volume 1.60666E+00 cm3 processed
+45GADO_A with volume 3.46040E+00 cm3 processed
+45GADO_B with volume 3.46023E+00 cm3 processed
+45GADO_C with volume 3.46039E+00 cm3 processed
+45GADO_D with volume 3.46079E+00 cm3 processed
+45GADO_E with volume 2.59514E+00 cm3 processed
+45GADO_F with volume 8.65111E-01 cm3 processed
+42GADO_A with volume 4.94335E-01 cm3 processed
+42GADO_B with volume 4.94314E-01 cm3 processed
+42GADO_C with volume 4.94334E-01 cm3 processed
+42GADO_D with volume 4.94386E-01 cm3 processed
+42GADO_E with volume 3.70753E-01 cm3 processed
+42GADO_F with volume 1.23588E-01 cm3 processed
+clad with volume 3.42445E+01 cm3 processed
+box with volume 2.06440E+01 cm3 processed
+cool with volume 1.83561E+02 cm3 processed
+moder with volume 1.09251E+02 cm3 processed
+gap with volume 4.35220E+00 cm3 processed
+Parsing Dragon output file, from input file : /home/loutre/RESEARCH/PolyBWR_project/PTT/Dragon5/SALT_volumes.txt
+[0.617929, 0.3707535, 0.1853787, 0.06179489, 1.08804, 8.56111, 45.89016, 1.235855, 0.7415066, 0.3707571, 0.1235892, 1.544819, 0.9268833, 0.4634463, 0.1544865, 5.097905, 3.058716, 1.529373, 0.5098053, 0.9268912, 0.55613, 0.2780678, 0.09269189, 5.161005, 2.162747, 1.297637, 0.648825, 0.216281, 27.3128, 0.8651044, 0.8650414, 0.8650925, 0.8651793, 0.6487899, 0.2162811, 0.1235863, 0.1235773, 0.1235847, 0.123597, 0.09268428, 0.0308973]
+{'region 1': 0.617929, 'region 2': 0.3707535, 'region 3': 0.1853787, 'region 4': 0.06179489, 'region 5': 1.08804, 'region 6': 8.56111, 'region 7': 45.89016, 'region 8': 1.235855, 'region 9': 0.7415066, 'region 10': 0.3707571, 'region 11': 0.1235892, 'region 12': 1.544819, 'region 13': 0.9268833, 'region 14': 0.4634463, 'region 15': 0.1544865, 'region 16': 5.097905, 'region 17': 3.058716, 'region 18': 1.529373, 'region 19': 0.5098053, 'region 20': 0.9268912, 'region 21': 0.55613, 'region 22': 0.2780678, 'region 23': 0.09269189, 'region 24': 5.161005, 'region 25': 2.162747, 'region 26': 1.297637, 'region 27': 0.648825, 'region 28': 0.216281, 'region 29': 27.3128, 'region 30': 0.8651044, 'region 31': 0.8650414, 'region 32': 0.8650925, 'region 33': 0.8651793, 'region 34': 0.6487899, 'region 35': 0.2162811, 'region 36': 0.1235863, 'region 37': 0.1235773, 'region 38': 0.1235847, 'region 39': 0.123597, 'region 40': 0.09268428, 'region 41': 0.0308973}
+41
+D5 vols are: {'region 41': 0.0308973, 'region 4': 0.06179489, 'region 40': 0.09268428, 'region 23': 0.09269189, 'region 37': 0.1235773, 'region 38': 0.1235847, 'region 36': 0.1235863, 'region 11': 0.1235892, 'region 39': 0.123597, 'region 15': 0.1544865, 'region 3': 0.1853787, 'region 28': 0.216281, 'region 35': 0.2162811, 'region 22': 0.2780678, 'region 2': 0.3707535, 'region 10': 0.3707571, 'region 14': 0.4634463, 'region 19': 0.5098053, 'region 21': 0.55613, 'region 1': 0.617929, 'region 34': 0.6487899, 'region 27': 0.648825, 'region 9': 0.7415066, 'region 31': 0.8650414, 'region 32': 0.8650925, 'region 30': 0.8651044, 'region 33': 0.8651793, 'region 13': 0.9268833, 'region 20': 0.9268912, 'region 5': 1.08804, 'region 8': 1.235855, 'region 26': 1.297637, 'region 18': 1.529373, 'region 12': 1.544819, 'region 25': 2.162747, 'region 17': 3.058716, 'region 16': 5.097905, 'region 24': 5.161005, 'region 6': 8.56111, 'region 29': 27.3128, 'region 7': 45.89016}
+S2 vols are: {'42GADO_F': 0.123588, '24UOx_D': 0.247172, '42GADO_E': 0.370753, '48UOx_D': 0.370774, '42GADO_B': 0.494314, '42GADO_C': 0.494334, '42GADO_A': 0.494335, '32UOx_D': 0.494353, '42GADO_D': 0.494386, '42UOx_D': 0.617948, '24UOx_C': 0.741502, '45GADO_F': 0.865111, '48UOx_C': 1.11225, '45UOx_D': 1.29768, '32UOx_C': 1.48303, '24UOx_B': 1.48306, '50UOx_D': 1.60666, '42UOx_C': 1.8538, '48UOx_B': 2.22449, '24UOx_A': 2.47173, '45GADO_E': 2.59514, '32UOx_B': 2.96604, '45GADO_B': 3.46023, '45GADO_C': 3.46039, '45GADO_A': 3.4604, '45GADO_D': 3.46079, '48UOx_A': 3.70749, '42UOx_B': 3.70752, '45UOx_C': 3.89292, 'gap': 4.3522, '50UOx_C': 4.81981, '32UOx_A': 4.94341, '42UOx_A': 6.17927, '45UOx_B': 7.78582, '50UOx_B': 9.63953, '45UOx_A': 12.9764, '50UOx_A': 16.0662, 'box': 20.644, 'clad': 34.2445, 'moder': 109.251, 'cool': 183.561}
+Consistent material volumes dict lenghts : S2 and D5 case both have 41 material volumes/Merged Mixes
+Warning in region 48UOx_C, with S2 volume 0.556125 and D5 volume 0.4325622
+Warning in region 45UOx_D, with S2 volume 0.64884 and D5 volume 0.5561356
+Warning in region 50UOx_D, with S2 volume 0.80333 and D5 volume 0.9268926
+Warning in region 42UOx_C, with S2 volume 0.9269 and D5 volume 1.0196106
+Warning in region 32UOx_B, with S2 volume 1.48302 and D5 volume 1.29765
+Warning in region 45GADO_B, with S2 volume 1.730115 and D5 volume 1.4830132
+Warning in region 48UOx_A, with S2 volume 1.853745 and D5 volume 1.7303586
+Warning in region 45UOx_C, with S2 volume 1.94646 and D5 volume 1.8537824
+Warning in region 50UOx_C, with S2 volume 2.409905 and D5 volume 2.47171
+Warning in region 32UOx_A, with S2 volume 2.471705 and D5 volume 2.595274
+Warning in region 42UOx_A, with S2 volume 3.089635 and D5 volume 3.058746
+Warning in region 45UOx_B, with S2 volume 3.89291 and D5 volume 3.089638
+Warning in region 50UOx_B, with S2 volume 4.819765 and D5 volume 4.325494
+Warning in region 45UOx_A, with S2 volume 6.4882 and D5 volume 6.117432
+Warning in region 50UOx_A, with S2 volume 8.0331 and D5 volume 10.19581
+Absolute errors on volumes are [5.999999999964367e-07, 3.7799999999948986e-06, -7.940000000011826e-06, -3.2199999999982243e-06, -2.399999999985747e-06, 2.4000000000135024e-06, 5.0999999999801204e-06, 1.8999999999991246e-06, 1.000000000001e-06, -1.0000000000287557e-06, 6.400000000017503e-06, 6.500000000020378e-06, -0.12356279999999997, -0.09270440000000002, -8.000000000008e-06, -1.580000000001025e-05, 0.12356259999999997, 0.09271060000000009, 1.5000000000098268e-05, -7.000000000090267e-06, 9.800000000170783e-06, -0.18537000000000003, -0.24710180000000004, -0.00011220000000000674, -1.4999999999876223e-05, -0.0001861999999999142, -0.12338640000000001, 6.5999999998567205e-06, -0.09267760000000003, -2.0000000000131024e-05, 0.061804999999999666, 0.12356899999999982, -0.030888999999999722, -0.8032720000000002, -0.49427100000000035, -0.370768, 2.1627100000000006, 1.000000000139778e-05, -3.0000000002416982e-05, 9.999999999621423e-05, -0.00018000000000029104], with an RMS error of 0.3790661207586096
+Relative errors on volumes are [0.00048548402757260956, 0.0015292994352090442, -0.002141587525930155, -0.0008684535593105839, -0.0004855213487754235, 0.0004855017053274714, 0.001031689036782773, 0.0003843407443667025, 0.00020227109990998937, -0.00016182591415924246, 0.0008631129787940562, 0.0007513486708665568, -11.109265003371544, -7.143856728931634, -0.000539436154360195, -0.0010653648537490223, 7.690650168672898, 5.001111230985009, 0.0006743118647464483, -0.0002832024533460478, 0.0003776289525871739, -6.2497471375976055, -7.1411958164630684, -0.003242409092616923, -0.0004334758987364531, -0.005380274446005514, -3.328030554364274, 0.0001780165717206305, -2.3806705506406507, -0.00045953770507171145, 1.2823119583551978, 2.499671279541851, -0.4998810539108944, -10.317114960273937, -5.127542525413587, -2.857248543509756, 13.461241612826935, 4.844022476941378e-05, -8.760530888877624e-05, 9.153234294991737e-05, -9.806004543464626e-05] (%), with an RMS error of 4.119119995518853 (%)
+Processing PIN with label 24UOx
+24UOx
+computing volumes for pins
+Processing PIN with label 32UOx
+32UOx
+computing volumes for pins
+Processing PIN with label 42UOx
+42UOx
+computing volumes for pins
+Processing PIN with label 45UOx
+45UOx
+computing volumes for pins
+Processing PIN with label 48UOx
+48UOx
+computing volumes for pins
+Processing PIN with label 50UOx
+50UOx
+computing volumes for pins
+creating pin 45GADO
+Processing PIN with label 45GADO
+computing volumes for pins
+creating pin 42GADO
+Processing PIN with label 42GADO
+computing volumes for pins
+24UOx
+32UOx
+42UOx
+45UOx
+48UOx
+50UOx
+45GADO
+42GADO
+{'24UOx_A': 1.2358538552360943, '24UOx_B': 0.7415123131416559, '24UOx_C': 0.37075615657082817, '24UOx_D': 0.12358538552360976, '32UOx_A': 2.4717077104721885, '32UOx_B': 1.4830246262833118, '32UOx_C': 0.7415123131416563, '32UOx_D': 0.24717077104721952, '42UOx_A': 3.0896346380902355, '42UOx_B': 1.8537807828541397, '42UOx_C': 0.9268903914270704, '42UOx_D': 0.3089634638090244, '45UOx_A': 6.488232739989495, '45UOx_B': 3.892939643993693, '45UOx_C': 1.946469821996848, '45UOx_D': 0.6488232739989512, '48UOx_A': 1.8537807828541415, '48UOx_B': 1.1122684697124838, '48UOx_C': 0.5561342348562422, '48UOx_D': 0.18537807828541464, '50UOx_A': 8.033050059034613, '50UOx_B': 4.819830035420763, '50UOx_C': 2.409915017710383, '50UOx_D': 0.8033050059034634, '45GADO_A': 1.7301953973305313, '45GADO_B': 1.7301953973305326, '45GADO_C': 1.7301953973305313, '45GADO_D': 1.7301953973305304, '45GADO_E': 1.2976465479978985, '45GADO_F': 0.43254884933263416, '42GADO_A': 0.24717077104721877, '42GADO_B': 0.24717077104721893, '42GADO_C': 0.24717077104721874, '42GADO_D': 0.24717077104721863, '42GADO_E': 0.18537807828541408, '42GADO_F': 0.06179269276180488, 'box': 10.321999999999996, 'clad': 17.122220316000785, 'gap': 2.176084627167553}
+Statisticall error on volume of region 24UOx_A from Serpent2 is 0.0009017865549811201
+Statisticall error on volume of region 24UOx_B from Serpent2 is 0.0023852413548196756
+Statisticall error on volume of region 24UOx_C from Serpent2 is -0.0013908254082312388
+Statisticall error on volume of region 24UOx_D from Serpent2 is 0.000497207972964823
+Statisticall error on volume of region 32UOx_A from Serpent2 is -0.00010965989938810634
+Statisticall error on volume of region 32UOx_B from Serpent2 is -0.0003119491901739141
+Statisticall error on volume of region 32UOx_C from Serpent2 is 0.00036234844601833654
+Statisticall error on volume of region 32UOx_D from Serpent2 is 0.002317811590829875
+Statisticall error on volume of region 42UOx_A from Serpent2 is 1.1713675135482162e-05
+Statisticall error on volume of region 42UOx_B from Serpent2 is -0.0011211063536674993
+Statisticall error on volume of region 42UOx_C from Serpent2 is 0.0010366460822555043
+Statisticall error on volume of region 42UOx_D from Serpent2 is 0.003410173761562381
+Statisticall error on volume of region 45UOx_A from Serpent2 is -0.0005046056577596541
+Statisticall error on volume of region 45UOx_B from Serpent2 is -0.0007614809476646466
+Statisticall error on volume of region 45UOx_C from Serpent2 is -0.0005046056577322761
+Statisticall error on volume of region 45UOx_D from Serpent2 is 0.002577897821952384
+Statisticall error on volume of region 48UOx_A from Serpent2 is -0.0019302635172658896
+Statisticall error on volume of region 48UOx_B from Serpent2 is -0.0021100762201746314
+Statisticall error on volume of region 48UOx_C from Serpent2 is -0.001660544462733093
+Statisticall error on volume of region 48UOx_D from Serpent2 is 0.004812712844947065
+Statisticall error on volume of region 50UOx_A from Serpent2 is 0.0006216936906807131
+Statisticall error on volume of region 50UOx_B from Serpent2 is -0.0013493301690014783
+Statisticall error on volume of region 50UOx_C from Serpent2 is -0.000415687288115293
+Statisticall error on volume of region 50UOx_D from Serpent2 is 0.0031114080396457255
+Statisticall error on volume of region 45GADO_A from Serpent2 is 0.00026602021227016976
+Statisticall error on volume of region 45GADO_B from Serpent2 is -0.00464671970903392
+Statisticall error on volume of region 45GADO_C from Serpent2 is -2.2964488980747463e-05
+Statisticall error on volume of region 45GADO_D from Serpent2 is 0.01153642356103028
+Statisticall error on volume of region 45GADO_E from Serpent2 is -0.005898986747715175
+Statisticall error on volume of region 45GADO_F from Serpent2 is 0.00153755289745593
+Statisticall error on volume of region 42GADO_A from Serpent2 is -0.0013233956445970413
+Statisticall error on volume of region 42GADO_B from Serpent2 is -0.00557147075303493
+Statisticall error on volume of region 42GADO_C from Serpent2 is -0.001525684935465946
+Statisticall error on volume of region 42GADO_D from Serpent2 is 0.00899335819004274
+Statisticall error on volume of region 42GADO_E from Serpent2 is -0.0008513872992325211
+Statisticall error on volume of region 42GADO_F from Serpent2 is 0.002115522299960971
+Statisticall error on volume of region box from Serpent2 is 3.441884982368245e-14
+Statisticall error on volume of region clad from Serpent2 is 0.0001733653618990668
+Statisticall error on volume of region gap from Serpent2 is 0.0007064446049151763

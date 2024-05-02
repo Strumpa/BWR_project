@@ -1,0 +1,140 @@
+***************************************************************************
+* Deck Geom_C                                                             *
+*                                                                         *
+* Treatment of main flux calculation geometry for BWR pincell             *
+* ATRIUM-10 UOX pincell, geometry provided by M. Hursin (PSI)             *
+*                                                                         *
+* Author : R. Guasch, adapted from L. Fede                                *
+*                                                                         *
+*                                                                         *
+* Dragon Procedure called as :                                            *
+* GEOM GEOM_SS := Geom_C :: <<name_geom>> ;                               *
+*                                                                         *
+* Input data :                                                            *
+* Rcomb1, Rcomb2, Rcomb3, Rcom4 : radial dicretization for cylindrical    *
+* Fuel zone : 50/100, 80/100, 95/100 and 100/100 fuel surface (volume)    *
+* Rgap, Rclad : radii for gap and cladding around fuel                    *
+* pitch : side length of cartesian cell                                   *
+* All dimensions are given in cm.                                         *
+*                                                                         *
+* Output data :                                                           *
+* GEOM : geometry used for main flux calculation                          *
+* GEOM_SS : geometry used for self-shielding calculation                  *
+*                                                                         *
+***************************************************************************
+
+* --------------------------------
+*    INPUT & OUTPUT PARAMETERS
+* --------------------------------
+PARAMETER GEOM GEOM_SS ::
+::: LINKED_LIST GEOM ; 
+::: LINKED_LIST GEOM_SS ; ;
+
+STRING name_geom ;
+:: >>name_geom<< ;
+
+* -------------------------------
+*    STRUCTURES AND MODULES
+* -------------------------------
+MODULE  GEO: END: ;
+
+
+REAL Rcomb1 Rcomb2 Rcomb3 Rcomb4 Rcomb5 Rcomb6 ;
+REAL Rgap Rclad pitch := 0.4520 0.5140 1.29500 ;
+REAL Rmode := 0.60 ;
+
+INTEGER COMB0101 COMB0102 COMB0103 COMB0104 COMB0105 COMB0106 GAP CLAD MODE ;
+
+
+IF name_geom 'AT10_UOX' = THEN
+  EVALUATE Rcomb4 := 0.4435 ;
+  EVALUATE Rcomb1 := 0.313602 ;
+  EVALUATE Rcomb2 := 0.396678 ; 
+  EVALUATE Rcomb3 := 0.43227 ;
+
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+            1 2 3 4 5 6 7 ; !  DISTRIBUTED SELF-SHIELDING
+ 
+
+  GEOM := GEO: :: CARCEL 7 
+    X- REFL X+ REFL
+    Y- REFL Y+ REFL
+    RADIUS 0.0 <<Rcomb1>> <<Rcomb2>>
+               <<Rcomb3>> <<Rcomb4>> <<Rgap>> <<Rclad>> <<Rmode>>
+    MIX <<COMB0101>> <<COMB0102>> <<COMB0103>> <<COMB0104>>
+        <<GAP>> <<CLAD>> <<MODE>> <<MODE>>
+    MESHX 0.0 <<pitch>> MESHY 0.0 <<pitch>>
+  ;
+
+  GEOM_SS := GEO: :: CARCEL 6 
+    X- REFL X+ REFL
+    Y- REFL Y+ REFL
+    RADIUS 0.0 <<Rcomb1>> <<Rcomb2>>
+               <<Rcomb3>> <<Rcomb4>> <<Rgap>> <<Rclad>>
+    MIX <<COMB0101>> <<COMB0102>> <<COMB0103>> <<COMB0104>>
+        <<GAP>> <<CLAD>> <<MODE>>
+    MESHX 0.0 <<pitch>> MESHY 0.0 <<pitch>>
+  ;
+ELSEIF name_geom 'AT10_UOX_simple' = THEN
+  EVALUATE Rcomb4 := 0.4435 ;
+  EVALUATE Rcomb1 := 0.313602 ;
+  EVALUATE Rcomb2 := 0.396678 ; 
+  EVALUATE Rcomb3 := 0.43227 ;
+
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+            1 2 3 4 5 6 7 ; !  DISTRIBUTED SELF-SHIELDING
+ 
+
+  GEOM := GEO: :: CARCEL 6 
+    X- REFL X+ REFL
+    Y- REFL Y+ REFL
+    RADIUS 0.0 <<Rcomb1>> <<Rcomb2>>
+               <<Rcomb3>> <<Rcomb4>> <<Rgap>> <<Rclad>>
+    MIX <<COMB0101>> <<COMB0102>> <<COMB0103>> <<COMB0104>>
+        <<GAP>> <<CLAD>> <<MODE>>
+    MESHX 0.0 <<pitch>> MESHY 0.0 <<pitch>>
+  ;
+
+  GEOM_SS := GEO: :: CARCEL 6 
+    X- REFL X+ REFL
+    Y- REFL Y+ REFL
+    RADIUS 0.0 <<Rcomb1>> <<Rcomb2>>
+               <<Rcomb3>> <<Rcomb4>> <<Rgap>> <<Rclad>>
+    MIX <<COMB0101>> <<COMB0102>> <<COMB0103>> <<COMB0104>>
+        <<GAP>> <<CLAD>> <<MODE>>
+    MESHX 0.0 <<pitch>> MESHY 0.0 <<pitch>>
+  ;
+
+
+ELSEIF name_geom 'AT10_UOX_Gd2O3' = THEN ! CHECH RADII FOR Gd CELLS 
+
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 COMB0105 COMB0106 GAP CLAD MODE :=
+          1 2 3 4 5 6 7 8 9 ; !  DISTRIBUTED SELF-SHIELDING 
+
+  EVALUATE Rcomb1 Rcomb2 Rcomb3 Rcomb4 Rcomb5 Rcomb6 := 
+           0.19834 0.28049 0.34353 0.39668 0.43227 0.4435 ;
+
+  GEOM := GEO: :: CARCEL 9 
+    X- REFL X+ REFL
+    Y- REFL Y+ REFL
+    RADIUS 0.0 <<Rcomb1>> <<Rcomb2>>  <<Rcomb3>> <<Rcomb4>> <<Rcomb5>> <<Rcomb6>>
+               <<Rgap>> <<Rclad>> <<Rmode>>
+    MIX <<COMB0101>> <<COMB0102>> <<COMB0103>> <<COMB0104>> <<COMB0105>> <<COMB0106>>
+        <<GAP>> <<CLAD>> <<MODE>> <<MODE>>
+    MESHX 0.0 <<pitch>> MESHY 0.0 <<pitch>>
+  ;
+
+  GEOM_SS := GEO: :: CARCEL 8 
+    X- REFL X+ REFL
+    Y- REFL Y+ REFL
+    RADIUS 0.0 <<Rcomb1>> <<Rcomb2>> <<Rcomb3>> <<Rcomb4>> <<Rcomb5>> <<Rcomb6>>
+               <<Rgap>> <<Rclad>>
+    MIX <<COMB0101>> <<COMB0102>> <<COMB0103>> <<COMB0104>> <<COMB0105>> <<COMB0106>>
+        <<GAP>> <<CLAD>> <<MODE>>
+    MESHX 0.0 <<pitch>> MESHY 0.0 <<pitch>>
+  ;
+ENDIF ;
+
+END: ;
+QUIT .
+

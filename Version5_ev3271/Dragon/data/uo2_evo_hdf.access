@@ -1,0 +1,48 @@
+#!/bin/sh
+if [ $# = 0 ]
+   then
+   echo "usage: uo2_evo_hdf.access directory" 1>&2
+   exit 1
+fi
+MACH=`uname -s`
+Sysx="`echo $MACH | cut -b -6`"
+if [ $Sysx = "CYGWIN" ]; then
+   MACH=`uname -o`
+elif [ $Sysx = "Darwin" ]; then
+   MACH=`uname -sm`
+elif [ $Sysx = "SunOS" ]; then
+   MACH=`uname -sm`
+fi
+pos=$1/../../libraries/hdf5
+if [ -f "$pos"/ap3lib-xsect-CEA93_CLA99_GV0LUX_N.h5.gz ]
+   then
+    echo 'gunzipping CLA99CEA93'
+    chmod 755 "$pos"
+    gunzip "$pos"/ap3lib-xsect-CEA93_CLA99_GV0LUX_N.h5.gz
+fi
+if [ -f "$pos"/ap3lib-xsect-CEA93_CLA99_GV0LUX_N.h5 ]
+   then
+    ln -s "$pos"/ap3lib-xsect-CEA93_CLA99_GV0LUX_N.h5 CLA99CEA93
+fi
+if [ -f "$pos"/ap3lib-autop-1-CEA93_CLA99_GV0LUX_N.h5.gz ]
+   then
+    echo 'gunzipping CLA99CEA93_SS'
+    chmod 755 "$pos"
+    gunzip "$pos"/ap3lib-autop-1-CEA93_CLA99_GV0LUX_N.h5.gz
+fi
+if [ -f "$pos"/ap3lib-autop-1-CEA93_CLA99_GV0LUX_N.h5 ]
+   then
+    ln -s "$pos"/ap3lib-autop-1-CEA93_CLA99_GV0LUX_N.h5 CLA99CEA93_SS
+fi
+if [ -f "$pos"/Depletion_Data_CH_STD_CEA93_V10_withYields.h5.gz ]
+   then
+    echo 'gunzipping CLA99CEA93_EVO'
+    chmod 755 "$pos"
+    gunzip "$pos"/Depletion_Data_CH_STD_CEA93_V10_withYields.h5.gz
+fi
+if [ -f "$pos"/Depletion_Data_CH_STD_CEA93_V10_withYields.h5 ]
+   then
+    ln -s "$pos"/Depletion_Data_CH_STD_CEA93_V10_withYields.h5 CLA99CEA93_EVO
+fi
+ls -l
+echo "uo2_evo_hdf access script terminated"

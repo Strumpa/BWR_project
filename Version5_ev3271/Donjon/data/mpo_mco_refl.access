@@ -1,0 +1,10 @@
+#!/bin/sh
+if [ $# = 0 ]
+   then
+   echo "usage: mpo_mco_refl.access directory" 1>&2
+   exit 1
+fi
+ln -s "$1"/data/mpo_mco_refl_proc/MpoRefl.hdf .
+ln -s "$1"/data/mpo_mco_refl_proc/_Multicompo_Refl_MCompRefl.txt .
+ls -l
+echo "mpo_mco_refl access script terminated"

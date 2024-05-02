@@ -1,0 +1,122 @@
+************************************************************************************************************************
+*                                                                                                                      *
+* Procedure :  SALT_TSPC.c2m                                                                                           *
+* Purpose   :  Tracking and figure printing for pin cells + MOC Flux calculation, SALT tracking on windmill cell       *
+* Author    :  R. Guasch adapted from L.Fede                                                                           *
+*                                                                                                                      *
+* CALL      :   SALT_TSPC                                                                                              *
+*                                                                                                                      *
+************************************************************************************************************************
+
+STRING geo_name := "AT10_UOX_simple" ; !"AT10_UOX_Gd2O3"
+STRING cell_name := "AT10_24UOX" ; ! "AT10_24/32/42/45/48/50UOX" for UOX pins (1 to 6), 
+! "AT10_45Gd" / "AT10_42Gd" for AT10_UOX_Gd2O3 pins (7,8)
+
+
+* ---
+* STRUCTURES AND MODULES
+* ---
+MODULE G2S: TLM: MCCGT: SYBILT: SALT: USS: ASM: FLU: GREP: END: DELETE: ;
+
+* ---
+* PROCEDURES
+PROCEDURE Mix_Cell Geom_C_SALT Geom_C ; 
+* ---
+
+LINKED_LIST GEOM GEOM_SS TRACK_SS TRACK LIBRARY LIBRARY2 SYS FLUX ;
+
+SEQ_ASCII UOX_TBH_SS ;
+SEQ_ASCII UOX_TBH_FLX ;
+SEQ_BINARY TF_EXC ;
+SEQ_BINARY TF_EXC_SS ;
+
+SEQ_ASCII TLM_F :: FILE 'tracks_SALT_TISO.m' ;
+
+
+SEQ_ASCII FIG_FLX.ps :: FILE './PIN_AT10_FIG_FLX.ps' ;
+
+REAL Kinf1 Keff1 ;
+
+
+* ---
+* TRACKING PARAMETERS FOR SSH
+* ---
+INTEGER iqua2 := 24 ;
+INTEGER nseg := 5 ;
+
+* ---
+* TRACKING PARAMETERS FOR MOC FLX
+* ---
+INTEGER an2d := 18 ;  ! ANGULAR QUADRATURE PARAMETER
+REAL densur := 35.0 ; ! DENSITY OF INTEGRATION LINES CM^-1
+
+* polar angles for MCCGT:
+INTEGER nmu := 4 ;
+
+* size allocation for MCCGT:
+INTEGER mcu := 50000 ;
+
+! GEOMETRY DEFINITION
+GEOM GEOM_SS := Geom_C :: <<geo_name>> ; 
+
+! XS MIX DEFINITION
+LIBRARY := Mix_Cell :: J311_295 <<cell_name>> ;
+
+* ---
+* SELF-SHIELDING TRACKING
+* ---
+
+
+
+TRACK_SS := SYBILT: GEOM_SS ::
+    TITLE 'TRACKING FOR PINCELL SS'
+    MAXR 50 QUA2 <<iqua2>> <<nseg>> DP01 MAXZ 200000 
+;
+
+
+* ---
+* FLUX CALC TRACKING
+* ---
+UOX_TBH_FLX FIG_FLX.ps := G2S: GEOM :: ;
+
+TRACK TF_EXC := SALT: UOX_TBH_FLX ::
+  EDIT 10
+  ALLG
+  !TSPC EQW2 <<an2d>> <<densur>> REND
+  TISO EQW <<an2d>> <<densur>> REND
+  LONG
+;
+
+TLM_F := TLM: TRACK TF_EXC ::
+  EDIT 10
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+
+* MOC tracking
+TRACK := MCCGT: TRACK TF_EXC ::
+  EDIT 0
+  CACB <<nmu>> AAC 80 TMT EPSI 1E-5 MCU <<mcu>>
+;
+
+
+
+! UNIVERSAL SELF-SHIELDING 
+LIBRARY2 := USS: LIBRARY TRACK_SS  ::
+          EDIT 0
+          PASS 2
+          GRMIN 52
+;
+
+SYS := ASM: LIBRARY2 TRACK TF_EXC :: ARM EDIT 0 ; 
+FLUX := FLU: LIBRARY2 SYS TRACK TF_EXC :: 
+          EDIT 1 TYPE K B1 SIGS ;
+
+
+GREP: FLUX :: GETVAL 'K-EFFECTIVE  ' 1 1 1 >>Keff1<< ;
+ECHO "SS tracking = SYBILT and FLX tracking = SALT TISO, MOC on simple geom: Keff1=" Keff1 ;
+
+ECHO "AT10_24UOX SALT TISO completed" ;
+
+END: ;

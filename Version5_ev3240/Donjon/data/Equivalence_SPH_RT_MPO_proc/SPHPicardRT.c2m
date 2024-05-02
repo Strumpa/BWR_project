@@ -1,0 +1,98 @@
+****************************************************************
+*                                                              *
+* Procedure : SPHPicardRT.c2m                                  *
+* Purpose   : Compute SPH factors using a fixed point approach *
+* Author    : A. Hebert                                        *
+*                                                              *
+* CALL      :                                                  *
+*  Macro2 Optim := SPHPicardRT Macro1 Macrogeom Track          *
+*                     :: (data) ;                              *
+*                                                              *
+*  Output object:                                              *
+*    Macro2    : Corrected macrolib                            *
+*    Optim     : L_OPTIMIZE object                             *
+*                                                              *
+*  Input objects:                                              *
+*    Macro1    : Reference macrolib for the macro-geometry     *
+*    Macrogeom : Macro-geometry                                *
+*    Track     : Tracking of the macro-geometry                *
+*                                                              *
+*  Input data:                                                 *
+*    fmin      : minimum acceptable correction factor          *
+*    fmax      : maximum acceptable correction factor          *
+*    epsout    : convergence criterion for outer iterations    *
+*    IterEmax  : maximum number of iterations                  *
+*                                                              *
+****************************************************************
+PARAMETER  MACRO2 OPTIM MACRO1 MACROGEOM TRACK ::
+  ::: LINKED_LIST MACRO2 OPTIM MACRO1 MACROGEOM TRACK ; ;
+MODULE TRIVAA: FLUD: GREP: OUT: FPSPH: MAC: ERROR: DELETE: END: ;
+LINKED_LIST SYSTEM CALC EDIT ;
+LOGICAL Conv ;
+REAL Keff fmin fmax epsout ;
+DOUBLE rmsval ;
+INTEGER IterE IterEmax ;
+  :: >>fmin<< >>fmax<< >>epsout<< >>IterEmax<< ;
+
+!****************************************
+!****************************************
+!**********   SPH ITERATIONS   **********
+!****************************************
+!****************************************
+
+MACRO2 := MACRO1 ;
+
+EVALUATE IterE := 0 ;
+REPEAT
+
+  EVALUATE IterE := IterE 1 + ;
+  ECHO "#------------------------------" ;
+  IF IterE 10 < THEN
+    ECHO "#-------------" IterE "--------------" ;
+  ELSE
+    ECHO "#------------" IterE "--------------" ;
+  ENDIF ;
+  ECHO "#------------------------------" ;
+
+  SYSTEM := TRIVAA: MACRO2 TRACK :: EDIT 0 ;
+  CALC := FLUD: SYSTEM TRACK ::
+           EDIT 2 ADI 3 EXTE 1.0E-7 200 ;
+      
+  GREP: CALC :: GETVAL 'K-EFFECTIVE ' 1 >>Keff<< ;
+
+  EDIT := OUT: CALC MACROGEOM MACRO2 TRACK ::
+      EDIT 0 INTG MIX ;
+  IF IterE 1 = THEN
+     ECHO "Error statistics before correction" ;
+     ERROR: MACRO1 EDIT :: HREA 'NFTOT' ;
+  ENDIF ;
+  IF IterE 1 = THEN
+    OPTIM := FPSPH: EDIT MACRO1 :: EDIT 2 SPH PN
+       VAR-VAL-MIN <<fmin>>
+       VAR-VAL-MAX <<fmax>>
+       OUT-STEP-EPS <<epsout>> OUT-CONV-TST >>Conv<< >>rmsval<< ;
+  ELSE
+    OPTIM := FPSPH: OPTIM EDIT MACRO1 :: EDIT 1
+       VAR-VAL-MIN <<fmin>>
+       VAR-VAL-MAX <<fmax>>
+       OUT-CONV-TST >>Conv<< >>rmsval<< ;
+  ENDIF ;
+  ECHO "outer iteration=" IterE "rmsval=" rmsval D_TO_R "Keff=" Keff "Conv=" Conv ;
+  EDIT SYSTEM CALC := DELETE: EDIT SYSTEM CALC ;
+  MACRO2 := MACRO2 MACRO1 ;
+  MACRO2 := MAC: MACRO2 OPTIM ;
+
+UNTIL Conv IterE IterEmax > + ;
+*----
+* VERIFICATION CALCULATION
+*----
+SYSTEM := TRIVAA: MACRO2 TRACK :: EDIT 0 ;
+CALC := FLUD: SYSTEM TRACK ::
+        EDIT 2 ADI 3 EXTE 1.E-07 200 ;
+
+EDIT := OUT: CALC MACROGEOM MACRO2 TRACK ::
+      EDIT 0 INTG MIX ;
+
+ECHO "Error statistics after SPH correction" ;
+ERROR: MACRO1 EDIT :: HREA 'NFTOT' ;
+END: ;

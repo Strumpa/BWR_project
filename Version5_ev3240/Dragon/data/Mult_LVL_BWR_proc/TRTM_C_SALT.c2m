@@ -1,0 +1,56 @@
+****************************************************************************************
+*                                                                                       
+* Procedure :  TRTM_C_SALT                                                                        
+* Purpose   :  Tracking and figure printing for pin cells, generate Matlab file with TLM
+* Author    :  R. Guasch                                           
+*                                                                                         
+* CALL      :                                                                             
+* TRTM_C_SALT GEOM_C
+*                                                                                         
+******************************************************************************************
+
+
+* ---
+* INPUT & OUTPUT PARAMETERS
+* ---
+PARAMETER GEOM_C ::
+::: LINKED_LIST GEOM_C ; ;
+
+* ---
+* STRUCTURES AND MODULES
+* ---
+MODULE G2S: SALT: TLM: END: ;
+
+LINKED_LIST TRACK ;
+SEQ_ASCII Geo_G2S_C ;
+SEQ_BINARY TF_EXC ;
+SEQ_ASCII FIG_C.ps :: FILE './CELL_AT10_FIG.ps' ;
+SEQ_ASCII TLM_F :: FILE 'tracks_SALT_C.m' ;
+
+
+INTEGER an2d := 8 ;  ! ANGULAR QUADRATURE PARAMETER
+REAL densur := 5.0 ; ! DENSITY OF INTEGRATION LINES CM^-1
+
+ECHO "performing SALT tracking in TRTM_C_SALT" ;
+* ---
+* FLUX CALC TRACKING
+* ---
+Geo_G2S_C FIG_C.ps := G2S: GEOM_C :: ;
+
+TRACK TF_EXC := SALT: Geo_G2S_C ::
+  EDIT 1
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+;
+
+TLM_F := TLM: TRACK TF_EXC ::
+  EDIT 10
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+
+
+END: ;
+QUIT .

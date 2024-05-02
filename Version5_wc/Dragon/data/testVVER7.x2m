@@ -10,7 +10,7 @@ SEQ_ASCII FIG1.ps FIG_SS.ps ;
 INTEGER Multicompo := 1 ;
 STRING name_geom := "KML2_439GT_36Gd" ;
 STRING Library := "DLIB_J3p1p1" ;
-STRING ss := "auto" ;
+STRING ss := "uss" ;
 STRING name_compo := "./_COMPO_" name_geom "_" ss + + + ;
 PROCEDURE vverBU vverGEO vverMIX vverTRACK ;
 PROCEDURE assertS ;
@@ -54,7 +54,7 @@ UTL: COMPO :: STEP UP EDIBU DIR STEP UP MIXTURES STEP AT 1
               STEP UP CALCULATIONS STEP AT 2 ;
 OUT := COMPO :: STEP UP EDIBU STEP UP MIXTURES STEP AT 1
                 STEP UP CALCULATIONS STEP AT 2 ;
-assertS OUT :: 'K-EFFECTIVE' 1 1.011271 ;
+assertS OUT :: 'K-EFFECTIVE' 1 1.008845 ;
 
 ECHO "test testVVER7 completed" ;
 END: ;

@@ -1,0 +1,101 @@
+*ENTRADA Datos_pertur.c2m
+*----
+*  Nombre          : Datos_pertur.c2m
+*  Autor           : R. Santi
+*
+
+MODULE
+ END: ;
+
+LINKED_LIST Datos_pertur ; 
+
+* Dimension 
+      
+REAL radio      := 14.302 ;   ! circular
+
+* Temperaturas, densidades y composiciones 
+
+REAL PUR_MOL    := 99.60  ;
+REAL conc_B     := 0.05   ;
+REAL conc_Li    := 0.26   ;
+
+REAL T_comb1    := 798.54 ;
+REAL T_comb2    := 798.54 ;
+REAL T_comb3    := 798.54 ;
+REAL T_comb4    := 798.54 ;
+
+REAL Tvaina     := 564.53 ;
+REAL Dzry       := 6.56 ;
+REAL T_cool     := 559.03 ;
+REAL D_cool     := 0.82430 ;
+REAL Tcanal     := 550.25 ;
+REAL T_gap      := 515.76 ;
+REAL D_gap      := 0.90467 ;
+REAL T_foil     := 485.20 ;
+REAL T_mod      := 448.66 ;
+REAL D_mod      := 0.99524 ;
+
+REAL D_comb     := 10.07189 ;
+
+REAL W238       := 87.51763 ;
+REAL W235       := 0.62707 ;
+REAL W234       := 5.1127E-3 ;
+REAL W239       := 1.0E-18 ;
+REAL WO2        := 11.8502 ;
+REAL WB         := 1.13E-5 ;
+REAL potencia   := 21.8940148 ;
+
+* Temperaturas, densidades y composiciones perturbadas
+
+REAL PUR_MOL_P  := 98.60   ;
+REAL conc_B_p   := 1.0     ;
+REAL conc_Li_p  := 1.0     ;
+REAL T_comb1P   := 960.15  ;
+REAL T_comb2P   := 960.15  ;
+REAL T_comb3P   := 960.15  ;
+REAL T_comb4P   := 960.15  ;
+REAL T_modP     := 460.65  ;
+REAL T_coolP    := 578.95  ;
+REAL D_modP     := 0.98144 ;
+REAL D_coolP    := 0.78430 ; 
+REAL D_coolV    := 0.0013  ; 
+
+* BUCKLING GEOMETRICO
+
+REAL buck_geom  := 7.328175E-05 ;
+
+* SELECCION DE LA VARIABLE A PERTURBAR ("perturba"):
+* a) Si la entrada es "da2_pertur_Qwims_T_Dens.inp"
+* 1 Tcombustible
+* 2 Trefrigerante
+* 3 Dens refrigerante
+* 4 Trefrig y Dens refrig 
+* 5 Tmoderador
+* 6 Dens moderador
+* 7 Tmoderador y Dens moderador
+* 8 Vacio
+
+* b) Si la entrada es "da2_pertur_Qwims_D2O_B_Li.inp"
+* 9 Pureza D2O
+* 10 Boro en refrigerante y moderador
+* 11 Litio en refrigerante y moderador
+
+INTEGER perturba := 3 ;  ! opcion 1 a 8
+
+* SELECCION DEL TIPO DE BUCKLING A USAR EN LA REFERENCIA ("buckling"):
+
+STRING buckling := "geometrico" ;   ! opcion "critico" // "geometrico"
+
+:: <<radio>> <<PUR_MOL>> <<conc_B>> <<conc_Li>> 
+   <<T_comb1>> <<T_comb2>> <<T_comb3>> <<T_comb4>> 
+   <<Tvaina>> <<Dzry>> <<T_cool>> <<D_cool>> 
+   <<Tcanal>> <<T_gap>> <<D_gap>> <<T_foil>> <<T_mod>> <<D_mod>>
+   <<D_comb>> <<W238>> <<W235>> <<W234>> <<W239>> <<WO2>> <<WB>> 
+   <<potencia>> <<PUR_MOL_P>> <<conc_B_p>> <<conc_Li_p>>
+   <<T_comb1P>> <<T_comb2P>> <<T_comb3P>> <<T_comb4P>>
+   <<T_modP>> <<T_coolP>> <<D_modP>> <<D_coolP>> <<D_coolV>>   
+   <<buck_geom>> <<perturba>> <<buckling>>  
+   ;
+
+END: ;
+QUIT .

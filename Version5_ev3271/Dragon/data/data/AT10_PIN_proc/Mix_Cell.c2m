@@ -1,0 +1,626 @@
+* Mix_UOX procedure
+*----
+*  Name          : Mix_Cell.c2m
+*  Type          : DRAGON procedure
+*  Use           : Microlib generation with Draglibs for
+*                  UOX pincell calculation with 4 fuel regions, UOX + Gd2O3 with 6 regions
+*  Author        : R. Guasch
+
+*  Procedure called as:
+*
+*  LIBRARY := Mix_Cell :: <<Library>> <<cell_name>> ;
+*
+*  Where library is JEFF3.1.1 SHEM295 and 
+*  Output data  :
+*    LIBRARY    : Microlib with table of probabilities
+
+PARAMETER  LIBRARY  ::
+  EDIT 0
+    ::: LINKED_LIST LIBRARY  ;
+;
+
+STRING Library cell_name ;
+:: >>Library<<  >>cell_name<< ;
+
+MODULE  LIB: UTL: DELETE: END: ABORT: ;
+
+INTEGER COMB0101 COMB0102 COMB0103 COMB0104 COMB0105 COMB0106 GAP CLAD MODE ;
+
+IF cell_name "AT10_24UOX" = THEN 
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+           1 2 3 4 5 6 7 ;
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 7    ! MAXIMUM OF MATERIAL MIXTURES
+    PT
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+    CALENDF 3 PT      ! CALENDF TYPE PROBABILITY TABLES
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX <<COMB0101>> 750.0
+    O16     = O16    4.66705E-02
+    U234    = U234   5.15910E-06 1 
+    U235    = U235   5.67035E-04 1 
+    U238    = U238   2.27631E-02 1
+    Pu239   = Pu239  0.0        1
+    Pu240   = Pu240  0.0        1
+    Pu241   = Pu241  0.0        1
+    Pu242   = Pu242  0.0        1
+  MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+  MIX <<CLAD>> 559.0 NOEV
+   Ni60  = Ni60   9.69262E-06
+   Zr90  = Zr90   2.18317E-02 2
+   Zr91  = Zr91   4.76096E-03 2
+   Zr92  = Zr92   7.27723E-03 2
+   Zr94  = Zr94   7.37482E-03 2
+   Zr96  = Zr96   1.18812E-03 2
+   Fe58  = Fe58   2.68895E-07
+   Sn112  = Sn112   4.67343E-06
+   Sn116  = Sn116   7.00535E-05
+   Cr50  = Cr50   3.29613E-06
+   Sn114  = Sn114   3.17985E-06
+   Sn117  = Sn117   3.70020E-05
+   Sn122  = Sn122   2.23073E-05
+   O17  = O17   1.17376E-07
+   Sn124  = Sn124   2.78961E-05
+   Cr54  = Cr54   1.79408E-06
+   Ni62  = Ni62   1.34344E-06
+   Cr53  = Cr53   7.20746E-06
+   Sn115  = Sn115   1.63812E-06
+   Ni61  = Ni61   4.21331E-07
+   Ni64  = Ni64   3.42085E-07
+   Cr52  = Cr52   6.35631E-05
+   O16  = O16   3.08132E-04
+   Sn120  = Sn120   1.56970E-04
+   Ni58  = Ni58   2.51627E-05
+   Fe54  = Fe54   5.57337E-06
+   Fe57  = Fe57   2.02053E-06
+   Fe56  = Fe56   8.74901E-05
+   Sn118  = Sn118   1.16691E-04
+   Sn119  = Sn119   4.13864E-05
+  MIX <<GAP>> 750.0 NOEV
+    He4      = He4 1.50456E-04
+  MIX <<MODE>> 559.0 NOEV
+    H1      = H1_H2O 4.94546E-02  
+    O16     = O16    2.47298E-02 
+;
+ELSEIF cell_name "AT10_24UOX_void_40" = THEN
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+           1 2 3 4 5 6 7 ;
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 7    ! MAXIMUM OF MATERIAL MIXTURES
+    PT
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+    CALENDF 3 PT      ! CALENDF TYPE PROBABILITY TABLES
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX <<COMB0101>> 750.0
+    O16     = O16    4.66705E-02
+    U234    = U234   5.15910E-06 1 
+    U235    = U235   5.67035E-04 1 
+    U238    = U238   2.27631E-02 1
+    Pu239   = Pu239  0.0        1
+    Pu240   = Pu240  0.0        1
+    Pu241   = Pu241  0.0        1
+    Pu242   = Pu242  0.0        1
+  MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+  MIX <<CLAD>> 559.0 NOEV
+   Ni60  = Ni60   9.69262E-06
+   Zr90  = Zr90   2.18317E-02 2
+   Zr91  = Zr91   4.76096E-03 2
+   Zr92  = Zr92   7.27723E-03 2
+   Zr94  = Zr94   7.37482E-03 2
+   Zr96  = Zr96   1.18812E-03 2
+   Fe58  = Fe58   2.68895E-07
+   Sn112  = Sn112   4.67343E-06
+   Sn116  = Sn116   7.00535E-05
+   Cr50  = Cr50   3.29613E-06
+   Sn114  = Sn114   3.17985E-06
+   Sn117  = Sn117   3.70020E-05
+   Sn122  = Sn122   2.23073E-05
+   O17  = O17   1.17376E-07
+   Sn124  = Sn124   2.78961E-05
+   Cr54  = Cr54   1.79408E-06
+   Ni62  = Ni62   1.34344E-06
+   Cr53  = Cr53   7.20746E-06
+   Sn115  = Sn115   1.63812E-06
+   Ni61  = Ni61   4.21331E-07
+   Ni64  = Ni64   3.42085E-07
+   Cr52  = Cr52   6.35631E-05
+   O16  = O16   3.08132E-04
+   Sn120  = Sn120   1.56970E-04
+   Ni58  = Ni58   2.51627E-05
+   Fe54  = Fe54   5.57337E-06
+   Fe57  = Fe57   2.02053E-06
+   Fe56  = Fe56   8.74901E-05
+   Sn118  = Sn118   1.16691E-04
+   Sn119  = Sn119   4.13864E-05
+  MIX <<GAP>> 750.0 NOEV
+    He4      = He4 1.50456E-04
+  MIX <<MODE>> 559.0 NOEV
+    H1      = H1_H2O 3.06532E-02  
+    O16     = O16    1.53282E-02
+;
+
+ELSEIF cell_name "AT10_32UOX" = THEN
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+           1 2 3 4 5 6 7 ;
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 7    ! MAXIMUM OF MATERIAL MIXTURES
+    PT
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+    CALENDF 3 PT      ! CALENDF TYPE PROBABILITY TABLES
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX <<COMB0101>> 750.0
+    O16     = O16    4.667480E-02
+    U234    = U234   7.039170E-06 1 
+    U235    = U235   7.560370E-04 1 
+    U238    = U238   2.257430E-02 1
+    Pu239   = Pu239  0.0        1
+    Pu240   = Pu240  0.0        1
+    Pu241   = Pu241  0.0        1
+    Pu242   = Pu242  0.0        1 
+  MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+  MIX <<CLAD>> 559.0 NOEV
+   Ni60  = Ni60   9.69262E-06
+   Zr90  = Zr90   2.18317E-02 2
+   Zr91  = Zr91   4.76096E-03 2
+   Zr92  = Zr92   7.27723E-03 2
+   Zr94  = Zr94   7.37482E-03 2
+   Zr96  = Zr96   1.18812E-03 2
+   Fe58  = Fe58   2.68895E-07
+   Sn112  = Sn112   4.67343E-06
+   Sn116  = Sn116   7.00535E-05
+   Cr50  = Cr50   3.29613E-06
+   Sn114  = Sn114   3.17985E-06
+   Sn117  = Sn117   3.70020E-05
+   Sn122  = Sn122   2.23073E-05
+   O17  = O17   1.17376E-07
+   Sn124  = Sn124   2.78961E-05
+   Cr54  = Cr54   1.79408E-06
+   Ni62  = Ni62   1.34344E-06
+   Cr53  = Cr53   7.20746E-06
+   Sn115  = Sn115   1.63812E-06
+   Ni61  = Ni61   4.21331E-07
+   Ni64  = Ni64   3.42085E-07
+   Cr52  = Cr52   6.35631E-05
+   O16  = O16   3.08132E-04
+   Sn120  = Sn120   1.56970E-04
+   Ni58  = Ni58   2.51627E-05
+   Fe54  = Fe54   5.57337E-06
+   Fe57  = Fe57   2.02053E-06
+   Fe56  = Fe56   8.74901E-05
+   Sn118  = Sn118   1.16691E-04
+   Sn119  = Sn119   4.13864E-05
+  MIX <<GAP>> 750.0 NOEV
+    He4      = He4 1.50456E-04
+  MIX <<MODE>> 559.0 NOEV
+    H1      = H1_H2O 4.94546E-02  
+    O16     = O16    2.47298E-02 
+;
+ELSEIF cell_name "AT10_42UOX" = THEN
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+           1 2 3 4 5 6 7 ;
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 7    ! MAXIMUM OF MATERIAL MIXTURES
+    PT
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+    CALENDF 3 PT      ! CALENDF TYPE PROBABILITY TABLES
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX <<COMB0101>> 750.0
+    O16     = O16    4.667960E-02
+    U234    = U234   9.163680E-06 1 
+    U235    = U235   9.686590E-04 1 
+    U238    = U238   2.236200E-02 1
+    Pu239   = Pu239  0.0        1
+    Pu240   = Pu240  0.0        1
+    Pu241   = Pu241  0.0        1
+    Pu242   = Pu242  0.0        1  
+  MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+  MIX <<CLAD>> 559.0 NOEV
+   Ni60  = Ni60   9.69262E-06
+   Zr90  = Zr90   2.18317E-02 2
+   Zr91  = Zr91   4.76096E-03 2
+   Zr92  = Zr92   7.27723E-03 2
+   Zr94  = Zr94   7.37482E-03 2
+   Zr96  = Zr96   1.18812E-03 2
+   Fe58  = Fe58   2.68895E-07
+   Sn112  = Sn112   4.67343E-06
+   Sn116  = Sn116   7.00535E-05
+   Cr50  = Cr50   3.29613E-06
+   Sn114  = Sn114   3.17985E-06
+   Sn117  = Sn117   3.70020E-05
+   Sn122  = Sn122   2.23073E-05
+   O17  = O17   1.17376E-07
+   Sn124  = Sn124   2.78961E-05
+   Cr54  = Cr54   1.79408E-06
+   Ni62  = Ni62   1.34344E-06
+   Cr53  = Cr53   7.20746E-06
+   Sn115  = Sn115   1.63812E-06
+   Ni61  = Ni61   4.21331E-07
+   Ni64  = Ni64   3.42085E-07
+   Cr52  = Cr52   6.35631E-05
+   O16  = O16   3.08132E-04
+   Sn120  = Sn120   1.56970E-04
+   Ni58  = Ni58   2.51627E-05
+   Fe54  = Fe54   5.57337E-06
+   Fe57  = Fe57   2.02053E-06
+   Fe56  = Fe56   8.74901E-05
+   Sn118  = Sn118   1.16691E-04
+   Sn119  = Sn119   4.13864E-05
+  MIX <<GAP>> 750.0 NOEV
+    He4      = He4 1.50456E-04
+  MIX <<MODE>> 559.0 NOEV
+    H1      = H1_H2O 4.94546E-02  
+    O16     = O16    2.47298E-02 
+;
+ELSEIF cell_name "AT10_45UOX" = THEN
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+           1 2 3 4 5 6 7 ;
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 7    ! MAXIMUM OF MATERIAL MIXTURES
+    PT
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+    CALENDF 3 PT      ! CALENDF TYPE PROBABILITY TABLES
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX <<COMB0101>> 750.0
+    O16     = O16    4.668150E-02
+    U234    = U234   9.991530E-06 1 
+    U235    = U235   1.051340E-03 1 
+    U238    = U238   2.227940E-02 1
+    Pu239   = Pu239  0.0        1
+    Pu240   = Pu240  0.0        1
+    Pu241   = Pu241  0.0        1
+    Pu242   = Pu242  0.0        1  
+  MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+  MIX <<CLAD>> 559.0 NOEV
+   Ni60  = Ni60   9.69262E-06
+   Zr90  = Zr90   2.18317E-02 2
+   Zr91  = Zr91   4.76096E-03 2
+   Zr92  = Zr92   7.27723E-03 2
+   Zr94  = Zr94   7.37482E-03 2
+   Zr96  = Zr96   1.18812E-03 2
+   Fe58  = Fe58   2.68895E-07
+   Sn112  = Sn112   4.67343E-06
+   Sn116  = Sn116   7.00535E-05
+   Cr50  = Cr50   3.29613E-06
+   Sn114  = Sn114   3.17985E-06
+   Sn117  = Sn117   3.70020E-05
+   Sn122  = Sn122   2.23073E-05
+   O17  = O17   1.17376E-07
+   Sn124  = Sn124   2.78961E-05
+   Cr54  = Cr54   1.79408E-06
+   Ni62  = Ni62   1.34344E-06
+   Cr53  = Cr53   7.20746E-06
+   Sn115  = Sn115   1.63812E-06
+   Ni61  = Ni61   4.21331E-07
+   Ni64  = Ni64   3.42085E-07
+   Cr52  = Cr52   6.35631E-05
+   O16  = O16   3.08132E-04
+   Sn120  = Sn120   1.56970E-04
+   Ni58  = Ni58   2.51627E-05
+   Fe54  = Fe54   5.57337E-06
+   Fe57  = Fe57   2.02053E-06
+   Fe56  = Fe56   8.74901E-05
+   Sn118  = Sn118   1.16691E-04
+   Sn119  = Sn119   4.13864E-05
+  MIX <<GAP>> 750.0 NOEV
+    He4      = He4 1.50456E-04
+  MIX <<MODE>> 559.0 NOEV
+    H1      = H1_H2O 4.94546E-02  
+    O16     = O16    2.47298E-02 
+;
+ELSEIF cell_name "AT10_48UOX" = THEN
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+           1 2 3 4 5 6 7 ;
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 7    ! MAXIMUM OF MATERIAL MIXTURES
+    PT
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+    CALENDF 3 PT      ! CALENDF TYPE PROBABILITY TABLES
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX <<COMB0101>> 750.0
+    O16     = O16    4.668280E-02
+    U234    = U234   1.058330E-05 1 
+    U235    = U235   1.110400E-03 1 
+    U238    = U238   2.222040E-02 1
+    Pu239   = Pu239  0.0        1
+    Pu240   = Pu240  0.0        1
+    Pu241   = Pu241  0.0        1
+    Pu242   = Pu242  0.0        1
+  MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+  MIX <<CLAD>> 559.0 NOEV
+   Ni60  = Ni60   9.69262E-06
+   Zr90  = Zr90   2.18317E-02 2
+   Zr91  = Zr91   4.76096E-03 2
+   Zr92  = Zr92   7.27723E-03 2
+   Zr94  = Zr94   7.37482E-03 2
+   Zr96  = Zr96   1.18812E-03 2
+   Fe58  = Fe58   2.68895E-07
+   Sn112  = Sn112   4.67343E-06
+   Sn116  = Sn116   7.00535E-05
+   Cr50  = Cr50   3.29613E-06
+   Sn114  = Sn114   3.17985E-06
+   Sn117  = Sn117   3.70020E-05
+   Sn122  = Sn122   2.23073E-05
+   O17  = O17   1.17376E-07
+   Sn124  = Sn124   2.78961E-05
+   Cr54  = Cr54   1.79408E-06
+   Ni62  = Ni62   1.34344E-06
+   Cr53  = Cr53   7.20746E-06
+   Sn115  = Sn115   1.63812E-06
+   Ni61  = Ni61   4.21331E-07
+   Ni64  = Ni64   3.42085E-07
+   Cr52  = Cr52   6.35631E-05
+   O16  = O16   3.08132E-04
+   Sn120  = Sn120   1.56970E-04
+   Ni58  = Ni58   2.51627E-05
+   Fe54  = Fe54   5.57337E-06
+   Fe57  = Fe57   2.02053E-06
+   Fe56  = Fe56   8.74901E-05
+   Sn118  = Sn118   1.16691E-04
+   Sn119  = Sn119   4.13864E-05
+  MIX <<GAP>> 750.0 NOEV
+    He4      = He4 1.50456E-04
+  MIX <<MODE>> 559.0 NOEV
+    H1      = H1_H2O 4.94546E-02  
+    O16     = O16    2.47298E-02 
+;
+ELSEIF cell_name "AT10_50UOX" = THEN
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+           1 2 3 4 5 6 7 ;
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 7    ! MAXIMUM OF MATERIAL MIXTURES
+    PT
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+    CALENDF 3 PT      ! CALENDF TYPE PROBABILITY TABLES
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX <<COMB0101>> 750.0
+    O16     = O16    4.668410E-02
+    U234    = U234   1.117530E-05 1 
+    U235    = U235   1.169460E-03 1 
+    U238    = U238   2.216140E-02 1
+    Pu239   = Pu239  0.0        1
+    Pu240   = Pu240  0.0        1
+    Pu241   = Pu241  0.0        1
+    Pu242   = Pu242  0.0        1
+  MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+  MIX <<CLAD>> 559.0 NOEV
+   Ni60  = Ni60   9.69262E-06
+   Zr90  = Zr90   2.18317E-02 2
+   Zr91  = Zr91   4.76096E-03 2
+   Zr92  = Zr92   7.27723E-03 2
+   Zr94  = Zr94   7.37482E-03 2
+   Zr96  = Zr96   1.18812E-03 2
+   Fe58  = Fe58   2.68895E-07
+   Sn112  = Sn112   4.67343E-06
+   Sn116  = Sn116   7.00535E-05
+   Cr50  = Cr50   3.29613E-06
+   Sn114  = Sn114   3.17985E-06
+   Sn117  = Sn117   3.70020E-05
+   Sn122  = Sn122   2.23073E-05
+   O17  = O17   1.17376E-07
+   Sn124  = Sn124   2.78961E-05
+   Cr54  = Cr54   1.79408E-06
+   Ni62  = Ni62   1.34344E-06
+   Cr53  = Cr53   7.20746E-06
+   Sn115  = Sn115   1.63812E-06
+   Ni61  = Ni61   4.21331E-07
+   Ni64  = Ni64   3.42085E-07
+   Cr52  = Cr52   6.35631E-05
+   O16  = O16   3.08132E-04
+   Sn120  = Sn120   1.56970E-04
+   Ni58  = Ni58   2.51627E-05
+   Fe54  = Fe54   5.57337E-06
+   Fe57  = Fe57   2.02053E-06
+   Fe56  = Fe56   8.74901E-05
+   Sn118  = Sn118   1.16691E-04
+   Sn119  = Sn119   4.13864E-05
+  MIX <<GAP>> 750.0 NOEV
+    He4      = He4 1.50456E-04
+  MIX <<MODE>> 559.0 NOEV
+    H1      = H1_H2O 4.94546E-02  
+    O16     = O16    2.47298E-02 
+;
+ELSEIF cell_name "AT10_45Gd" = THEN
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 COMB0105 COMB0106 GAP CLAD MODE :=
+           1 2 3 4 5 6 7 8 9 ;
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 9    ! MAXIMUM OF MATERIAL MIXTURES
+    PT
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+    CALENDF 3 PT      ! CALENDF TYPE PROBABILITY TABLES
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX <<COMB0101>> 750.0
+    O16     = O16    4.621410E-02
+    U234    = U234   9.451580E-06 1 
+    U235    = U235   9.945290E-04 1 
+    U238    = U238   2.107540E-02 1
+    Pu239   = Pu239  0.0        1
+    Pu240   = Pu240  0.0
+    Pu241   = Pu241  0.0        1
+    Pu242   = Pu242  0.0 
+    Gd154    = Gd154   2.986510E-05 1
+    Gd155    = Gd155   2.027540E-04 1
+    Gd156    = Gd156   2.804310E-04 1
+    Gd157    = Gd157   2.143990E-04 1
+    Gd158    = Gd158   3.403000E-04 1
+    Gd160    = Gd160   2.994740E-04 1  
+  MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0105>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0106>> COMB <<COMB0101>> 1.0
+  MIX <<CLAD>> 559.0 NOEV
+   Ni60  = Ni60   9.69262E-06
+   Zr90  = Zr90   2.18317E-02 2
+   Zr91  = Zr91   4.76096E-03 2
+   Zr92  = Zr92   7.27723E-03 2
+   Zr94  = Zr94   7.37482E-03 2
+   Zr96  = Zr96   1.18812E-03 2
+   Fe58  = Fe58   2.68895E-07
+   Sn112  = Sn112   4.67343E-06
+   Sn116  = Sn116   7.00535E-05
+   Cr50  = Cr50   3.29613E-06
+   Sn114  = Sn114   3.17985E-06
+   Sn117  = Sn117   3.70020E-05
+   Sn122  = Sn122   2.23073E-05
+   O17  = O17   1.17376E-07
+   Sn124  = Sn124   2.78961E-05
+   Cr54  = Cr54   1.79408E-06
+   Ni62  = Ni62   1.34344E-06
+   Cr53  = Cr53   7.20746E-06
+   Sn115  = Sn115   1.63812E-06
+   Ni61  = Ni61   4.21331E-07
+   Ni64  = Ni64   3.42085E-07
+   Cr52  = Cr52   6.35631E-05
+   O16  = O16   3.08132E-04
+   Sn120  = Sn120   1.56970E-04
+   Ni58  = Ni58   2.51627E-05
+   Fe54  = Fe54   5.57337E-06
+   Fe57  = Fe57   2.02053E-06
+   Fe56  = Fe56   8.74901E-05
+   Sn118  = Sn118   1.16691E-04
+   Sn119  = Sn119   4.13864E-05
+  MIX <<GAP>> 750.0 NOEV
+    He4      = He4 1.50456E-04
+  MIX <<MODE>> 559.0 NOEV
+    H1      = H1_H2O 4.94546E-02  
+    O16     = O16    2.47298E-02 
+;
+ELSEIF cell_name "AT10_42Gd" = THEN
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 COMB0105 COMB0106 GAP CLAD MODE :=
+           1 2 3 4 5 6 7 8 9 ;
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 9    ! MAXIMUM OF MATERIAL MIXTURES
+    PT
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+    CALENDF 3 PT      ! CALENDF TYPE PROBABILITY TABLES
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX <<COMB0101>> 750.0
+    O16     = O16    4.621230E-02
+    U234    = U234   8.668470E-06 1 
+    U235    = U235   9.163120E-04 1 
+    U238    = U238   2.115350E-02 1
+    Pu239   = Pu239  0.0        1
+    Pu240   = Pu240  0.0
+    Pu241   = Pu241  0.0        1
+    Pu242   = Pu242  0.0
+    Gd154    = Gd154   2.986510E-05 1
+    Gd155    = Gd155   2.027540E-04 1
+    Gd156    = Gd156   2.804310E-04 1
+    Gd157    = Gd157   2.143990E-04 1
+    Gd158    = Gd158   3.403000E-04 1
+    Gd160    = Gd160   2.994740E-04 1    
+  MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0105>> COMB <<COMB0101>> 1.0
+  MIX <<COMB0106>> COMB <<COMB0101>> 1.0
+  MIX <<CLAD>> 559.0 NOEV
+   Ni60  = Ni60   9.69262E-06
+   Zr90  = Zr90   2.18317E-02 2
+   Zr91  = Zr91   4.76096E-03 2
+   Zr92  = Zr92   7.27723E-03 2
+   Zr94  = Zr94   7.37482E-03 2
+   Zr96  = Zr96   1.18812E-03 2
+   Fe58  = Fe58   2.68895E-07
+   Sn112  = Sn112   4.67343E-06
+   Sn116  = Sn116   7.00535E-05
+   Cr50  = Cr50   3.29613E-06
+   Sn114  = Sn114   3.17985E-06
+   Sn117  = Sn117   3.70020E-05
+   Sn122  = Sn122   2.23073E-05
+   O17  = O17   1.17376E-07
+   Sn124  = Sn124   2.78961E-05
+   Cr54  = Cr54   1.79408E-06
+   Ni62  = Ni62   1.34344E-06
+   Cr53  = Cr53   7.20746E-06
+   Sn115  = Sn115   1.63812E-06
+   Ni61  = Ni61   4.21331E-07
+   Ni64  = Ni64   3.42085E-07
+   Cr52  = Cr52   6.35631E-05
+   O16  = O16   3.08132E-04
+   Sn120  = Sn120   1.56970E-04
+   Ni58  = Ni58   2.51627E-05
+   Fe54  = Fe54   5.57337E-06
+   Fe57  = Fe57   2.02053E-06
+   Fe56  = Fe56   8.74901E-05
+   Sn118  = Sn118   1.16691E-04
+   Sn119  = Sn119   4.13864E-05
+  MIX <<GAP>> 750.0 NOEV
+    He4      = He4 1.50456E-04
+  MIX <<MODE>> 559.0 NOEV
+    H1      = H1_H2O 4.94546E-02  
+    O16     = O16    2.47298E-02 
+;
+ENDIF ;
+
+
+END: ;
+QUIT .

@@ -1,0 +1,150 @@
+BEGIN
+* typgeo nbfold nbnode nbelem nbmacr nbreg
+      2      3      5     26      1      5
+* index  kndex  prec
+      0      0      1
+* eps         eps0
+   1.000000047E-03   9.999999747E-06
+* num_of_region/mesh
+      1      2      3      4      5
+* name_of_geometry
+   GEOM
+* macro_order_index_per_flux_region
+      1      1      1      1      1
+ elem =     1
+*type    node-   node+
+     1     0     1
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   1.227350167E+00   9.999995026E-01  -1.250008807E-02   9.269053081E-08   1.250008807E-02
+ elem =     2
+*type    node-   node+
+     1     1     0
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   2.523504235E-01   4.370831383E-01   6.249963761E-03   1.082544016E-02   1.250008807E-02
+ elem =     3
+*type    node-   node+
+     1     0     1
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   1.214850079E+00   9.999995953E-01  -8.750010938E-02   2.353488604E-07   8.750010938E-02
+ elem =     4
+*type    node-   node+
+     1     1     0
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   2.586003873E-01   4.479085785E-01   4.374985087E-02   7.577743523E-02   8.750010938E-02
+ elem =     5
+*type    node-   node+
+     3     1     2
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   5.773504859E-01   1.000000193E+00   6.500000522E-01   2.999999399E+02   1.125469068E+01
+ elem =     6
+*type    node-   node+
+     3     1     2
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   5.773496662E-01   9.999997197E-01   6.500000522E-01   2.887453627E+02   1.125469068E+01
+ elem =     7
+*type    node-   node+
+     1     3     2
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   1.443375416E+00   4.999999329E-01  -2.285252556E-01   1.319389331E-01   2.638781433E-01
+ elem =     8
+*type    node-   node+
+     1     2     3
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   5.773501283E-01   5.329070518E-15   1.599999999E-07   2.638781433E-01   2.638781433E-01
+ elem =     9
+*type    node-   node+
+     1     0     3
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   1.732050480E+00   9.999998109E-01  -5.047003131E-01  -3.082708240E-07   5.047003131E-01
+ elem =    10
+*type    node-   node+
+     1     3     0
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   0.000000000E+00   3.552713679E-15   2.523504235E-01   4.370831383E-01   5.047003131E-01
+ elem =    11
+*type    node-   node+
+     3     1     3
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   5.773499520E-01   9.999999825E-01   6.500002149E-01   3.487452604E+02   1.125468725E+01
+ elem =    12
+*type    node-   node+
+     3     1     3
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   5.773501154E-01   1.000000077E+00   6.500002149E-01   2.400000456E+02   1.125468725E+01
+ elem =    13
+*type    node-   node+
+     1     2     4
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   1.005964869E+00   5.113389824E-01   2.088852914E-01   1.205998835E-01   2.411999106E-01
+ elem =    14
+*type    node-   node+
+     1     4     2
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   7.862354969E-01   3.844781704E-01  -2.088852085E-01  -1.206000271E-01   2.411999106E-01
+ elem =    15
+*type    node-   node+
+     1     3     4
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   1.214850160E+00   6.319388660E-01  -3.566312667E-08   2.411997381E-01   2.411997381E-01
+ elem =    16
+*type    node-   node+
+     1     4     3
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   5.773502883E-01   2.638781433E-01  -2.088850828E-01   1.205998999E-01   2.411997381E-01
+ elem =    17
+*type    node-   node+
+     3     1     4
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   5.773499943E-01   9.999999021E-01   6.500001577E-01   3.112546801E+02   3.749058655E+01
+ elem =    18
+*type    node-   node+
+     3     1     4
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   5.773501639E-01   1.000000000E+00   6.500001577E-01   2.512547267E+02   3.749058655E+01
+ elem =    19
+*type    node-   node+
+     1     0     5
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   1.127349969E+00   9.999998306E-01  -5.500002695E-01   1.015392499E-07   5.500002695E-01
+ elem =    20
+*type    node-   node+
+     1     5     0
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   3.023502382E-01   5.236860137E-01   2.750000468E-01   4.763142563E-01   5.500002695E-01
+ elem =    21
+*type    node-   node+
+     3     5     1
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   5.773498472E-01   9.999996474E-01   5.500001222E-01   3.000000125E+02   5.999999660E+01
+ elem =    22
+*type    node-   node+
+     3     5     1
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   5.773504580E-01   1.000000000E+00   5.500001222E-01   2.399999842E+02   5.999999660E+01
+ elem =    23
+*type    node-   node+
+     1     0     2
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   1.154700320E+00   0.000000000E+00   2.886750958E-01   4.999999329E-01   5.773501917E-01
+ elem =    24
+*type    node-   node+
+     1     2     0
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   1.154700320E+00   3.552713679E-15  -5.773501917E-01   1.776356839E-15   5.773501917E-01
+ elem =    25
+*type    node-   node+
+     1     0     3
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   1.443375416E+00   4.999999329E-01   2.886750642E-01   4.999998780E-01   5.773501283E-01
+ elem =    26
+*type    node-   node+
+     1     3     0
+*cx            cy            ex_or_R       ey_or_theta1  theta2
+   5.773501283E-01   5.329070518E-15  -5.773501283E-01  -1.776356839E-15   5.773501283E-01
+*defaul  nbbcda  allsur  divsur  ndivsur
+       0       0       0       0       0
+*albedo  deltasur
+   1.000000000E+00   0.000000000E+00
+* mil(nbreg)
+      1      2      3      4      5
+END

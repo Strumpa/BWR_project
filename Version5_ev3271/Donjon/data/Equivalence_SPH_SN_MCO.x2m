@@ -1,0 +1,123 @@
+*----
+*  TEST CASE Equivalence_SPH_SN_MCO
+*  17 x 17 UOX ASSEMBLY WITH SN METHOD
+*  Input cross section data from MultiMpo17x17
+*----
+*  Define STRUCTURES and MODULES used
+*----
+LINKED_LIST ASSMB TRACK SYSTEM MACRO2 MACRO OPTIM FLUX Mpo17x17 ;
+SEQ_ASCII _Mpo17x17 :: FILE './_Mpo17x17.txt' ;
+SEQ_ASCII _Mpo17x17_SN :: FILE './_Mpo17x17_SN.txt' ;
+MODULE GEO: SPH: SNT: ASM: FLU: UTL: GREP: DELETE: END: ABORT: ;
+INTEGER IterEmax := 1000 ;
+INTEGER ncals ;
+REAL K_EFF_REF VALUE DELTA ;
+PROCEDURE SPHPicardSN ;
+
+*----
+* Input macro-geometry
+*----
+REAL cote := 1.26 ;
+REAL lame := 1.302 ;
+REAL side1 := lame ;
+REAL side2 := side1 cote + ;
+REAL side3 := side2 cote + ;
+REAL side4 := side3 cote + ;
+REAL side5 := side4 cote + ;
+REAL side6 := side5 cote + ;
+REAL side7 := side6 cote + ;
+REAL side8 := side7 cote + ;
+REAL side9 := side8 cote + ;
+REAL side10 := side9 cote + ;
+REAL side11 := side10 cote + ;
+REAL side12 := side11 cote + ;
+REAL side13 := side12 cote + ;
+REAL side14 := side13 cote + ;
+REAL side15 := side14 cote + ;
+REAL side16 := side15 cote + ;
+REAL side17 := side16 lame + ;
+ECHO "Assembly side=" side17 ;
+ASSMB := GEO: :: CAR2D 17 17 (*ASSEMBLY 17 X 17*)
+          X- REFL X+ REFL
+          Y- REFL Y+ REFL
+          MESHX 0.0 <<side1>> <<side2>> <<side3>> <<side4>> <<side5>> <<side6>> <<side7>> <<side8>> <<side9>>
+                    <<side10>> <<side11>> <<side12>> <<side13>> <<side14>> <<side15>> <<side16>> <<side17>>
+          MESHY 0.0 <<side1>> <<side2>> <<side3>> <<side4>> <<side5>> <<side6>> <<side7>> <<side8>> <<side9>>
+                    <<side10>> <<side11>> <<side12>> <<side13>> <<side14>> <<side15>> <<side16>> <<side17>>
+          MIX 45 44 43 42 41 40 39 38   37   38 39 40 41 42 43 44 45
+              44 36 35 34 33 32 31 30   29   30 31 32 33 34 35 36 44
+              43 35 28 27 26 25 24 23   22   23 24 25 26 27 28 35 43
+              42 34 27 21 20 19 18 17   16   17 18 19 20 21 27 34 42
+              41 33 26 20 15 14 13 12   11   12 13 14 15 20 26 33 41
+              40 32 25 19 14 10  9  8    7    8  9 10 14 19 25 32 40
+              39 31 24 18 13  9  6  5    4    5  6  9 13 18 24 31 39
+              38 30 23 17 12  8  5  3    2    3  5  8 12 17 23 30 38
+
+              37 29 22 16 11  7  4  2    1    2  4  7 11 16 22 29 37
+
+              38 30 23 17 12  8  5  3    2    3  5  8 12 17 23 30 38
+              39 31 24 18 13  9  6  5    4    5  6  9 13 18 24 31 39
+              40 32 25 19 14 10  9  8    7    8  9 10 14 19 25 32 40
+              41 33 26 20 15 14 13 12   11   12 13 14 15 20 26 33 41
+              42 34 27 21 20 19 18 17   16   17 18 19 20 21 27 34 42
+              43 35 28 27 26 25 24 23   22   23 24 25 26 27 28 35 43
+              44 36 35 34 33 32 31 30   29   30 31 32 33 34 35 36 44
+              45 44 43 42 41 40 39 38   37   38 39 40 41 42 43 44 45
+;
+
+EVALUATE ncals := 1 ;
+*----
+* Perform fixed point SPH equivalence for each branch calculation
+*----
+TRACK := SNT: ASSMB :: EDIT 1 SN 4 SCAT 1 QUAD 1 ;
+
+UTL: TRACK :: DIR IMPR VOLUME * ;
+
+Mpo17x17 := _Mpo17x17 ;
+
+INTEGER ical := 0 ;
+REPEAT
+
+  EVALUATE ical := ical 1 + ;
+  ECHO "process branch=" ical "/" ncals ;
+  MACRO2 := SPH: Mpo17x17 :: EDIT 1 STEP UP 'EDI2A' STEP AT <<ical>> MACRO OFF LEAK ;
+  GREP: MACRO2 :: GETVAL 'K-EFFECTIVE' 1 >>K_EFF_REF<< ;
+  ECHO "ical=" ical "reference k-effective=" K_EFF_REF ;
+
+  MACRO OPTIM := SPHPicardSN MACRO2 ASSMB TRACK
+   :: 0.0 10.0 1.0E-6 <<IterEmax>> ;
+  ECHO "control variables at convergence for ical=" ical ;
+  UTL: OPTIM :: IMPR 'VAR-VALUE' * ;
+  MACRO2 := DELETE: MACRO2 ;
+
+*----
+* Write SPH-corrected information on the Multicompo
+*----
+  Mpo17x17 := SPH: Mpo17x17 OPTIM :: EDIT 1 STEP UP 'EDI2A' STEP AT <<ical>> IDEM SPOP ;
+  OPTIM := DELETE: OPTIM ;
+
+*----
+* Verification calculation
+*----
+  SYSTEM := ASM: MACRO TRACK :: EDIT 0 ARM ;
+  FLUX := FLU: MACRO TRACK SYSTEM :: EDIT 1 TYPE K B0 SIGS ;
+
+  GREP: FLUX :: GETVAL 'K-EFFECTIVE' 1 >>VALUE<< ;
+  EVALUATE DELTA := VALUE K_EFF_REF - K_EFF_REF / ABS ;
+  IF DELTA 5.0E-4 < THEN
+    PRINT "SPH SUCCESSFUL; DELTA=" DELTA ;
+  ELSE
+    PRINT "-----------" ;
+    PRINT "SPH FAILURE" ;
+    PRINT "-----------" ;
+    PRINT "REFERENCE=" K_EFF_REF " CALCULATED=" VALUE ;
+    ABORT: ;
+  ENDIF ;
+  
+  MACRO SYSTEM FLUX := DELETE: MACRO SYSTEM FLUX ;
+UNTIL ical ncals = ;
+
+_Mpo17x17_SN := Mpo17x17 ;
+
+ECHO "Equivalence_SPH_SN_MCO completed" ;
+END: ;

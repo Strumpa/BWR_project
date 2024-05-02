@@ -1,0 +1,162 @@
+****************************************************************
+*                                                              *
+* Procedure :  vverMIX.c2m                                     *
+* Purpose   :  Mixture creation                                *
+* Author    :  L.Fede                                          *
+*                                                              *
+* CALL      :                                                  *
+* LIBRARY := vverMIX :: <<Library>> <<name_geom>> <<ss>>       *
+*                                                              *
+****************************************************************
+
+* -----------------------------------
+*     INPUT & OUTPUT PARAMETERS
+* -----------------------------------
+PARAMETER LIBRARY ::
+::: LINKED_LIST LIBRARY ; ;
+
+STRING Library name_geom ss ;
+:: >>Library<< >>name_geom<< >>ss<< ;
+
+* ----------------------------------
+*      STRUCTURES AND MODULES
+* ----------------------------------
+MODULE  LIB: END: ABORT: ;
+
+INTEGER COMB0101 COMB0102 COMB0103 COMB0104 COMB0105 COMB0106 COMB0107 COMB0108 COMB0109 COMB0110 COMB0111 GAP7 CLAD8
+ MODE9 ;
+
+REAL N_Zr90 N_Zr91 N_Zr92 N_Zr94 N_Zr96 ;
+REAL NNb93 N_Hf174 N_Hf176 N_Hf177 N_Hf178 N_Hf179 N_Hf180 ;
+
+* ----------------------------------
+*               MIX
+* ----------------------------------
+
+* ---
+* KHMELNITSKY-2 REACTOR - 439 GT ASSEMBLY - 3.6% UOx CELL + 5.0% Gd2O3
+* ---
+
+  EVALUATE N_Zr90      N_Zr91      N_Zr92       N_Zr94       N_Zr96     :=
+           2.20052E-2  4.74596E-3  7.17541E-3   7.11667E-3   1.12260E-3 ;
+
+  EVALUATE NNb93      N_Hf174    N_Hf176    N_Hf177    N_Hf178    N_Hf179    N_Hf180    :=
+           4.18189E-4 1.07216E-8 3.48463E-7 1.22523E-6 1.78690E-6 8.87146E-7 2.27225E-6 ;
+
+  EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 COMB0105 COMB0106 GAP7 CLAD8 MODE9 :=
+           11 12 13 14 15 16 7 8 9 ; !  DISTRIBUTED SELF-SHIELDING 
+
+IF name_geom 'KML2_439GT_36Gd' = ss 'auto' = * THEN
+
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 16    ! MAXIMUM OF MATERIAL MIXTURES
+    SUBG
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+
+    DEPL LIB: DRAGON FIL: <<Library>>
+
+    MIXS LIB: DRAGON FIL: <<Library>>
+
+    MIX <<COMB0101>> 900.0
+      O16     = O16    4.59021E-2
+      U235    = U235   2.84175E-3 1
+      U238    = U238   2.09525E-2 1
+      Pu239   = Pu239  0.0        1
+      Pu240   = Pu240  0.0        1
+      Pu241   = Pu241  0.0        1
+      Pu242   = Pu242  0.0        1
+      Gd154   = Gd154  3.78440E-6 1
+      Gd155   = Gd155  2.55262E-5 1
+      Gd156   = Gd156  3.50791E-5 1
+      Gd157   = Gd157  2.66479E-5 1
+      Gd158   = Gd158  4.20283E-5 1
+      Gd160   = Gd160  3.65230E-5 1
+    MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+    MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+    MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+    MIX <<COMB0105>> COMB <<COMB0101>> 1.0
+    MIX <<COMB0106>> COMB <<COMB0101>> 1.0
+    MIX <<CLAD8>> 600.0 NOEV
+      Zr90    = Zr90   <<N_Zr90>> 1
+      Zr91    = Zr91   <<N_Zr91>> 1
+      Zr92    = Zr92   <<N_Zr92>> 1
+      Zr94    = Zr94   <<N_Zr94>> 1
+      Zr96    = Zr96   <<N_Zr96>> 1
+      Nb93    = Nb93   <<NNb93>> 
+      Hf174   = Hf174  <<N_Hf174>>
+      Hf176   = Hf176  <<N_Hf176>>
+      Hf178   = Hf178  <<N_Hf178>>
+      Hf179   = Hf179  <<N_Hf179>>
+      Hf180   = Hf180  <<N_Hf180>>
+    MIX <<MODE9>> 560.0 NOEV
+      H1      = H1_H2O 5.082040E-2
+      O16     = O16    2.548710E-2
+      B10     = B10    1.02048E-5
+      B11     = B11    4.10756E-5
+    MIX <<GAP7>> 560.0 NOEV
+      He4     = He4   1.00E-08
+    ;
+
+ELSEIF name_geom 'KML2_439GT_36Gd' = ss 'uss' = * THEN
+
+  LIBRARY := LIB: ::
+    EDIT 0
+    NMIX 16    ! MAXIMUM OF MATERIAL MIXTURES
+    PT
+    ANIS 2
+    ADED 4 NELAS N4N N2N N3N
+
+    DEPL LIB: DRAGON FIL: <<Library>>
+
+    MIXS LIB: DRAGON FIL: <<Library>>
+
+    MIX <<COMB0101>> 900.0
+      O16     = O16    4.59021E-2
+      U235    = U235   2.84175E-3 1
+      U238    = U238   2.09525E-2 1
+      Pu239   = Pu239  0.0        1
+      Pu240   = Pu240  0.0        1
+      Pu241   = Pu241  0.0        1
+      Pu242   = Pu242  0.0        1
+      Gd154   = Gd154  3.78440E-6 1
+      Gd155   = Gd155  2.55262E-5 1
+      Gd156   = Gd156  3.50791E-5 1
+      Gd157   = Gd157  2.66479E-5 1
+      Gd158   = Gd158  4.20283E-5 1
+      Gd160   = Gd160  3.65230E-5 1
+    MIX <<COMB0102>> COMB <<COMB0101>> 1.0
+    MIX <<COMB0103>> COMB <<COMB0101>> 1.0
+    MIX <<COMB0104>> COMB <<COMB0101>> 1.0
+    MIX <<COMB0105>> COMB <<COMB0101>> 1.0
+    MIX <<COMB0106>> COMB <<COMB0101>> 1.0
+    MIX <<CLAD8>> 600.0 NOEV
+      Zr90    = Zr90   <<N_Zr90>> 2 IRSET PT NONE
+      Zr91    = Zr91   <<N_Zr91>> 2 IRSET PT NONE
+      Zr92    = Zr92   <<N_Zr92>> 2 IRSET PT NONE
+      Zr94    = Zr94   <<N_Zr94>> 2 IRSET PT NONE
+      Zr96    = Zr96   <<N_Zr96>> 2 IRSET PT NONE
+      Nb93    = Nb93   <<NNb93>> 
+      Hf174   = Hf174  <<N_Hf174>>
+      Hf176   = Hf176  <<N_Hf176>>
+      Hf178   = Hf178  <<N_Hf178>>
+      Hf179   = Hf179  <<N_Hf179>>
+      Hf180   = Hf180  <<N_Hf180>>
+    MIX <<MODE9>> 560.0 NOEV
+      H1      = H1_H2O 5.082040E-2
+      O16     = O16    2.548710E-2
+      B10     = B10    1.02048E-5
+      B11     = B11    4.10756E-5
+    MIX <<GAP7>> 560.0 NOEV
+      He4     = He4   1.00E-08
+    ; 
+ELSE
+
+  ECHO "vverMIX: geometry" name_geom "and self-shielding" ss "not available" ;
+  ABORT: ;
+
+ENDIF ;
+
+END: ;
+QUIT .

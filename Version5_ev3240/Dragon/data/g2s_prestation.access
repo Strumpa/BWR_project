@@ -1,0 +1,10 @@
+#!/bin/sh
+if [ $# = 0 ]
+   then
+   echo "usage: g2s_prestation.access directory" 1>&2
+   exit 1
+fi
+ln -s $1/data/g2s_prestation_proc/isocel_r60.tdt .
+ln -s $1/data/g2s_prestation_proc/lozenge_r120.tdt .
+ls -l
+echo "g2s_prestation access script terminated"

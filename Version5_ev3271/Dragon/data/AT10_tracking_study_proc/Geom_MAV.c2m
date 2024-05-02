@@ -1,0 +1,53 @@
+***************************************************************************
+* Deck Geom_MAV                                                           *
+*                                                                         *
+* Treatment of main flux calculation geometry for BWR pincell             *
+* ATRIUM-10 UOX pincell, geometry provided by M. Hursin (PSI)             *
+* Testing windmill discretization for main flux calculation               *
+*                                                                         *
+* Author : R. Guasch, adapted from A. Hebert and A. Canbakan              *
+*                                                                         *
+*                                                                         *
+* Dragon Procedure called as :                                            *
+* GEOMMAV := Geom_MAV :: <<Rcomb1>> <<Rcomb2>> <<Rcomb3>> <<Rcomb4>>      *
+*        <<Rgap>> <<Rclad>> <<pitch>>;                                    *
+*                                                                         *
+* Input data :                                                            *
+* Rcomb1, Rcomb2, Rcomb3, Rcomb4 : radial dicretization for cylindrical   *
+* Fuel zone : 50/100, 80/100, 95/100 and 100/100 fuel surface (volume)    *
+* Rgap, Rclad : radii for gap and cladding around fuel                    *
+* pitch : side length of cartesian cell                                   *
+* All dimensions are given in cm.                                         *
+*                                                                         *
+* Output data :                                                           *
+* GEOMMAV : geometry used for main flux calculation:                      *
+*           -windmill discretization = MAV                                *
+*                                                                         *
+***************************************************************************
+
+PARAMETER  GEOMMAV  ::  
+       EDIT 0 
+           ::: LINKED_LIST GEOMMAV  ; 
+;
+
+* Modules used in this procedure :
+MODULE GEO: END: ;
+
+* Input data :
+
+REAL Rcomb1  Rcomb2  Rcomb3  Rcomb4  ;
+:: >>Rcomb1<< >>Rcomb2<< >>Rcomb3<< >>Rcomb4<< ;
+
+REAL Rgap Rclad pitch ;
+:: >>Rgap<< >>Rclad<< >>pitch<< ;
+
+GEOMMAV := GEO: :: CARCEL 6 
+  X- REFL X+ REFL
+  Y- REFL Y+ REFL
+  SECT 4 6
+  RADIUS 0.0 <<Rcomb1>> <<Rcomb2>>
+        <<Rcomb3>> <<Rcomb4>> <<Rgap>> <<Rclad>>
+  MIX 1 2 3 4 5 6 7 7 7 7 7 7 7 7 7 7 7 7
+  MESHX 0.0 <<pitch>> MESHY 0.0 <<pitch>>
+;
+

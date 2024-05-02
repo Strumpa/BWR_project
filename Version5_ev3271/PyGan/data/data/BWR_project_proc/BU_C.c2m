@@ -1,0 +1,214 @@
+********************************************************************************************************************
+*                                                                                                                  *
+* Procedure :  BU_C.c2m                                                                                            *
+* Purpose   :  Depletion calculus for AT10 pin cells                                                               *
+* Author    :  R.Guasch adapted from L.Fede                                                                        *
+*                                                                                                                  *
+* CALL      :                                                                                                      *
+* COMPO  := BU_C LIBRARY TRACK TF_EXC TRACK_SS TF_EXC_SS StepList :: <<Multicompo>> <<name_geom>> <<name_compo>>   * 
+*                                                                                                                  *
+********************************************************************************************************************
+
+* ---
+* INPUT & OUTPUT PARAMETERS
+* ---
+PARAMETER COMPO LIBRARY TRACK TF_EXC TRACK_SS TF_EXC_SS StepList ::
+::: LINKED_LIST COMPO ;
+::: LINKED_LIST LIBRARY ; 
+::: LINKED_LIST TRACK ;
+::: SEQ_BINARY TF_EXC ;
+::: LINKED_LIST TRACK_SS ;
+::: SEQ_BINARY TF_EXC_SS ;
+::: LINKED_LIST StepList ; ;
+INTEGER Multicompo ;
+:: >>Multicompo<< ;
+STRING name_geom name_compo ;
+:: >>name_geom<< >>name_compo<< ;
+
+
+* ---
+* STRUCTURES AND MODULES
+* ---
+MODULE  DELETE: USS: ASM: FLU: EVO: GREP: COMPO:
+        EDI: END: ;
+LINKED_LIST SYS FLUX BURNUP EDIBU LIBRARY2 ;
+SEQ_ASCII _COMPO :: FILE <<name_compo>> ;
+
+************************************************************************
+*  REFERENCE LOCAL PARAMETERS                                          *
+************************************************************************
+SEQ_ASCII FIG_BWR :: FILE './FIG_BWR_CELL_1level.ps' ;
+REAL Kinf ;
+ECHO "BWR_BU: Multicompo=" Multicompo ;
+
+************************************************************************
+*  BEGIN DECLARATION                                                   *
+************************************************************************
+INTEGER nstep nauto maxcompo ;
+GREP: StepList :: LENGTH ListBU >>nstep<< ;
+GREP: StepList :: LENGTH ListAutop >>nauto<< ;
+GREP: StepList :: LENGTH ListCompo >>maxcompo<< ;
+ECHO "nstep=" nstep "nauto=" nauto "maxcompo=" maxcompo ;
+************************************************************************
+*  END DECLARATION                                                     *
+************************************************************************
+************************************************************************
+*  BEGIN COMPO INITIALIZATION                                          *
+************************************************************************
+COMPO := COMPO: ::
+    EDIT 0
+    STEP UP 'EDIBU'
+    MAXCAL 5
+    COMM 'Evolution burnup pincell' ENDC
+    PARA 'Burnup' IRRA
+    ISOT 11 U235 U236 U238 Pu239 Pu240 Pu241 Pu242 Gd155 Gd157 Xe135 Sm149
+    INIT
+;
+
+************************************************************************
+*  END COMPO INITIALIZATION                                            *
+************************************************************************
+
+************************************************************************
+*  NOMINAL REFERENCE CALCULATION                                       *
+************************************************************************
+INTEGER istepNext ;
+REAL BUbeg Tbeg ;
+REAL BU BUautop BUcompo := 0.0 0.0 0.0 ;
+REAL Norm_f2 := 38.6 ; ! SPECIFIC POWER MW/t
+REAL BUend Tend := 0. 0. ;
+INTEGER istep :=  0 ;
+INTEGER iauto :=  1 ;
+INTEGER iCompo :=  1 ;
+ECHO "start burnup loop" ;
+WHILE istep nstep < DO
+
+ EVALUATE istep := istep 1 + ;
+ ECHO "burnup step: " istep "/" nstep ;
+ 
+ EVALUATE BUbeg Tbeg := BUend Tend ;
+ GREP: StepList :: GETVAL 'ListBU' <<istep>> >>BUend<< ;
+ EVALUATE Tend := BUend Norm_f2 / ;
+ ECHO "Nominal depletion between" Tbeg " and" Tend "days" ;
+
+*----
+* USS
+*----
+  IF istep 1 = THEN
+     ECHO ".perform self-shielding at" Tbeg "days" ;
+     LIBRARY2 := USS: LIBRARY TRACK_SS TF_EXC_SS ::
+        EDIT 0
+        PASS 2
+        GRMIN 52
+     ;
+  ELSE
+     GREP: StepList :: GETVAL "ListAutop" <<iauto>> >>BUautop<< ;
+     GREP: StepList :: GETVAL "ListBU" <<istep>> >>BU<< ;
+     ECHO "HERE, step is =" istep "iauto is =" iauto ;
+     ECHO "BU is =" BU " and BUautop =" BUautop ;  
+     IF BUautop BU = THEN
+       ECHO "perform self-shielding at" Tbeg "days" ;
+       LIBRARY2 := USS: LIBRARY LIBRARY2 TRACK_SS TF_EXC_SS ::
+          EDIT 0
+          PASS 2
+          GRMIN 52
+       ;
+      EVALUATE iauto := iauto 1 + ;
+      ECHO "iauto is = " iauto ;
+    ENDIF ;
+  ENDIF ;
+
+************************************************************************
+*  BEGIN MOC FLUX CALCULATION                                          *
+************************************************************************
+  SYS := ASM: LIBRARY2 TRACK TF_EXC :: ARM EDIT 0 ;    
+
+  IF istep 1 = THEN     
+     FLUX := FLU: LIBRARY2 SYS TRACK TF_EXC :: 
+     EDIT 1 TYPE K B1 SIGS ;
+  ELSE
+     FLUX := FLU: FLUX LIBRARY2 SYS TRACK TF_EXC :: 
+     EDIT 1 TYPE K B1 SIGS ;
+  ENDIF ;
+ 
+  SYS := DELETE: SYS ;
+
+  IF istep 1 = THEN
+    BURNUP LIBRARY2 := EVO: LIBRARY2 FLUX TRACK ::
+      EDIT 0
+      SAVE <<Tbeg>> DAY POWR <<Norm_f2>>
+    ;
+  ELSE
+    BURNUP LIBRARY2 := EVO: BURNUP LIBRARY2 FLUX TRACK ::
+      EDIT 0
+      SAVE <<Tbeg>> DAY POWR <<Norm_f2>>
+    ;
+  ENDIF ;
+
+  GREP: StepList :: GETVAL "ListCompo" <<iCompo>> >>BUcompo<< ;
+  GREP: StepList :: GETVAL "ListBU" <<istep>> >>BU<< ;
+  ECHO "here istep = " istep "and iCompo =" iCompo BUcompo ;
+  IF BUcompo BU = THEN
+      IF name_geom "AT10_UOX_Gd2O3" = THEN
+          EDIBU := EDI: FLUX LIBRARY2 TRACK ::
+            EDIT 0
+            MICR 11 U235 U236 U238 Pu239 Pu240 Pu241 Pu242 Gd155 Gd157 Xe135 Sm149
+            MERG MIX 1 1 1 1 1 1 0 0 0
+            COND
+            SAVE ON FUEL ;
+          COMPO := COMPO: COMPO EDIBU BURNUP LIBRARY ::
+            EDIT 0
+            STEP UP 'EDIBU'
+            SET <<Tbeg>> DAY ;
+    
+          EDIBU := DELETE: EDIBU ;
+          EVALUATE iCompo := iCompo 1 + ;
+      ELSE  
+          EDIBU := EDI: FLUX LIBRARY2 TRACK ::
+            EDIT 0
+            MICR 11 U235 U236 U238 Pu239 Pu240 Pu241 Pu242 Gd155 Gd157 Xe135 Sm149
+            MERG MIX 1 1 1 1 0 0 0
+            COND
+            SAVE ON FUEL ;
+          COMPO := COMPO: COMPO EDIBU BURNUP LIBRARY ::
+            EDIT 0
+            STEP UP 'EDIBU'
+            SET <<Tbeg>> DAY ;
+    
+          EDIBU := DELETE: EDIBU ;
+          EVALUATE iCompo := iCompo 1 + ;
+      ENDIF ;
+  ENDIF ;
+
+  GREP: FLUX :: GETVAL 'K-INFINITY  ' 1 1 1 >>Kinf<< ;
+  ECHO "+++ Burnup=" BUend " Kinf=" Kinf " at step" istep ;
+
+  IF istep nstep < THEN
+    EVALUATE istepNext := istep 1 + ;
+    GREP: StepList :: GETVAL 'ListBU' <<istepNext>> >>BUend<< ;
+    EVALUATE Tend := BUend Norm_f2 / ;
+  
+    BURNUP LIBRARY2 := EVO: BURNUP LIBRARY2 FLUX TRACK ::
+     EDIT 3 DEPL <<Tbeg>> <<Tend>> DAY POWR <<Norm_f2>> 
+     EXPM 1.0E15 GLOB ;
+  
+  ENDIF ;
+ 
+************************************************************************
+*  END FLUX CALCULATION                                                *
+************************************************************************
+
+ENDWHILE ;
+************************************************************************
+*  END OF REFERENCE BURNUP LOOP WITH DEPLETION                         *
+************************************************************************
+
+************************************************************************
+*  EXPORT MULTICOMPO IN ASCII FORMAT                                   *
+************************************************************************
+_COMPO := COMPO ;
+
+END: ;
+QUIT .
+
+

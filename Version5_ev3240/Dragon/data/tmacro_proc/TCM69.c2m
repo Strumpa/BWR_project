@@ -1,0 +1,154 @@
+*----
+*  TEST CASE TCM69
+*  High-order schemes for the continuous slowing-down term of the
+*  Boltzmann Fokker-Planck equation in Cartesian geometries.
+*----
+*  Define STRUCTURES and MODULES used
+*----
+MODULE GEO: FMAC: MAC: SNT: ASM: FLU: PSOUR: OUT: DELETE: END: UTL:
+       HEAT: ABORT: ;
+PROCEDURE assertS assertS_low ;
+LINKED_LIST  EMACRO EMACRO2 GEOM ETRACK SYSTEM
+       EFLUX ESOUR EEDITS DEPOS EFLX ;
+SEQ_ASCII FMAC_M :: FILE './W_6MeV_e_ph_CSD.txt' ;
+*----
+*  High-order energy schemes 1D Cartesian
+*----
+GEOM := GEO: :: CAR1D 1
+           X- VOID  X+ VOID
+           MIX 1
+           MESHX 0.0 0.05
+           SPLITX 20
+           ;
+ETRACK := SNT: GEOM ::
+      EDIT 2 
+      MAXR 1000 
+      SCHM 1 DIAM 2
+      ESCHM 1 EDIAM 2
+      NLIVO 
+      SN 8 SCAT 8 
+      EPSI 1.E-5
+      MAXI 300 
+      BFPG 
+      ;
+EMACRO := FMAC: FMAC_M :: EDIT 2 PARTICLE BETA ;
+EMACRO2 := EMACRO ;
+EMACRO := MAC: EMACRO EMACRO2 :: MIX 1 1 OLDL ;
+EMACRO2 := DELETE: EMACRO2 ;
+ESOUR := PSOUR: EMACRO ETRACK GEOM ::
+     MONO 1
+     X-
+     INTG 1 1.0
+     DIR 1.0 0.0 0.0
+     ;
+SYSTEM := ASM: EMACRO ETRACK :: EDIT 2 ARM ;
+EFLUX := FLU: EMACRO ETRACK SYSTEM ESOUR :: EDIT 1 TYPE S EXTE 100 ;
+EEDITS := OUT: EFLUX ETRACK EMACRO GEOM :: EDIT 2 COND INTG NONE ;
+*----
+* Asserts in 1D Cartesian
+*----
+EFLX := EEDITS :: STEP UP GROUP STEP AT 1 ;
+assertS EFLX :: 'FLUX-INTG' 1 3.990423E-3 ;
+assertS EFLX :: 'FLUX-INTG' 5 6.039801E-3 ;
+assertS EFLX :: 'FLUX-INTG' 15 5.647896E-3 ;
+GEOM ETRACK EMACRO ESOUR SYSTEM EFLUX EEDITS EFLX := DELETE:
+GEOM ETRACK EMACRO ESOUR SYSTEM EFLUX EEDITS EFLX ;
+*----
+*  High-order energy schemes 2D Cartesian
+*----
+GEOM := GEO: :: CAR2D 1 1
+           X- REFL  X+ VOID
+           Y- VOID  Y+ REFL
+           MIX 1
+           MESHX 0.0 0.05
+           MESHY 0.0 0.05
+           SPLITX 5
+           SPLITY 5
+           ;
+ETRACK := SNT: GEOM ::
+      EDIT 2 
+      MAXR 1000 
+      SCHM 2 DIAM 0
+      ESCHM 1 EDIAM 1
+      NLIVO 
+      SN 4 SCAT 1 
+      EPSI 1.E-5
+      MAXI 300 
+      BFPG 
+      QUAD 10
+      ;
+EMACRO := FMAC: FMAC_M :: EDIT 2 PARTICLE BETA ;
+EMACRO2 := EMACRO ;
+EMACRO := MAC: EMACRO EMACRO2 :: MIX 1 1 OLDL ;
+EMACRO2 := DELETE: EMACRO2 ;
+ESOUR := PSOUR: EMACRO ETRACK GEOM ::
+     ISO 1
+     INTG 1 1.0
+     XLIM 0.00 0.05
+     YLIM 0.00 0.02
+     ;
+SYSTEM := ASM: EMACRO ETRACK :: EDIT 2 ARM ;
+EFLUX := FLU: EMACRO ETRACK SYSTEM ESOUR :: EDIT 1 TYPE S EXTE 100 ;
+EEDITS := OUT: EFLUX ETRACK EMACRO GEOM :: EDIT 2 COND INTG NONE ;
+*----
+* Asserts in 2D Cartesian
+*----
+EFLX := EEDITS :: STEP UP GROUP STEP AT 1 ;
+assertS EFLX :: 'FLUX-INTG' 1 4.309041E-7 ;
+assertS EFLX :: 'FLUX-INTG' 5 3.809887E-7 ;
+assertS EFLX :: 'FLUX-INTG' 15 4.219277E-8 ;
+GEOM ETRACK EMACRO ESOUR SYSTEM EFLUX EEDITS EFLX := DELETE:
+GEOM ETRACK EMACRO ESOUR SYSTEM EFLUX EEDITS EFLX ;
+*----
+*  High-order energy schemes 3D Cartesian
+*----
+GEOM := GEO: :: CAR3D 1 1 1
+           X- VOID  X+ REFL
+           Y- REFL  Y+ REFL
+           Z- VOID  Z+ VOID
+           MIX 1
+           MESHX 0.0 0.05
+           MESHY 0.0 0.05
+           MESHZ 0.0 0.05
+           SPLITX 3
+           SPLITY 4
+           SPLITZ 2
+           ;
+ETRACK := SNT: GEOM ::
+      EDIT 2 
+      MAXR 1000
+      SCHM 1 DIAM 0
+      ESCHM 2 EDIAM 1
+      NLIVO 
+      SN 4 SCAT 1 
+      EPSI 1.E-5
+      MAXI 300 
+      BFPG 
+      ;
+EMACRO := FMAC: FMAC_M :: EDIT 2 PARTICLE BETA ;
+EMACRO2 := EMACRO ;
+EMACRO := MAC: EMACRO EMACRO2 :: MIX 1 1 OLDL ;
+EMACRO2 := DELETE: EMACRO2 ;
+ESOUR := PSOUR: EMACRO ETRACK GEOM ::
+     MONO 1
+     X-
+     INTG 1 1.0
+     DIR 1.0 0.0 0.0
+     YLIM 0.0 0.05
+     ZLIM 0.0 0.05
+     ;
+SYSTEM := ASM: EMACRO ETRACK :: EDIT 2 ARM ;
+EFLUX := FLU: EMACRO ETRACK SYSTEM ESOUR :: EDIT 1 TYPE S EXTE 100 ;
+EEDITS := OUT: EFLUX ETRACK EMACRO GEOM :: EDIT 2 COND INTG NONE ;
+*----
+* Asserts in 3D Cartesian
+*----
+EFLX := EEDITS :: STEP UP GROUP STEP AT 1 ;
+assertS_low EFLX :: 'FLUX-INTG' 1 1.443974E-5  5.0E-3 ;
+assertS_low EFLX :: 'FLUX-INTG' 5 7.057812E-8  5.0E-3 ;
+assertS_low EFLX :: 'FLUX-INTG' 15 -9.77388E-7 5.0E-3 ;
+*----
+*  End of test
+*----
+ECHO "Test TCM69 completed" ;
+END: ;

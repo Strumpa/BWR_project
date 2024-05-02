@@ -1,0 +1,36 @@
+XSM_FILE XSM1 XSM2 ;
+PROCEDURE svdg13c_auto svdg13c_uss ;
+MODULE VDG: DELETE: ABORT: END: ;
+SEQ_ASCII SECLIB_XSM :: FILE './SECLIB_XSM' ;
+XSM_FILE DUMMYDA ;
+REAL zaver REFVALUE DELTA ;
+*
+* import the cross section library (autolib)
+DUMMYDA := SECLIB_XSM ;
+*
+* TEST AUTO: SELF-SHIELDING MODULE.
+XSM1 := svdg13c_auto ;
+*
+* TEST USS: SELF-SHIELDING MODULE.
+XSM2 := svdg13c_uss ;
+*
+* COMPARE THE TWO RUNS.
+VDG: XSM1 XSM2 :: PICK AVER >>zaver<< ;
+ECHO "USS: averaged error=" zaver "%" ;
+
+EVALUATE REFVALUE := 0.6706 ;
+EVALUATE DELTA := zaver REFVALUE - REFVALUE / ABS ;
+IF DELTA 5.0E-2 < THEN
+  ECHO "TEST SUCCESSFUL; DELTA=" DELTA ;
+ELSE
+  ECHO "------------" ;
+  ECHO "TEST FAILURE" ;
+  ECHO "------------" ;
+  ECHO "REFERENCE=" REFVALUE " CALCULATED=" zaver ;
+  ABORT: ;
+ENDIF ;
+
+XSM1 XSM2 := DELETE: XSM1 XSM2 ;
+ECHO "test svdg13c completed" ;
+END: ;
+QUIT "LIST" .

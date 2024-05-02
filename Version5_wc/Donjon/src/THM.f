@@ -30,7 +30,7 @@
 * The THM: module specification is:
 * THERMO MAPFL := THM: [ THERMO ] MAPFL :: (descthm) ;
 * where
-*   THERMO : name of the \emph{thermo) object that will be created or updated 
+*   THERMO : name of the \emph{thermo} object that will be created or updated 
 *     by the THM: module. Object \emph{thermo} contains thermal-hydraulics 
 *     information set or computed by THM: in transient or in permanent 
 *     conditions such as the distribution of the enthalpy, the pressure, the 
@@ -880,13 +880,31 @@
         SASS=HX(IX)*HY(IY)
         IF(PITCH.EQ.0.0) THEN
 *         PWR ASSEMBLY
+          WRITE(*,*) 'THM: PWR ASSEMBLY'
           ACOOL=SASS-FNFU(ICH)*PI*RGG*RGG-FNTG(ICH)*PI*RTG*RTG
           RAPCOOL=SASS/ACOOL
           PCH=FNFU(ICH)*2.0*PI*RGG
           PM=PCH+FNTG(ICH)*2.0*PI*RTG
           SUMSEC=SUMSEC+ACOOL
+          WRITE(*,*) 'THM number of fuel rods = ',FNFU(ICH)
+          WRITE(*,*) 'THM: number of guide tubes = ',FNTG(ICH)
+*         Overwriting for THM_prototype test
+*         Consider an single BWR cell :
+          WRITE(*,*) 'THM: Tube cell, check with THM prototype'
+          ACOOL = PI*RTG*RTG - FNFU(ICH)*PI*RGG*RGG
+          RAPCOOL = SASS/ACOOL
+          PCH = FNFU(ICH)*2.0*PI*RGG
+*         CASE WITH TUBEX geometry for fuel rod + moderator
+          PM = PCH + 2.0*PI*RTG
+          SUMSEC=ACOOL
+          WRITE(*,*) 'THM: ACOOL = ',ACOOL  
+          WRITE(*,*) 'THM: clad outer radius = ',RGG
+          WRITE(*,*) 'THM: clad outer perimeter = ', PCH
+          WRITE(*,*) 'THM: fuel pellet radius = ',RC
+          WRITE(*,*) 'THM: guide tube radius = ',RTG
         ELSE
 *         CANDU CLUSTER
+          WRITE(*,*) 'THM: CANDU CLUSTER'
           ATOTHEX=3.0*PITCH**2.0*(3.0)**0.5/2.0
           ATIGEHEX=3.0*PI*RGG*RGG
           ACOOL=ATOTHEX-ATIGEHEX
@@ -899,6 +917,9 @@
         FCOOL=(1.0-FPUISS)*RAPCOOL
         FFUEL=FPUISS*RAPFUEL
         HD=4.0*ACOOL/PM
+        WRITE(*,*) 'THM: HYDRAULIC DIAMETER = ',HD
+        WRITE(*,*) 'THM: WETTED PERIMETER = ',PM
+        WRITE(*,*) 'THM: PERIMETER of HEATING elements = ',PCH
         IF(HD.LE.0.) CALL XABORT('THM: NEGATIVE HYDRAULIC DIAMETER(1).')
 *----
 *  RECOVER STEADY-STATE RADII

@@ -1,0 +1,121 @@
+************************************************************************************************************************
+*                                                                                                                      *
+* Procedure :  SALT_MAV.c2m                                                                                            *
+* Purpose   :  Tracking and figure printing for pin cells + MOC Flux calculation, SALT tracking on windmill cell       *
+* Author    :  R. Guasch adapted from L.Fede                                                                           *
+*                                                                                                                      *
+* CALL      :   SALT_MAV                                                                                               *
+*                                                                                                                      *
+************************************************************************************************************************
+
+* ---
+* STRUCTURES AND MODULES
+* ---
+MODULE G2S: MCCGT: SALT: USS: ASM: FLU: GREP: END: DELETE: ;
+
+* ---
+* PROCEDURES
+PROCEDURE Mix_Cell Geom_ISO GeomSS_ISO ; 
+* ---
+
+LINKED_LIST GEOMFLX_MAV GEOMSS TRACK_SS TRACK LIBRARY LIBRARY2 SYS FLUX ;
+
+SEQ_ASCII C_ISO_SS ;
+SEQ_ASCII C_ISO_FLX ;
+SEQ_BINARY TF_EXC ;
+SEQ_BINARY TF_EXC_SS ;
+
+SEQ_ASCII FIG_SS_I.ps :: FILE './PIN_AT10_FIG_SS.ps' ;
+SEQ_ASCII FIG_FLX_I.ps :: FILE './PIN_AT10_FIG_FLX.ps' ;
+
+INTEGER COMB0101 COMB0102 COMB0103 COMB0104 GAP CLAD MODE :=
+        1 2 3 4 5 6 7 ; !  DISTRIBUTED SELF-SHIELDING 
+
+! Geometric Parameter definition : 
+REAL Rcomb1 Rcomb2 Rcomb3 Rcomb4 := 0.313602 0.396678 0.43227 0.4435 ;
+REAL Rgap Rclad pitch := 0.4520 0.5140 1.295 ;
+REAL Rmode := 0.64 ;
+
+
+REAL Kinf1 Keff1 ;
+
+* ---
+* TRACKING PARAMETERS FOR SSH
+* ---
+INTEGER an2d_SS := 12 ;
+REAL densur_SS := 20.0 ;
+
+* ---
+* TRACKING PARAMETERS FOR MOC FLX
+* ---
+INTEGER an2d := 18 ;  ! ANGULAR QUADRATURE PARAMETER
+REAL densur := 35.0 ; ! DENSITY OF INTEGRATION LINES CM^-1
+
+* polar angles for MCCGT:
+INTEGER nmu := 4 ;
+
+* size allocation for MCCGT:
+INTEGER mcu := 50000 ;
+
+! GEOMETRY DEFINITION
+
+GEOMSS := GeomSS_ISO :: <<Rcomb1>> <<Rcomb2>> <<Rcomb3>> <<Rcomb4>> 
+    <<Rgap>> <<Rclad>> <<pitch>> ;
+
+GEOMFLX_MAV := Geom_ISO :: <<Rcomb1>> <<Rcomb2>> <<Rcomb3>> <<Rcomb4>>
+        <<Rgap>> <<Rclad>> <<pitch>> ;
+
+
+* ---
+* SELF-SHIELDING TRACKING
+* ---
+C_ISO_SS FIG_SS_I.ps := G2S: GEOMSS :: ;
+
+TRACK_SS TF_EXC_SS := SALT: C_ISO_SS ::
+  EDIT 0
+  ALLG
+  TISO EQW <<an2d>> <<densur>> REND
+;
+
+
+* ---
+* FLUX CALC TRACKING
+* ---
+C_ISO_FLX FIG_FLX_I.ps := G2S: GEOMFLX_MAV :: ;
+
+TRACK TF_EXC := SALT: C_ISO_FLX ::
+  EDIT 0
+  ALLG
+  TISO EQW <<an2d>> <<densur>> REND
+;
+
+* MOC tracking
+TRACK := MCCGT: TRACK TF_EXC ::
+  EDIT 0
+  CACB <<nmu>> AAC 80 TMT EPSI 1E-5 MCU <<mcu>>
+;
+
+
+! LIBRARY
+LIBRARY := Mix_Cell :: J311_295 <<COMB0101>> <<COMB0102>> <<COMB0103>> <<COMB0104>> 
+                                <<GAP>> <<CLAD>> <<MODE>> ;
+
+
+! UNIVERSAL SELF-SHIELDING 
+LIBRARY2 := USS: LIBRARY TRACK_SS TF_EXC_SS ::
+          EDIT 0
+          PASS 2
+          GRMIN 52
+;
+
+SYS := ASM: LIBRARY2 TRACK TF_EXC :: ARM EDIT 0 ; 
+FLUX := FLU: LIBRARY2 SYS TRACK TF_EXC :: 
+          EDIT 1 TYPE K B1 SIGS ;
+
+
+GREP: FLUX :: GETVAL 'K-EFFECTIVE  ' 1 1 1 >>Keff1<< ;
+ECHO "SS tracking = SALT and FLX tracking = SALT TISO, MOC used on sectorized (MAV) geom: Keff1=" Keff1 ;
+
+ECHO "AT10SALT_MAV completed" ;
+
+END: ;

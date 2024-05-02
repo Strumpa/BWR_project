@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+if [ $# = 0 ]
+   then
+   echo "usage: AT-10_pin.save directory" 1>&2
+   exit 1
+fi
+echo "access AT-10_pin.save"
+MACH=`uname -s`
+Sysx="`echo $MACH | cut -b -6`"
+if [ $Sysx = "CYGWIN" ]; then
+   MACH=`uname -o`
+elif [ $Sysx = "AIX" ]; then
+   MACH=`uname -s`
+else
+   MACH=`uname -sm | sed 's/[ ]/_/'`
+fi
+ls -l
+mv tracks_NXT_san_TSPC.m $1/"$MACH"
+mv PIN_AT10_FIG_SS.ps $1/"$MACH"
+mv PIN_AT10_FIG_FLX.ps $1/"$MACH"
+echo "NXT_TSPC.save completed"
+

@@ -1,0 +1,42 @@
+****************************************************************
+*                                                              *
+* Procedure :  vverGEO.c2m                                     *
+* Purpose   :  Geometry creation                               *
+* Author    :  L.Fede                                          *
+*                                                              *
+* CALL      :                                                  *
+* GEOM := vverGEO                                              *
+*                                                              *
+****************************************************************
+
+* ---
+* INPUT & OUTPUT PARAMETERS
+* ---
+PARAMETER GEOM :: ::: LINKED_LIST GEOM ; ;
+
+* ---
+* STRUCTURES AND MODULES
+* ---
+MODULE  GEO: END: ;
+REAL PITCH := 0.73612 ;
+
+INTEGER COMB0101 COMB0105 COMB0106 COMB0107 GAIN3 MODE4 :=
+        1 5 6 7 3 4 ; !  DISTRIBUTED SELF-SHIELDING 
+
+* ---
+* GEOMETRY DEFINITION
+* ---
+REAL RCOMB7 := 0.3860 ;
+REAL RCOMB1 := 0.5 SQRT RCOMB7 * ;
+REAL RCOMB5 := 0.8 SQRT RCOMB7 * ;
+REAL RCOMB6 := 0.95 SQRT RCOMB7 * ;
+
+GEOM := GEO: :: HEXCEL 5
+  HBC COMPLETE ALBE 1.0
+  SIDE <<PITCH>>
+  RADIUS 0.0 <<RCOMB1>> <<RCOMB5>> <<RCOMB6>> <<RCOMB7>> 0.4582
+  MIX <<COMB0101>> <<COMB0105>> <<COMB0106>> <<COMB0107>> <<GAIN3>> <<MODE4>>
+;
+
+END: ;
+QUIT .

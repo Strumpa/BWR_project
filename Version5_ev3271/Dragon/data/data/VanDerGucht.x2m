@@ -1,0 +1,18 @@
+* Regression tests for Van Der Gucht self-shielding tests
+* Running time = ~ 1m
+* A. Hebert and C. Van Der Gucht
+*
+PROCEDURE svdg0   svdg0c  svdg1   svdg1c  svdg2   svdg6c  svdg12  svdg12c
+          svdg13c svdg14c ;
+*
+svdg0 ;
+svdg0c ;
+svdg1 ;
+svdg1c ;
+svdg2 ;
+svdg6c ;
+svdg12 ;
+svdg12c ;
+svdg13c ;
+svdg14c ;
+QUIT "LIST" .

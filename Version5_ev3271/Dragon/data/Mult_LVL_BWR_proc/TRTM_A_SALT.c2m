@@ -1,0 +1,95 @@
+****************************************************************************************
+*                                                                                       
+* Procedure :  TRTM_A_SALT                                                                        
+* Purpose   :  Tracking and figure printing for pin cells, generate Matlab file with TLM
+* Author    :  R. Guasch                                           
+*                                                                                         
+* CALL      :                                                                             
+* TRTM_A_SALT GEOM_A
+*                                                                                         
+******************************************************************************************
+
+
+* ---
+* INPUT & OUTPUT PARAMETERS
+* ---
+PARAMETER GEOM_A1 GEOM_A2 GEOM_A3 ::
+::: LINKED_LIST GEOM_A1 ;
+::: LINKED_LIST GEOM_A2 ;
+::: LINKED_LIST GEOM_A3 ; ;
+
+* ---
+* STRUCTURES AND MODULES
+* ---
+MODULE G2S: SALT: TLM: END: ;
+
+
+LINKED_LIST TRACK1 ;
+LINKED_LIST TRACK2 ;
+LINKED_LIST TRACK3 ;
+SEQ_ASCII Geo_G2S_A1 ;
+SEQ_ASCII Geo_G2S_A2 ;
+SEQ_ASCII Geo_G2S_A3 ;
+SEQ_BINARY TF_EXC1 ;
+SEQ_BINARY TF_EXC2 ;
+SEQ_BINARY TF_EXC3 ;
+SEQ_ASCII FIG_A1.ps :: FILE './AT10_FIG_A1.ps' ;
+SEQ_ASCII FIG_A2.ps :: FILE './AT10_FIG_A2.ps' ;
+SEQ_ASCII FIG_A3.ps :: FILE './AT10_FIG_A3.ps' ;
+SEQ_ASCII TLM_F1 :: FILE 'tracks_SALT_A1.m' ;
+SEQ_ASCII TLM_F2 :: FILE 'tracks_SALT_A2.m' ;
+SEQ_ASCII TLM_F3 :: FILE 'tracks_SALT_A3.m' ;
+
+
+INTEGER an2d := 8 ;  ! ANGULAR QUADRATURE PARAMETER
+REAL densur := 5.0 ; ! DENSITY OF INTEGRATION LINES CM^-1
+
+
+* ---
+* FLUX CALC TRACKING
+* ---
+Geo_G2S_A1 FIG_A1.ps := G2S: GEOM_A1 :: ;
+Geo_G2S_A2 FIG_A2.ps := G2S: GEOM_A2 :: ;
+Geo_G2S_A3 FIG_A3.ps := G2S: GEOM_A3 :: ;
+
+TRACK1 TF_EXC1 := SALT: Geo_G2S_A1 ::
+  EDIT 1
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+;
+TRACK2 TF_EXC2 := SALT: Geo_G2S_A2 ::
+  EDIT 1
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+;
+TRACK3 TF_EXC3 := SALT: Geo_G2S_A3 ::
+  EDIT 1
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+  LONG
+;
+
+TLM_F1 := TLM: TRACK1 TF_EXC1 ::
+  EDIT 10
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+TLM_F2 := TLM: TRACK2 TF_EXC2 ::
+  EDIT 10
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+TLM_F3 := TLM: TRACK3 TF_EXC3 ::
+  EDIT 10
+  NTPO 1
+  DIRECTIONS
+  DIR 0
+;
+
+
+END: ;
+QUIT .

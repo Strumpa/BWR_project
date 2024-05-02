@@ -1,0 +1,95 @@
+*DECK BranchFlux
+*----
+*  Name          : BranchFlux.c2m
+*  Type          : DRAGON procedure
+*  Use           : Branch flux calculation
+*  Author        : A. Hebert
+*
+*  Procedure called as: 
+*
+*  LIBRARY2 FLUX := BranchFlux LIBRARY2 FLUX LIBRARY TRACKN :: (data) ;
+*
+*  Input data   :
+*    LIBRARY    : Microlib with subgroups
+*    LIBRARY2   : Self-shielded microlib
+*    TRACKN     : Tracking
+*    FLUX       : Multigroup flux
+*  Output data  :
+*    LIBRARY2   : Self-shielded microlib
+*    FLUX       : Multigroup flux
+*  Parameters   :
+*    istep      : Burnup step index corresponding to the calculation
+*    BUend      : Burnup corresponding to the calculation
+*    BUnextSS   : Burnup corresponding to the next self-shielding
+*                 calculation
+*    Fuelpwr    : Fuel power in MW/tonne
+
+PARAMETER LIBRARY2 FLUX LIBRARY TRACKN ::
+      EDIT 1 
+          ::: LINKED_LIST LIBRARY2 FLUX LIBRARY TRACKN ;
+   ;
+*                                                                      ;
+*----
+*  Modules used in this procedure
+*----
+MODULE ASM: FLU: EDI: EVO: USS: GREP: ABORT: DELETE: END: ;
+LINKED_LIST SYS ;
+REAL B2 Kinf1 Kinf2 Keff2 Tend ;
+
+INTEGER istep ;
+REAL BUend BUnextSS Fuelpwr ;
+   :: >>istep<< >>BUend<< >>BUnextSS<< >>Fuelpwr<< ;
+
+  EVALUATE Tend := BUend Fuelpwr / ;
+  ECHO "-----------------------------------------------------------" ;
+  ECHO "Branch flux calculation at step=" istep ;
+
+*----
+*  Resonance self-shielding
+*----
+  ECHO "BURNUP_sortie = " BUend "Next SS = " BUnextSS ;
+  IF BUend BUnextSS - ABS 1E-5 < THEN
+    ECHO "Perform a self-shielding calculation" ;
+    ECHO "-----------------------------------------------------------" ;
+    IF istep 1 = THEN
+      LIBRARY2 := USS: LIBRARY TRACKN ::
+        EDIT 0
+        ARM
+        TRAN
+        PASS 2
+        GRMIN 45
+      ;
+    ELSE
+      LIBRARY2 := USS: LIBRARY2 LIBRARY TRACKN ;
+    ENDIF ;
+  ELSE
+    ECHO "No self-shielding calculation" ;
+    ECHO "-----------------------------------------------------------" ;
+  ENDIF ;
+
+************************************************************************
+* BEGIN FLUX CALCULATION                                               *
+************************************************************************
+  SYS := ASM: LIBRARY2 TRACKN ::
+    EDIT 0 ARM ;
+
+  IF istep 1 = THEN
+    FLUX := FLU: SYS LIBRARY2 TRACKN
+             :: EDIT 1 TYPE K B1 SIGS ;
+  ELSE
+    FLUX := FLU: FLUX SYS LIBRARY2 TRACKN
+             :: EDIT 1 TYPE K B1 SIGS ;
+  ENDIF ;
+
+  GREP: FLUX :: GETVAL 'B2  B1HOM   ' 1 1 1 >>B2<< ;
+  ECHO "B2-1 = " B2 " at BU = " BUend ;
+
+  GREP: FLUX :: GETVAL 'K-INFINITY  ' 1 1 1 >>Kinf1<< ;
+  ECHO "K-inf1_sortie is " Kinf1 " at BU = " BUend ;
+
+************************************************************************
+* END FLUX CALCULATION                                                 *
+************************************************************************
+
+END: ;
+QUIT .

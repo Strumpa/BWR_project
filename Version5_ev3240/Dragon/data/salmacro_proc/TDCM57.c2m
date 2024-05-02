@@ -1,0 +1,229 @@
+*----
+*  TEST CASE TDCM57
+*  MACROSCOPIC CROSS SECTIONS
+*  4-group equilateral triangular Alamos geometry
+*  Author: A. Hebert
+*----
+*  Define STRUCTURES and MODULES used
+*----
+MODULE G2S: SALT: MCCGT: MAC: ASM: FLU: DELETE: TLM: END: ;
+SEQ_ASCII GT_ALAMOS :: FILE './KML2_ARO_13AU_SSH.ap3' ;
+SEQ_ASCII GT_SAL ;
+LINKED_LIST TRACKF MACRO4G SYS FLUX ;
+SEQ_BINARY INTLINS ;
+SEQ_ASCII alamos1.ps alamos2.ps alamos3.ps ;
+SEQ_ASCII alamos4.ps :: FILE './KML2_ARO_13AU_SSH.ps' ;
+SEQ_ASCII TDCM57.m :: FILE './TDCM57.m' ;
+PROCEDURE assertS ;
+INTEGER an2d := 6 ;
+REAL densur := 20.0 ;
+*----
+*  Input Macrolib
+*----
+MACRO4G := MAC: ::
+ EDIT 1 NGRO 4 NMIX 7 NIFI 1 ANIS 2
+ READ INPUT
+ MIX     1 (* U1_3_MAT *)
+    TOTAL  4.097E-01 6.286E-01 4.594E-01 7.508E-01
+    TRANC  4.841E-02 7.939E-03 8.080E-03 8.038E-03
+    NUSIGF 1.632E-02 9.259E-02 5.129E-01 8.808E-01
+    CHI    1.000E+00 0.000E+00 0.000E+00 0.000E+00
+     SCAT 1 1 (*1->1*) 3.908E-01
+          2 2 (*2->2*) 4.407E-01 (*1->2*) 8.546E-04
+          3 4 (*4->3*) 5.318E-03 (*3->3*) 3.785E-01 (*2->3*) 8.057E-03
+          2 4 (*4->4*) 3.983E-01 (*3->4*) 1.203E-02
+          1 1 (*1->1*) 4.793E-02
+          2 2 (*2->2*) 5.419E-03  (*1->2*) -2.640E-04
+          3 4 (*4->3*) -7.338E-04 (*3->3*) 9.014E-03 (*2->3*) -2.453E-03
+          2 4 (*4->4*) 8.769E-03  (*3->4*) -2.572E-03
+ MIX     2 (* clad_fuel_MAT *)
+    TOTAL  4.240E-02 1.0476E-01 2.7503E-01 1.1194E+00
+    TRANC  0.000E+00 0.000E+00  0.000E+00  0.000E+00
+     SCAT 1 1 (*1->1*) 3.738E-02
+          2 2 (*2->2*) 4.102E-02 (*1->2*) 2.439E-05
+          3 4 (*4->3*) 4.985E-04 (*3->3*) 4.956E-02 (*2->3*) 7.370E-05
+          2 4 (*4->4*) 2.996E-02 (*3->4*) 3.248E-04
+          1 1 (*1->1*) 0.000E+00
+          1 2 (*2->2*) -6.161E-03
+          1 3 (*3->3*) -2.326E-02
+          1 4 (*4->4*) 0.000E+00
+ MIX     3 (* clad_gtube_MAT *)
+    TOTAL  4.240E-02 1.0476E-01 2.7503E-01 1.1194E+00
+    TRANC  0.000E+00 0.000E+00  0.000E+00  0.000E+00
+     SCAT 1 1 (*1->1*) 3.738E-02
+          2 2 (*2->2*) 4.102E-02 (*1->2*) 2.439E-05
+          3 4 (*4->3*) 4.985E-04 (*3->3*) 4.956E-02 (*2->3*) 7.370E-05
+          2 4 (*4->4*) 2.996E-02 (*3->4*) 3.248E-04
+          1 1 (*1->1*) 0.000E+00
+          1 2 (*2->2*) -6.161E-03
+          1 3 (*3->3*) -2.326E-02
+          1 4 (*4->4*) 0.000E+00
+ MIX     4 (* clad_itube_MAT *)
+    TOTAL  4.240E-02 1.0476E-01 2.7503E-01 1.1194E+00
+    TRANC  0.000E+00 0.000E+00  0.000E+00  0.000E+00
+     SCAT 1 1 (*1->1*) 3.738E-02
+          2 2 (*2->2*) 4.102E-02 (*1->2*) 2.439E-05
+          3 4 (*4->3*) 4.985E-04 (*3->3*) 4.956E-02 (*2->3*) 7.370E-05
+          2 4 (*4->4*) 2.996E-02 (*3->4*) 3.248E-04
+          1 1 (*1->1*) 0.000E+00
+          1 2 (*2->2*) -6.161E-03
+          1 3 (*3->3*) -2.326E-02
+          1 4 (*4->4*) 0.000E+00
+ MIX     5 (* struct_MAT *)
+    TOTAL  8.240E-02 2.0476E-01 3.7503E-01 2.1194E+00
+    TRANC  0.000E+00 0.000E+00  0.000E+00  0.000E+00
+     SCAT 1 1 (*1->1*) 3.738E-02
+          2 2 (*2->2*) 4.102E-02 (*1->2*) 2.439E-05
+          3 4 (*4->3*) 4.985E-04 (*3->3*) 4.956E-02 (*2->3*) 7.370E-05
+          2 4 (*4->4*) 2.996E-02 (*3->4*) 3.248E-04
+          1 1 (*1->1*) 0.000E+00
+          1 2 (*2->2*) -6.161E-03
+          1 3 (*3->3*) -2.326E-02
+          1 4 (*4->4*) 0.000E+00
+ MIX     6 (* void_MAT *)
+    TOTAL  4.240E-05 1.0476E-04 2.7503E-03 1.1194E-04
+    TRANC  0.000E+00 0.000E+00  0.000E+00  0.000E+00
+     SCAT 1 1 (*1->1*) 0.000E+00
+          1 2 (*2->2*) 0.000E+00
+          1 3 (*3->3*) 0.000E+00
+          1 4 (*4->4*) 0.000E+00
+          1 1 (*1->1*) 0.000E+00
+          1 2 (*2->2*) 0.000E+00
+          1 3 (*3->3*) 0.000E+00
+          1 4 (*4->4*) 0.000E+00
+ MIX     7 (* water_MAT *)
+    TOTAL  5.316E-01 9.352E-01 9.931E-01 1.5931E+00
+    TRANC  2.880E-01 5.529E-01 4.936E-01 4.4340E-01
+     SCAT 1 1 (*1->1*) 4.973E-01
+          2 2 (*2->2*) 6.570E-01 (*1->2*) 3.134E-02
+          4 4 (*4->3*) 1.163E-02 (*3->3*) 7.176E-01 (*2->3*) 2.528E-01
+                                                    (*1->3*) 2.304E-03
+          4 4 (*4->4*) 1.565E+00 (*3->4*) 2.707E-01 (*2->4*) 2.412E-02
+                                                    (*1->4*) 2.228E-04
+          1 1 (*1->1*) 2.735E-01
+          2 2 (*2->2*) 4.253E-01 (*1->2*) 1.410E-02
+          4 4 (*4->3*) 5.064E-03 (*3->3*) 4.286E-01 (*2->3*) 1.203E-01
+                                                    (*1->3*) 3.050E-04
+          4 4 (*4->4*) 4.384E-01 (*3->4*) 6.426E-02 (*2->4*) 3.373E-03
+                                                    (*1->4*) 1.245E-05
+;
+*----
+* Surfacic file conversion with REFL unfolding and isotropic reflection
+*----
+GT_SAL alamos1.ps := G2S: GT_ALAMOS :: EDIT 0 ALAMOS -8 ;
+*----
+*  Tracking of surfacic file for equilateral triangular geometry
+*----
+TRACKF INTLINS := SALT: GT_SAL ::
+  EDIT 1
+  ALLG
+  TISO <<an2d>> <<densur>> REND
+;
+
+TRACKF := MCCGT: TRACKF INTLINS ::
+  EDIT 2
+  LCMD 3 AAC 150 TMT SCR 0 EPSI 1E-5
+  MAXI 1 KRYL 0 HDD 0.0 ;
+*----
+*  Compute flux
+*----
+SYS := ASM: MACRO4G TRACKF INTLINS :: ARM EDIT 1 ;    
+
+FLUX := FLU: MACRO4G SYS TRACKF INTLINS :: 
+     EDIT 1 TYPE K EXTE 100 1E-5 ;
+
+assertS FLUX :: 'K-EFFECTIVE' 1 0.9933268 ;
+GT_SAL TRACKF INTLINS SYS FLUX := DELETE: GT_SAL TRACKF INTLINS SYS FLUX ;
+
+*----
+* Surfacic file conversion for RA60 rotation and isotropic reflection
+*----
+GT_SAL alamos2.ps := G2S: GT_ALAMOS :: EDIT 0 ALAMOS -10 ;
+*----
+*  Tracking of surfacic file for equilateral triangular geometry
+*----
+TRACKF INTLINS := SALT: GT_SAL ::
+  EDIT 1
+  ALLG
+  TISO <<an2d>> <<densur>> REND
+;
+
+TRACKF := MCCGT: TRACKF INTLINS ::
+  EDIT 2
+  LCMD 3 AAC 150 TMT SCR 0 EPSI 1E-5
+  MAXI 1 KRYL 0 HDD 0.0 ;
+*----
+*  Compute flux
+*----
+SYS := ASM: MACRO4G TRACKF INTLINS :: ARM EDIT 1 ;    
+
+FLUX := FLU: MACRO4G SYS TRACKF INTLINS :: 
+     EDIT 1 TYPE K EXTE 100 1E-5 ;
+
+assertS FLUX :: 'K-EFFECTIVE' 1 0.9933580 ;
+GT_SAL TRACKF INTLINS SYS FLUX := DELETE: GT_SAL TRACKF INTLINS SYS FLUX ;
+
+*----
+* Surfacic file conversion with REFL unfolding and specular reflection
+*----
+GT_SAL alamos3.ps := G2S: GT_ALAMOS :: EDIT 0 ALAMOS 8 ;
+*----
+*  Tracking of surfacic file for equilateral triangular geometry
+*----
+TRACKF INTLINS := SALT: GT_SAL ::
+  EDIT 1
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND
+;
+
+TRACKF := MCCGT: TRACKF INTLINS ::
+  EDIT 2
+  LCMD 3 AAC 150 TMT SCR 0 EPSI 1E-5
+  MAXI 1 KRYL 0 HDD 0.0 ;
+*----
+*  Compute flux
+*----
+SYS := ASM: MACRO4G TRACKF INTLINS :: ARM EDIT 1 ;    
+
+FLUX := FLU: MACRO4G SYS TRACKF INTLINS :: 
+     EDIT 1 TYPE K EXTE 100 1E-5 ;
+
+assertS FLUX :: 'K-EFFECTIVE' 1 0.9929629 ;
+GT_SAL TRACKF INTLINS SYS FLUX := DELETE: GT_SAL TRACKF INTLINS SYS FLUX ;
+
+*----
+* Surfacic file conversion for RA60 rotation and specular reflection
+*----
+GT_SAL alamos4.ps := G2S: GT_ALAMOS :: EDIT 0 ALAMOS 10 ;
+*----
+*  Tracking of surfacic file for equilateral triangular geometry
+*----
+TRACKF INTLINS := SALT: GT_SAL ::
+  EDIT 1
+  ALLG
+  TSPC EQW2 <<an2d>> <<densur>> REND LONG
+;
+
+TRACKF := MCCGT: TRACKF INTLINS ::
+  EDIT 2
+  LCMD 3 AAC 150 TMT SCR 0 EPSI 1E-5
+  MAXI 1 KRYL 0 HDD 0.0 ;
+*----
+*  Compute flux
+*----
+SYS := ASM: MACRO4G TRACKF INTLINS :: ARM EDIT 1 ;    
+
+FLUX := FLU: MACRO4G SYS TRACKF INTLINS :: 
+     EDIT 1 TYPE K EXTE 100 1E-5 ;
+*----
+* Plot tracks
+*----
+TDCM57.m := TLM: TRACKF INTLINS ::
+  EDIT 1
+  NTPO 1
+  DIRECTIONS NoPause DIR 0 ;
+
+assertS FLUX :: 'K-EFFECTIVE' 1 0.9930210 ;
+ECHO "test TDCM57 completed" ;
+END: ;
+QUIT .

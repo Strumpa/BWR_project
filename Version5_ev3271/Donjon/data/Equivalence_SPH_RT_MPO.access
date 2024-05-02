@@ -1,0 +1,10 @@
+#!/bin/sh
+if [ $# = 0 ]
+   then
+   echo "usage: Equivalence_SPH_RT_MPO.access directory" 1>&2
+   exit 1
+fi
+cp $1/data/Equivalence_SPH_RT_MPO_proc/quick-mpo-oneParam-17-diag.hdf .
+chmod 644 *.hdf
+ls -l
+echo "Equivalence_SPH_RT_MPO access script terminated"

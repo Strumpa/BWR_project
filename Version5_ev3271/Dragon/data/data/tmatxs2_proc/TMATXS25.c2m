@@ -1,0 +1,225 @@
+*--------------------------------------------------------
+* TEST CASE TMATXS25
+* AUTHOR: Pr. OTMAN JAI (03/2024)
+* Department of Electrical Engineering & Smart Systems
+* Higher School of Technology
+* Sidi Mohamed Ben Abdellah University, Fez, Morocco
+*--------------------------------------------------------
+* DIMENSION: 2D
+* GEOMETRY TYPE: HEXAGONAL
+* TEMPERATURE: 300.0 K
+* LIBRARY: jeff311sh295
+
+* SELF-SHIELDING MODEL: RIB-CORR-RSE
+* TRACKING TYPE: NXT:
+* HOMOGENEISATION TYPE: MERG REGI (BY REGION)
+* CONDENSATION: 295 ENERGY GROUPS
+*
+*-------------------------------------------------
+*  Define STRUCTURES and MODULES used
+*-------------------------------------------------
+MODULE       NXT: PSP: ASM: ABORT: FLU: DELETE: LIB: GEO:
+             EDI: GREP: USS: UTL: END: ;
+LINKED_LIST  Library Library2 Tracking_F Tracking_S Pij Flux
+             Edition Geometry_F Geometry_S StepList BURNUP EDIOBJ ;
+SEQ_BINARY   Lines_F Lines_S ;
+*-------------------------------------------------
+REAL     Temperature := 294.0     ; ! Room Temperature := 293.0 K (All Components)
+REAL     Pitch       := 4.353600  ; ! Pitch of Hexagonal Cell
+REAL     Keff Kinf ; ! OUTPUT
+REAL Kinf1 Keff1 ;
+PROCEDURE assertS ;
+*---------
+* Side Of Hexagonal Cell
+*---------
+REAL     Rz := 0.3175 ;
+REAL     Rf := 1.82769 ;
+REAL     Rv := 1.8315 ;                                                
+REAL     Rg := 1.8823 ;
+REAL     Side_Cell := Pitch 3.0 SQRT / ; ! Side of Hexagonal Cell
+*------------------------------------------------------------
+REAL      DENSITY_S   := 30.0      ; ! (30.0)Densite des Lignes d'Integration (SSH):
+INTEGER   ANGLES_S    := 16        ; ! (16)Nombre de Directions (SSH):
+REAL      DENSITY_F   := 50.0      ; ! (50.0)Densite des Lignes d'Integration (Flux):
+INTEGER   ANGLES_F    := 31        ; ! (31)Nombre de Directions (Flux):
+*------------------------------------------------------------
+STRING   library    := "Jeff3sh295" ; ! DRAGLIB Library
+*-------------------------------------------------
+REAL RCOMB1 RCOMB4 RCOMB5 RCOMB6 ; ! 50%, 30%, 15% et 5%.(* DISTRIBUTED SELF-SHIELDING *)
+*-------------------------------------------------                
+******************  Macroscopic XS  **************
+*-------------------------------------------------------------
+ Library := LIB: ::                 
+ EDIT 1                           
+  NMIX 7 (*MAXIMUM OF MATERIAL MIXTURES*) 
+  CTRA APOL  (*APOLLO TYPE TRANSPORT CORRECTION*)
+  ANIS 2                
+  ADED 4 NELAS N4N N2N N3N
+  RSE 1.0E-5  (*RSE TYPE PROBABILITY TABLES*)
+*
+  MIXS LIB: DRAGON FIL: <<library>>
+*---------------------------    
+* MIX 1 : ZIRCONIUM BAR
+*---------------------------
+     MIX  1  <<Temperature>>     6.4   NOEV                              
+              Zr90   = 'Zr90'  0.50707   2   
+              Zr91   = 'Zr91'  0.11181   2   
+              Zr92   = 'Zr92'  0.17278   2   
+              Zr94   = 'Zr94'  0.17891   2   
+              Zr96   = 'Zr96'  0.02944   2                                  
+*---------------------------
+* MIX 2 : STANDARD FUEL
+*---------------------------
+      MIX 2   <<Temperature>>
+              Zr90   = 'Zr90'  1.8327E-02
+              Zr91   = 'Zr91'  3.9527E-03
+              Zr92   = 'Zr92'  5.9761E-03
+              Zr94   = 'Zr94'  5.9272E-03
+              Zr96   = 'Zr96'  9.3496E-04
+              U235   = 'U235'  2.5059E-04 1
+              U238   = 'U238'  9.9714E-04 1
+*---------------------------
+* MIX 6 : CLAD
+*---------------------------
+      MIX  6  <<Temperature>>     8.030   NOEV
+              Fe54  = 'Fe54'  3.909987E-02
+              Fe56  = 'Fe56'  6.303045E-01
+              Fe57  = 'Fe57'  1.468904E-02
+              Fe58  = 'Fe58'  1.989641E-03
+*---------------------------
+* MIX 7 : Water Arround Fuel Element
+*---------------------------
+      MIX  7  <<Temperature>>    NOEV
+              H1H2O  = 'H1_H2O'  6.67535E-02
+              O16    = 'O16'     3.33768E-02
+ ;
+
+ Library := LIB: Library ::
+  EDIT 1
+  NMIX 7     (*MAXIMUM OF MATERIAL MIXTURES*)
+  CTRA APOL  (*APOLLO TYPE TRANSPORT CORRECTION*)
+  ANIS 2
+  ADED 4 NELAS N4N N2N N3N
+  RSE 1.0E-5 (*RSE TYPE PROBABILITY TABLES*)
+*
+  MIXS LIB: MATXS2 FIL: _matxs_H1_ZRH
+*---------------------------         
+* MIX 2 : STANDARD FUEL
+*---------------------------
+      MIX 2   <<Temperature>>
+              H1ZrH  = 'H1_ZRH'    5.4850E-02  THER 40 hzrh TCOH hzrh$
+*-------------------------------------------------------------------------------------
+****************************** RIM EFFECT IN FUEL ELEMENTS ***************************
+*-------------------------------------------------------------------------------------
+  MIX 3 COMB 2 1.0
+  MIX 4 COMB 2 1.0
+  MIX 5 COMB 2 1.0
+;
+*-------------------------------------------------------------
+******************  Geometry (HEXAGONAL)  *******************   
+*-------------------------------------------------------------
+******************** HEX (HEXT) **********************
+REAL Rcomb1    := 0.5 SQRT Rf * ;
+REAL Rcomb2    := 0.8 SQRT Rf * ;
+REAL Rcomb3    := 0.95 SQRT Rf * ;
+*------------------------------------------ 
+*------------------------------------------------------------
+******** GEOMETRIE POUR LE CALCUL D'AUTOPROTECTION **********
+*------------------------------------------------------------
+Geometry_S := GEO: ::  HEX 1
+  EDIT 1
+  HBC COMPLETE REFL
+  CELL Fuel_Cell
+*---------------------
+         ::: Fuel_Cell := GEO: HEXT 1
+    SIDE <<Side_Cell>>
+    MIX
+    7 7 7 7 7 7
+
+    CLUSTER ROD_Fuel
+    ::: ROD_Fuel := GEO: TUBE 4
+        MIX 1 2 0 6
+        RADIUS 0.00000  <<Rz>>  <<Rf>> <<Rv>> <<Rg>>
+        NPIN  1
+        RPIN 0.0000
+        APIN 0.0000  ;
+   ;
+*------------------------------------------------------------
+ ;
+*------------------------------------------------------------
+**** TRACKING DE LA GEOMETRIE DE CALCUL D'AUTOPROTECTION ****
+*------------------------------------------------------------
+Tracking_S Lines_S := NXT: Geometry_S ::
+  EDIT 1 
+  TISO <<ANGLES_S>> <<DENSITY_S>>
+   ;
+*------------------------------------------------------------
+************ GEOMETRIE POUR LE CALCUL DES FLUX **************
+*------------------------------------------------------------
+Geometry_F := GEO: ::  HEX 1
+  EDIT 1
+  HBC COMPLETE REFL
+  CELL Fuel_Cell
+*---------------------
+         ::: Fuel_Cell := GEO: HEXT 1
+    SIDE <<Side_Cell>>
+    MIX
+    7 7 7 7 7 7
+
+    CLUSTER ROD_Fuel
+    ::: ROD_Fuel := GEO: TUBE 7
+        MIX  1 2 3 4 5 0 6
+        RADIUS 0.00000 <<Rz>> <<Rcomb1>> <<Rcomb2>> <<Rcomb3>>
+                       <<Rf>> <<Rv>> <<Rg>>
+        SPLITR 1 1 1 1 1 1 1
+        NPIN  1
+        RPIN 0.0000
+        APIN 0.0000  ;
+   ;
+*------------------------------------------------------------
+ ;
+*------------------------------------------------------------
+******** TRACKING DE LA GEOMETRIE DE CALCUL DES FLUX ********
+*------------------------------------------------------------
+Tracking_F Lines_F := NXT: Geometry_F ::
+  EDIT 1
+  TISO <<ANGLES_F>> <<DENSITY_F>>
+   ;
+!
+!*-------------------------------------------------
+!*****  POSTSCRIPT
+!*-------------------------------------------------
+SEQ_ASCII FigMix.ps :: FILE 'FigMix.ps' ;
+FigMix.ps := PSP: Tracking_F ::
+ EDIT 0
+ FILL HSB !NOCONTOUR
+ TYPE MIXTURE ;
+*-------------------------------------------------
+* Self-Shielding calculation
+*-------------------------------------------------
+   Library2 := USS: Library Tracking_S Lines_S ::
+   EDIT 1 TRAN PASS 3 ;
+*-------------------------------------------------
+*-------------------------------------------------------------
+*  Transport calculation
+*-------------------------------------------------------------
+Pij := ASM: Library2 Tracking_F Lines_F :: EDIT 1 PIJ ;
+*-------------------------------------------------------------
+*  Flux calculation
+*-------------------------------------------------------------
+Flux := FLU: Pij Library2 Tracking_F ::
+    EDIT 1 TYPE K ;
+*-------------------------------------------------------------
+Edition := EDI: Flux Library2 Tracking_F ::
+   EDIT 5
+   MERG COMP
+   MICR RES
+   SAVE ON FUEL
+  ;
+*-------------------------------------------------------------
+UTL: Edition :: DIR IMPR STATE-VECTOR * STEP UP FUEL DIR IMPR STATE-VECTOR * ;
+SEQ_ASCII MERG.db :: FILE '_MERG.db' ;
+MERG.db := Edition ;
+assertS Flux :: K-EFFECTIVE 1 1.412607 ;
+END: ;
+QUIT "LIST" .

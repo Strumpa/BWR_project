@@ -1,0 +1,90 @@
+****************************************************************
+*                                                              *
+* Procedure :  vverGEO.c2m                                     *
+* Purpose   :  Geometry creation                               *
+* Author    :  L.Fede                                          *
+*                                                              *
+* CALL      :                                                  *
+* GEOM GEOM_SS := vverGEO :: <<name_geom>>                     *
+*                                                              *
+****************************************************************
+
+* --------------------------------
+*    INPUT & OUTPUT PARAMETERS
+* --------------------------------
+PARAMETER GEOM GEOM_SS ::
+::: LINKED_LIST GEOM ; 
+::: LINKED_LIST GEOM_SS ; ;
+
+STRING name_geom ;
+:: >>name_geom<< ;
+
+* -------------------------------
+*    STRUCTURES AND MODULES
+* -------------------------------
+MODULE  GEO: END: ABORT: ;
+REAL PITCH RCOMB1 RCOMB2 RCOMB3 RCOMB4 RCOMB5 RCOMB6 RCOMB7 RCOMB8 RCOMB9 RCOMB10 RCOMB11 CLAD ; 
+REAL RMOD1  RMOD2 RMOD3  :=
+     0.5235 0.592 0.6605 ;
+INTEGER COMB0101 COMB0102 COMB0103 COMB0104 COMB0105 COMB0106 COMB0107 COMB0108 COMB0109
+ COMB0110 COMB0111 GAP7 CLAD8 MODE9 ;
+
+* --------------------------------
+*       GEOMETRY DEFINITION
+* -------------------------------
+ECHO "vverGEO: process geometry=" name_geom ;
+
+* ---
+* KHMELNITSKY-2 REACTOR - 439 GT ASSEMBLY - 3.6% UOx CELL + Gd2O3
+* ---
+IF name_geom 'KML2_439GT_36Gd' = THEN
+
+ EVALUATE COMB0101 COMB0102 COMB0103 COMB0104 COMB0105 COMB0106 GAP7 CLAD8 MODE9 :=
+          11 12 13 14 15 16 7 8 9 ; ! DISTRIBUTED SELF-SHIELDING 
+
+ GEOM := GEO: :: HEXCEL 12
+      HBC COMPLETE TRAN
+      RADIUS 0.0 0.075 0.169270 0.239384 0.293185 0.338541 0.368916 0.3785 0.3865 0.455 <<RMOD1>> <<RMOD2>> <<RMOD3>>
+      SIDE 0.7361215932
+      MIX
+      <<GAP7>>
+      <<COMB0101>>
+      <<COMB0102>>
+      <<COMB0103>>
+      <<COMB0104>>
+      <<COMB0105>>
+      <<COMB0106>>
+      <<GAP7>>
+      <<CLAD8>>
+      <<MODE9>>
+      <<MODE9>>
+      <<MODE9>>
+      <<MODE9>>
+      ;
+
+ GEOM_SS := GEO: :: HEXCEL 9
+      HBC COMPLETE ALBE 1.0
+      RADIUS 0.0 0.075 0.169270 0.239384 0.293185 0.338541 0.368916 0.3785 0.3865 0.455
+      SIDE 0.7361215932
+      MIX
+      <<GAP7>>
+      <<COMB0101>>
+      <<COMB0102>>
+      <<COMB0103>>
+      <<COMB0104>>
+      <<COMB0105>>
+      <<COMB0106>>
+      <<GAP7>>
+      <<CLAD8>>
+      <<MODE9>>
+      ;
+
+ELSE
+
+  ECHO "vverGEO: geometry" name_geom "not available" ;
+  ABORT: ;
+
+ENDIF ;
+
+END: ;
+QUIT .

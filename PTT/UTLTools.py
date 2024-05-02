@@ -2,7 +2,7 @@
 # Author : R. Guasch, adapted from L. Fede's getLists()
 # Purpose : handle issues with generating UTL compatible lists for Dragon5 BU calculations
 #
-
+import numpy as np
 import matplotlib.pyplot as plt
 #
 
@@ -116,5 +116,5 @@ def convert_to_UTL_lists(ListBU, ListAUTOP, ListCOMPO,Serpent):
 
 #ListBU, ListAUTOP, ListCOMP = getLists("CASMO-5")
 #convert_to_UTL_lists(ListBU, ListAUTOP, ListCOMP)
-ListBU, ListAUTOP, ListCOMP = getLists('UOx4_autop5') #'UOx4_autop5' for AT10_24UOX, 'UOx2_autop5' for others ?
+ListBU, ListAUTOP, ListCOMP = getLists('UOx2_autop5') #'UOx4_autop5' for AT10_24UOX, 'UOx2_autop5' for others ?
 convert_to_UTL_lists(ListBU, ListAUTOP, ListCOMP, Serpent=True)

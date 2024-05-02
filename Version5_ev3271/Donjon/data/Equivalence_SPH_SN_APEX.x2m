@@ -1,0 +1,75 @@
+*----
+*  TEST CASE Equivalence_SPH_SN_APEX
+*  5 x 5 UMZONE ASSEMBLY WITH SN METHOD
+*  Input cross section data from APEX
+*----
+*  Define STRUCTURES and MODULES used
+*----
+LINKED_LIST ASSMB TRACK SYSTEM MACRO2 MACRO OPTIM FLUX ;
+STRING Apex_name := './UOX_5x5_TG6_sym8_multiDom.h5' ;
+HDF5_FILE UOX_5x5 :: FILE <<Apex_name>> ;
+MODULE GEO: SPH: SNT: ASM: FLU: UTL: HUTL: GREP: DELETE: END: ;
+INTEGER IterEmax := 1000 ;
+INTEGER ncals ;
+REAL K_EFF_REF ;
+PROCEDURE SPHPicardSN ;
+PROCEDURE assertS ;
+
+REAL side1 := 1.26 ;
+REAL side2 := side1 1.26 + ;
+REAL side3 := side2 1.26 + ;
+REAL side4 := side3 1.26 + ;
+REAL side5 := side4 1.26 + ;
+ASSMB := GEO: :: CAR2D 5 5 (*ASSEMBLY 5 X 5*)
+          X- DIAG X+ REFL
+          Y- REFL Y+ DIAG
+          MESHX 0.0 <<side1>> <<side2>> <<side3>> <<side4>> <<side5>>
+          MIX 6 5 4 5 6
+                3 2 3 5
+                  1 2 4
+                    3 5
+                      6
+;
+
+TRACK := SNT: ASSMB :: EDIT 1 SN 4 SCAT 1 QUAD 1 ;
+
+UTL: TRACK :: DIR IMPR VOLUME * ;
+
+*----
+* Perform fixed point SPH equivalence for each branch calculation
+*----
+HUTL: UOX_5x5 :: GREP 'NCALS' 1 >>ncals<< ;
+INTEGER ical := 0 ;
+REPEAT
+
+  EVALUATE ical := ical 1 + ;
+  ECHO "process branch=" ical "/" ncals ;
+  MACRO2 := SPH: UOX_5x5 :: EDIT 1 STEP AT <<ical>> MACRO OFF LEAK ;
+  GREP: MACRO2 :: GETVAL 'K-EFFECTIVE' 1 >>K_EFF_REF<< ;
+  ECHO "ical=" ical "reference k-effective=" K_EFF_REF ;
+
+  MACRO OPTIM := SPHPicardSN MACRO2 ASSMB TRACK
+   :: 0.0 10.0 1.0E-6 <<IterEmax>> ;
+  ECHO "control variables at convergence for ical=" ical ;
+  UTL: OPTIM :: IMPR 'VAR-VALUE' * ;
+  MACRO2 := DELETE: MACRO2 ;
+
+*----
+* Write SPH factors on APEX file
+*----
+  UOX_5x5 := SPH: UOX_5x5 OPTIM :: EDIT 1 STEP AT <<ical>>
+     IDEM SPOP EQUI 'EQV_DIFF_S3' ;
+  OPTIM := DELETE: OPTIM ;
+
+*----
+* Verification calculation
+*----
+  SYSTEM := ASM: MACRO TRACK :: EDIT 0 ARM ;
+  FLUX := FLU: MACRO TRACK SYSTEM :: EDIT 1 TYPE K B0 SIGS ;
+  assertS FLUX :: 'K-EFFECTIVE' 1 <<K_EFF_REF>> ;
+  
+  MACRO SYSTEM FLUX := DELETE: MACRO SYSTEM FLUX ;
+UNTIL ical ncals = ;
+
+ECHO "Equivalence_SPH_SN_APEX completed" ;
+END: ;

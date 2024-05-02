@@ -1,0 +1,74 @@
+XSM_FILE XSM1 XSM2 XSM3 XSM4 ;
+PROCEDURE svdg12_auto svdg12_shiba svdg12_uss svdg12_rse ;
+MODULE VDG: DELETE: ABORT: END: ;
+SEQ_ASCII SECLIB_XSM :: FILE './SECLIB_XSM' ;
+XSM_FILE DUMMYDA ;
+REAL zaver REFVALUE DELTA ;
+*
+* import the cross section library (autolib)
+DUMMYDA := SECLIB_XSM ;
+*
+* TEST AUTO: SELF-SHIELDING MODULE.
+XSM1 := svdg12_auto ;
+*
+* TEST SHI: SELF-SHIELDING MODULE.
+XSM2 := svdg12_shiba ;
+*
+* TEST USS/PTSL: SELF-SHIELDING MODULE.
+XSM3 := svdg12_uss ;
+*
+* TEST USS/RSE: SELF-SHIELDING MODULE.
+XSM4 := svdg12_rse ;
+*
+* COMPARE THE TWO RUNS.
+VDG: XSM1 XSM2 :: EDIT 2 PICK AVER >>zaver<< ;
+ECHO "SHI: averaged error=" zaver "%" ;
+
+EVALUATE REFVALUE := 1.722 ;
+EVALUATE DELTA := zaver REFVALUE - REFVALUE / ABS ;
+IF DELTA 5.0E-2 < THEN
+  ECHO "TEST SUCCESSFUL; DELTA=" DELTA ;
+ELSE
+  ECHO "------------" ;
+  ECHO "TEST FAILURE" ;
+  ECHO "------------" ;
+  ECHO "REFERENCE=" REFVALUE " CALCULATED=" zaver ;
+  ABORT: ;
+ENDIF ;
+*
+* COMPARE THE TWO RUNS.
+VDG: XSM1 XSM3 :: EDIT 2 PICK AVER >>zaver<< ;
+ECHO "USS/PTSL: averaged error=" zaver "%" ;
+
+EVALUATE REFVALUE := 7.616 ;
+EVALUATE DELTA := zaver REFVALUE - REFVALUE / ABS ;
+IF DELTA 5.0E-2 < THEN
+  ECHO "TEST SUCCESSFUL; DELTA=" DELTA ;
+ELSE
+  ECHO "------------" ;
+  ECHO "TEST FAILURE" ;
+  ECHO "------------" ;
+  ECHO "REFERENCE=" REFVALUE " CALCULATED=" zaver ;
+  ABORT: ;
+ENDIF ;
+*
+* COMPARE THE TWO RUNS.
+VDG: XSM1 XSM4 :: EDIT 2 PICK AVER >>zaver<< ;
+ECHO "USS/RSE: averaged error=" zaver "%" ;
+
+EVALUATE REFVALUE := 3.54031E-1 ;
+EVALUATE DELTA := zaver REFVALUE - REFVALUE / ABS ;
+IF DELTA 5.0E-2 < THEN
+  ECHO "TEST SUCCESSFUL; DELTA=" DELTA ;
+ELSE
+  ECHO "------------" ;
+  ECHO "TEST FAILURE" ;
+  ECHO "------------" ;
+  ECHO "REFERENCE=" REFVALUE " CALCULATED=" zaver ;
+  ABORT: ;
+ENDIF ;
+*
+XSM1 XSM2 XSM3 XSM4 := DELETE: XSM1 XSM2 XSM3 XSM4 ;
+ECHO "test svdg12 completed" ;
+END: ;
+QUIT "LIST" .

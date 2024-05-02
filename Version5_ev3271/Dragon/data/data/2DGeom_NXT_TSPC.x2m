@@ -1,0 +1,56 @@
+*----
+*  TEST CASE TCM31
+*  4X4 2D-CARTESIAN MESH WITH NXT:
+*  MACROLIB-DEFINED CROSS SECTIONS
+*----
+* Define STRUCTURES and MODULES used
+*----
+LINKED_LIST MACRO ASSMB ASSMB2D TRACK SYS FLUX ;
+MODULE GEO: NXT: MAC: ASM: FLU: TLM: DELETE: END: ;
+SEQ_BINARY TRACK_FIL ;
+SEQ_ASCII Lines.m :: FILE './Lines.m' ;
+PROCEDURE assertS ;
+*
+MACRO := MAC: ::
+ EDIT 2 NGRO 1 NMIX 3 NIFI 1
+     READ INPUT
+     MIX 1 !EAU
+        TOTAL 0.3683        SCAT 1 1 0.3661
+     MIX 2 !COMBUSTIBLE
+        TOTAL 0.36522       SCAT 1 1 0.3234
+        NUSIGF 0.1564       CHI 1.0
+        MIX 3 !ARGENT
+     TOTAL 0.8453        SCAT 1 1 0.5216
+        ;
+
+ASSMB2D := GEO: :: CAR2D 4 4
+          EDIT 2
+          X- REFL  X+ REFL 
+          Y- REFL  Y+ REFL 
+          MESHX 0.0 0.37 0.46 0.62 0.72 
+          MESHY 0.0 0.37 0.46 0.62 0.72 
+          MIX 2 2 2 1
+              2 2 3 1
+              2 3 1 1
+              1 1 1 1     
+         ;
+*---
+*2D QR ANGULAR QUADRATURE IN NXT          
+*---
+TRACK TRACK_FIL := NXT: ASSMB2D ::
+     TITLE '2D CARTESIAN BENCHMARK'
+     EDIT 10
+     TSPC EQW2 2 3.0 LONG ;
+*
+
+Lines.m := TLM: TRACK TRACK_FIL ::
+  EDIT 99
+  NTPO 1
+  DIRECTIONS NoPause DIR 0 ;
+
+SYS := ASM: MACRO TRACK TRACK_FIL :: EDIT 1 PIJ ;
+*
+FLUX := FLU: SYS MACRO TRACK TRACK_FIL :: TYPE K ;
+ECHO "test 2DGeom_nxt_tspc completed" ;
+END: ;
+QUIT "LIST" .

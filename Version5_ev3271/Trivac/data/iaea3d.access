@@ -1,0 +1,4 @@
+#!/bin/sh
+echo access iaea3d.access
+ln -s "$1"/data/_iaea3d_ref.txt .
+ls -l

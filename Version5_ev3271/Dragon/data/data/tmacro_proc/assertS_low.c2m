@@ -1,0 +1,37 @@
+*
+* Assert procedure for non-regression testing
+* Recover a value from a real array
+* Special version with user-defined epsilon
+* Author: A. Hebert
+*
+PARAMETER LCMNAM :: ::: LINKED_LIST LCMNAM ; ;
+CHARACTER KEY ;
+INTEGER ISET IPOS ;
+REAL REFVALUE epsilon ;
+:: >>KEY<< >>IPOS<< >>REFVALUE<< >>epsilon<< ;
+INTEGER ITYLCM ;
+REAL VALUE DELTA ;
+DOUBLE PRECISION DVALUE ;
+MODULE GREP: ABORT: END: ;
+*
+GREP: LCMNAM :: TYPE <<KEY>> >>ITYLCM<< ;
+IF ITYLCM 2 = THEN
+  GREP: LCMNAM :: GETVAL <<KEY>> <<IPOS>> >>VALUE<< ;
+ELSEIF ITYLCM 4 = THEN
+  GREP: LCMNAM :: GETVAL <<KEY>> <<IPOS>> >>DVALUE<< ;
+  EVALUATE VALUE := DVALUE D_TO_R ;
+ELSE
+  PRINT "assertS_low: INVALID TYPE=" ITYLCM ;
+  ABORT: ;
+ENDIF ;
+EVALUATE DELTA := VALUE REFVALUE - REFVALUE / ABS ;
+IF DELTA epsilon < THEN
+  PRINT "TEST SUCCESSFUL; DELTA=" DELTA ;
+ELSE
+  PRINT "------------" ;
+  PRINT "TEST FAILURE" ;
+  PRINT "------------" ;
+  PRINT "REFERENCE=" REFVALUE " CALCULATED=" VALUE ;
+  ABORT: ;
+ENDIF ;
+END: ;
