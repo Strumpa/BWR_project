@@ -303,11 +303,30 @@ class FVM_ConvectionInCanal_MONO:
             Re_number = self.Q_flow*self.DH/(IAPWS97(P=self.P_cool, h=self.h_z[i]*10**-3).Liquid.mu)
             k_fluid = IAPWS97(P=self.P_cool, h=self.h_z[i]*10**-3).Liquid.k
             print(f"At axial slice = {i}, computed Reynold # = {Re_number}, computed Prandt # = {Pr_number}, k_fluid = {k_fluid}")
-            self.Hc[i] = (0.023)*(Pr_number)**0.4*(Re_number)**0.8*k_fluid/self.DH
-            self.T_water[i] = IAPWS97(P=self.P_cool, h=self.h_z[i]*10**-3).T
-            self.T_surf[i] = (self.q_fluid[i]/(2*np.pi*self.clad_radius)/self.Hc[i]+self.T_water[i])
+            
+            #need to compute de vapor quality to determine if the heat transfer coefficient is in the nucleate boiling regime or in the convective boiling regime.
+            self.x=0
+            self.state_Tsat=IAPWS97(P = self.P_cool, x = self.x) #faux, il faut trouver Tsat en fonction de P_cool
+            self.K = self.compute_K(self.T_surf[i], self.T_water[i], self.state_Tsat.T)
+            if self.K == 0:
+                self.Hc[i] = (0.023)*(Pr_number)**0.4*(Re_number)**0.8*k_fluid/self.DH
+                self.T_water[i] = IAPWS97(P=self.P_cool, h=self.h_z[i]*10**-3).T
+                self.T_surf[i] = (self.q_fluid[i]/(2*np.pi*self.clad_radius)/self.Hc[i]+self.T_water[i])
+            elif self.K == 1:
+                print('K=1')
+            elif self.K == 2:
+                print('K=2')
     
         return self.T_surf
     
 
+    def compute_K(self, Tsurf, Tcoolant, Tsat):
+        if Tcoolant < Tsat and Tsurf < Tsat:
+            self.K = 0
+        elif Tcoolant < Tsat and Tsurf > Tsat:
+            self.K = 1
+        elif Tcoolant > Tsat and Tsurf > Tsat:
+            self.K = 2
+
+        return self.K
     
