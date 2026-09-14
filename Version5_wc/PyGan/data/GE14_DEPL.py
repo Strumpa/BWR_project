@@ -14,6 +14,10 @@ import lifo
 import lcm
 import cle2000
 import matplotlib.pyplot as plt
+import re
+
+def format_isotope_name(isotope):
+    return re.sub(r"([A-Za-z]+)(\d+)", r"\1-\2", isotope)
 
 # --- DRAGON5 procedures
 from assertS import *
@@ -32,8 +36,8 @@ exec_case = False # Set to false allows for post treatment of a draglib for a sp
 post_treat_void_fractions = False
 post_treat_DOM_VAN_void_fractions = True
 # Assembly id / general parameters
-assembly_id = "DOM" # "VAN" # "DOM"
-void_fraction = 0.0 # 80.0 # 0.0
+assembly_id = "VAN" # "VAN" # "DOM"
+void_fraction = 80.0 # 80.0 # 0.0
 
 if void_fraction == 0.0:
     N_H, N_O = 4.926497E-02, 2.463249E-02
@@ -80,10 +84,26 @@ rates_normalisation_option = "EDP0" # "QFIS", "GLOB", "NOGL"
 # max group to perform SPH correction :
 max_sph_group = 19
 # U234 U235 U238 Pu239 Pu240 Pu241 Pu242 Am241 Gd155 Gd157 Xe135 Sm149
-tracked_nuclides = ["U234", "U235", "U238",
-                    "Pu239", "Pu240", "Pu241", "Pu242", 
-                    "Am241",
-					"Gd155", "Gd157", "Xe135","Sm149"]
+tracked_nuclides = ["U234", "U235", "U238", #"U236"
+                    "Np237",
+                    "Pu238", "Pu239", "Pu240", "Pu241", "Pu242", 
+                    "Am241", "Am243",
+					#"Gd152", "Gd160",
+                    "Gd154", "Gd155", "Gd156", "Gd157", "Gd158",
+                    #"Mo95", -- > need to un-lump Zr95 so that Zr95 decays into Mo95
+                    "Tc99",
+                    "Ru101",
+                    #"Rh103", -- > need to un-lump Ru103
+                    "Ag109",
+                    #"Xe131",
+                    "Xe133", "Xe135",
+                    "Cs133",
+                    #"Nd143",
+                    "Nd145", "Nd148", 
+                    # "Sm150" --> need to un-lump Nd150
+                    "Sm147", "Sm149", "Sm151", "Sm152",
+                    "Eu153", #"Eu155", - > not in S2 results
+                    ]
 
 ### Get burnup lists from getLists.py
 BU_lists = getLists(burnup_points)
@@ -140,10 +160,10 @@ else:
     path_to_saved_compo = f"{os.environ["PYGAN_RESULTS"]}/GE14_DEPL_results/GE14_{assembly_id}_{void_id}/D5/{dlib_name}/{rates_normalisation_option}/{burnup_points}"
     shutil.copyfile(f"{path_to_saved_compo}/{compo_name}", compo_name)
     print(os.listdir())
-    pyCOMPO = lcm.new('LCM_INP', compo_name[1:], impx=1)
+    pyCOMPO = lcm.new('LCM_INP', compo_name[1:], impx=0)
 
 
-if exec_case == True or post_treat_void_fractions == False: 
+if exec_case == True or post_treat_void_fractions == False and post_treat_DOM_VAN_void_fractions == False: 
     D5_NOM_case = D5_case(pyCOMPO = pyCOMPO,
                         dlib_name = dlib_name,
                         bu_points = burnup_points,
@@ -169,7 +189,7 @@ if exec_case == True or post_treat_void_fractions == False:
                             save_dir = save_dir_S2)
 
 
-    S2_ref_case.read_S2_outputs(f"GE14_{assembly_id}_{void_id}_endfb8r1_depl.serp")
+    S2_ref_case.read_S2_outputs(f"GE14_DEPL/GE14_{assembly_id}_{void_id}_endfb8r1_depl.serp")
     pccid = 2
 
     comparisonD5_EDP0_S2 = multiD5S2(f"void {void_id} D5 {ssh_method} {edpmode_flag} - S2 : {rates_normalisation_option} vs edep0 pcc {pccid}", [D5_NOM_case], S2_ref_case, burnup_points, tracked_nuclides, save_dir_case)
@@ -224,7 +244,7 @@ if post_treat_void_fractions:
                                 save_dir = save_dir_S2)
 
 
-        S2_ref_case.read_S2_outputs(f"GE14_{assembly_id}_{void_fraction_id}_endfb8r1_depl.serp") 
+        S2_ref_case.read_S2_outputs(f"GE14_DEPL/GE14_{assembly_id}_{void_fraction_id}_endfb8r1_depl.serp") 
         pccid = 2
         comparisonD5_EDP0_S2 = multiD5S2(f"void {void_fraction_id} D5 {ssh_method} {edpmode_flag} - S2 : {rates_normalisation_option} vs edep0 pcc {pccid}", [D5_assembly_void_id], S2_ref_case, burnup_points, tracked_nuclides, save_dir_case)
 
@@ -269,10 +289,10 @@ if post_treat_void_fractions:
         figures_delta_Niso[iso][1].axhline(y=-2.0, color='r', linestyle='-')
 
         figures_Niso[iso][1].set_xlabel("Burnup (MWd/t)")
-        figures_Niso[iso][1].set_ylabel(f"{iso} isotopic density (isotope/b/cm) (Serpent2)")
+        figures_Niso[iso][1].set_ylabel(f"{format_isotope_name(iso)} isotopic density (isotope/b/cm) (Serpent2)")
 
         figures_delta_Niso[iso][1].set_xlabel("Burnup (MWd/t)")
-        figures_delta_Niso[iso][1].set_ylabel(f"Relative difference on {iso} isotopic density (%)")
+        figures_delta_Niso[iso][1].set_ylabel(f"Relative difference on {format_isotope_name(iso)} isotopic density (%)")
 
         figures_Niso[iso][1].grid(True)
         figures_delta_Niso[iso][1].grid(True)
@@ -304,11 +324,11 @@ if post_treat_DOM_VAN_void_fractions:
 
     for assembly_id in ["DOM", "VAN"]:
         for void_fraction_id in ["00", "40", "80"]:
-        
+            print(f"Post-treat {assembly_id} {void_fraction_id}")
             path_to_saved_compo = f"{os.environ["PYGAN_RESULTS"]}/GE14_DEPL_results/GE14_{assembly_id}_{void_fraction_id}/D5/{dlib_name}/{rates_normalisation_option}/{burnup_points}"
             compo_name = f"_CPO_{assembly_id}_{void_fraction_id}_{dlib_name}_{edpmode_flag}_USS_{ssh_method}_{burnup_points}_{rates_normalisation_option}_EXTR_sph{max_sph_group}"
             shutil.copyfile(f"{path_to_saved_compo}/{compo_name}", compo_name)
-            pyCOMPO = lcm.new('LCM_INP', compo_name[1:], impx=1)
+            pyCOMPO = lcm.new('LCM_INP', compo_name[1:], impx=0)
             D5_assembly_void_id = D5_case(pyCOMPO = pyCOMPO,
                         dlib_name = dlib_name,
                         bu_points = burnup_points,
@@ -336,7 +356,7 @@ if post_treat_DOM_VAN_void_fractions:
                                     save_dir = save_dir_S2)
 
 
-            S2_ref_case.read_S2_outputs(f"GE14_{assembly_id}_{void_fraction_id}_endfb8r1_depl.serp") 
+            S2_ref_case.read_S2_outputs(f"GE14_DEPL/GE14_{assembly_id}_{void_fraction_id}_endfb8r1_depl.serp") 
             pccid = 2
             comparisonD5_EDP0_S2 = multiD5S2(f"void {void_fraction_id} D5 {ssh_method} {edpmode_flag} - S2 : {rates_normalisation_option} vs edep0 pcc {pccid}", [D5_assembly_void_id], S2_ref_case, burnup_points, tracked_nuclides, save_dir_case)
 
@@ -348,24 +368,24 @@ if post_treat_DOM_VAN_void_fractions:
             axDeltaKeff.plot(comparisonD5_EDP0_S2.D5_BU_common/1000, comparisonD5_EDP0_S2.delta_keffs[case_key], label=fr"$\Delta k_\infty$ : {assembly_id} {void_fraction_id} %", marker="x", linestyle="--")
 
             for iso in tracked_nuclides:
-                figures_Niso[iso][1].plot(S2_ref_case.BU/1000, S2_ref_case.Ni[iso], label=fr"N {iso} S2 : {assembly_id} {void_fraction_id} %", marker="x", linestyle="--")
+                figures_Niso[iso][1].plot(S2_ref_case.BU/1000, S2_ref_case.Ni[iso], label=fr"N {format_isotope_name(iso)} S2 : {assembly_id} {void_fraction_id} %", marker="x", linestyle="--")
                 case_key = list(comparisonD5_EDP0_S2.delta_Niso_dict[iso].keys())[0]
-                figures_delta_Niso[iso][1].plot(comparisonD5_EDP0_S2.D5_BU_common/1000, comparisonD5_EDP0_S2.delta_Niso_dict[iso][case_key], label=fr"$\Delta$ N {iso} : {assembly_id} {void_fraction_id} %", marker="x", linestyle="--")
+                figures_delta_Niso[iso][1].plot(comparisonD5_EDP0_S2.D5_BU_common/1000, comparisonD5_EDP0_S2.delta_Niso_dict[iso][case_key], label=fr"$\Delta$ N {format_isotope_name(iso)} : {assembly_id} {void_fraction_id} %", marker="x", linestyle="--")
 
     axDeltaKeff.axhline(y = 250.0, color = 'r', linestyle = '-')
     axDeltaKeff.axhline(y = -250.0, color = 'r', linestyle = '-')  
 
-    axKeff.set_xlabel("Burnup (GWd/t)")
-    axKeff.set_ylabel(r"$k_\infty$ (Serpent2)")
+    axKeff.set_xlabel("Burnup (GWd/t)", fontsize=14)
+    axKeff.set_ylabel(r"$k_\infty$ (Serpent2)", fontsize=14)
 
-    axDeltaKeff.set_xlabel("Burnup (GWd/t)")
-    axDeltaKeff.set_ylabel(r"Difference on $k_\infty$ (pcm)")
+    axDeltaKeff.set_xlabel("Burnup (GWd/t)", fontsize=14)
+    axDeltaKeff.set_ylabel(r"Difference on $k_\infty$ (pcm)", fontsize=14)
 
     axKeff.grid(True)
     axDeltaKeff.grid(True)
 
-    axKeff.legend()
-    axDeltaKeff.legend(loc="upper right")
+    axKeff.legend(loc="best", fontsize=14)
+    axDeltaKeff.legend(loc="best", fontsize=14)
 
     figKeff.tight_layout()
     figDeltaKeff.tight_layout()
@@ -380,17 +400,17 @@ if post_treat_DOM_VAN_void_fractions:
         figures_delta_Niso[iso][1].axhline(y=2.0, color='r', linestyle='-')
         figures_delta_Niso[iso][1].axhline(y=-2.0, color='r', linestyle='-')
 
-        figures_Niso[iso][1].set_xlabel("Burnup (GWd/t)")
-        figures_Niso[iso][1].set_ylabel(f"{iso} isotopic density (isotope/b/cm) (Serpent2)")
+        figures_Niso[iso][1].set_xlabel("Burnup (GWd/t)", fontsize=14)
+        figures_Niso[iso][1].set_ylabel(f"{format_isotope_name(iso)} isotopic density (isotope/b/cm) (Serpent2)", fontsize=14)
 
-        figures_delta_Niso[iso][1].set_xlabel("Burnup (GWd/t)")
-        figures_delta_Niso[iso][1].set_ylabel(f"Relative difference on {iso} isotopic density (%)")
+        figures_delta_Niso[iso][1].set_xlabel("Burnup (GWd/t)", fontsize=14)
+        figures_delta_Niso[iso][1].set_ylabel(f"Relative difference on {format_isotope_name(iso)} isotopic density (%)", fontsize=14)
 
         figures_Niso[iso][1].grid(True)
         figures_delta_Niso[iso][1].grid(True)
 
-        figures_Niso[iso][1].legend()
-        figures_delta_Niso[iso][1].legend()
+        figures_Niso[iso][1].legend(loc="best", fontsize=14)
+        figures_delta_Niso[iso][1].legend(loc="best", fontsize=14)
 
         figures_Niso[iso][0].tight_layout()
         figures_delta_Niso[iso][0].tight_layout()

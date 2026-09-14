@@ -1,0 +1,50 @@
+# Geometry description for single bundle derived from BWRProgressionProblems.
+# Simple axial variation in the assembly geometry. This file is used for testing the ability of the CoreModel to handle axial variation in the assembly geometry and to build the corresponding assembly models for each axial region.
+# The power dominated region (DOM) is taken to be from 0.0 to 222.0595 cm (value from BWRProgressionProblems),
+# The vanished rods region (VAN) is taken to be from 222.0595 cm to 347.1291 cm (value from BWRProgressionProblems).
+# This file describes 2D core layout and the the axial variation.
+
+# Idelchik model for water rod holes (lateral flow through orifice in WR wall).
+# f_table: water exits WR (P_actif < P_WR).  Columns: [winf/w0, K]
+# g_table: water enters WR (P_actif > P_WR). Columns: [winf/w0, K]
+# Ranges given by Idelchik are averaged to single midpoint values.
+WR_HOLE_MODEL:
+  IDELCHIK-EXIT:  # water exits WR
+    - [0.0, 2.75]
+    - [0.5, 2.30]
+    - [1.0, 2.25]
+    - [1.5, 2.30]
+    - [2.0, 2.65]
+    - [3.0, 3.65]
+    - [4.0, 5.00]
+    - [5.0, 6.50]
+    - [6.0, 8.00]
+  IDELCHIK-ENTER:  # water enters WR
+    - [0.0, 2.75]
+    - [0.5, 2.70]
+    - [1.0, 2.85]
+    - [2.0, 3.35]
+    - [3.0, 4.15]
+    - [4.0, 5.00]
+    - [5.0, 6.00]
+    - [6.0, 7.00]
+
+CORE_GEOMETRY:
+  geometry_type: "Cartesian"
+  reactor_type: "BWR"
+  core_2D_layout:
+    - ["GE14_bundle"]
+  assembly_axial_layouts:
+    GE14_bundle:
+      - axial_region: "DOM"
+        axial_bounds: [0.0, 222.0595]
+        assembly_geometry_file: "GEOM_GE14_DOM.yaml"
+        wr_holes:
+          - {z: 3, D_hole: 0.1}  # [cm] 
+          - {z: 6, D_hole: 0.1}  # [cm] 
+      - axial_region: "VAN"
+        axial_bounds: [222.0595, 347.1291]
+        assembly_geometry_file: "GEOM_GE14_VAN.yaml"
+        wr_holes:
+          - {z: 360, D_hole: 0.1}  # [cm] 
+          - {z: 363, D_hole: 0.1}  # [cm]

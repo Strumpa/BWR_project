@@ -28,7 +28,22 @@ LINKED_LIST EDIBU ;
 IF assbly_id "DOM" = THEN
    EDIBU := EDI: FLUX2 LIB26G TRKFLUXL2 ::
       EDIT 1
-      MICR 12 U234 U235 U238 Pu239 Pu240 Pu241 Pu242 Am241 Gd155 Gd157 Xe135 Sm149
+      MICR 35 U234 U235 U236 U238 
+            Np237
+            Pu238 Pu239 Pu240 Pu241 Pu242 
+            Am241 Am243
+!            Mo95 --> Zr95 shouldnt be lumped
+            Tc99
+            Ru101 
+!            Rh103 --> Ru103 shouldnt be lumped 
+            Ag109
+            Xe131 Xe133 Xe135
+            Cs133
+            Nd143 Nd145 Nd148
+            Sm147 Sm149 Sm151 Sm152
+!           Sm150 --> Nd150 shouldnt be lumped 
+            Eu153 Eu155
+            Gd152 Gd154 Gd155 Gd156 Gd157 Gd158 Gd160
       MERG MIX
          0 0 0 1 1 1 1 1 1 1 
          1 1 1 1 1 1 1 1 1 1 
@@ -59,7 +74,22 @@ IF assbly_id "DOM" = THEN
 ELSEIF assbly_id "VAN" = THEN 
    EDIBU := EDI: FLUX2 LIB26G TRKFLUXL2 ::
       EDIT 1
-      MICR 12 U234 U235 U238 Pu239 Pu240 Pu241 Pu242 Am241 Gd155 Gd157 Xe135 Sm149
+      MICR 35 U234 U235 U236 U238 
+            Np237
+            Pu238 Pu239 Pu240 Pu241 Pu242 
+            Am241 Am243
+!            Mo95 --> Zr95 shouldnt be lumped
+            Tc99
+            Ru101 
+!            Rh103 --> Ru103 shouldnt be lumped 
+            Ag109
+            Xe131 Xe133 Xe135
+            Cs133
+            Nd143 Nd145 Nd148
+            Sm147 Sm149 Sm151 Sm152
+!           Sm150 --> Nd150 shouldnt be lumped 
+            Eu153 Eu155
+            Gd152 Gd154 Gd155 Gd156 Gd157 Gd158 Gd160
       MERG MIX
          0 0 0 1 1 1 1 1 1 1 
          1 1 1 1 1 1 1 1 1 1 

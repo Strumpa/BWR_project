@@ -16,6 +16,9 @@
 * version 2.1 of the License, or (at your option) any later version
 *
 *Author(s): A. Hebert
+*  09/2026 proposed modification by R. Guasch :
+*    - flag to exclude energy from lumped isotopes and garantee 
+*      edepomode 0 Serpent2 formulation from R. Tuominen et al., ANE 129 (2019) 224–232.
 *
 *Parameters: input
 * IPLIB   pointer to the lattice microscopic cross section library
@@ -47,7 +50,7 @@
 *----
       TYPE(C_PTR) IPLIB,IPISO(NBISO)
       INTEGER NBISO,IMPX,NGRO,NL,ITRANC,NDEPL,ISONAM(3,NBISO),
-     1 ISONRF(3,NBISO),NIR(NBISO),EDPMFLAG
+     1 ISONRF(3,NBISO),NIR(NBISO),ELUMPFLAG
       LOGICAL MASKI(NBISO)
       REAL GIR(NBISO)
 *----
@@ -72,7 +75,7 @@
 *  RECOVER THE ENERGY GRID.
 *----
       CALL LCMGET(IPLIB,'STATE-VECTOR',ISTATE)
-      EDPMFLAG=ISTATE(28)
+      ELUMPFLAG=ISTATE(28)
       CALL LCMLEN(IPLIB,'ENERGY',LENGT,ITYLCM)
       IF(LENGT.EQ.0) CALL XABORT('LIBADD: NO GROUP STRUCTURE AVAILABLE')
       CALL LCMGET(IPLIB,'ENERGY',DELTA)
@@ -213,7 +216,7 @@
             IF(LENGTH.GT.NGRO) CALL XABORT('LIBADD: WR2 OVERFLOW.')
             WR2(:NGRO)=0.0
             CALL LCMGET(KPLIB,HREAC(IREA),WR2)
-            IF(EDPMFLAG.EQ.0) THEN
+            IF(ELUMPFLAG.EQ.0) THEN
              DO IG=1,LENGTH
               WORK(IG)=WORK(IG)+RER(IREA,JDEPL)*WR2(IG)*1.0E6
              ENDDO

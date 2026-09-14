@@ -1,0 +1,56 @@
+*----
+* Non-regression test for the S2M: module.
+*
+* The cross-code check. DRAGON solves a homogeneous UO2 / light water
+* medium from draglibJeff3p1p1SHEM295, and S2M: reads the SERPENT 
+* constants of the same medium computed with the same JEFF-3.1.1
+* evaluation.
+*
+*   DRAGON, 295 groups from the draglib   B2 = 2.998253E-3
+*   SERPENT, 2 groups through S2M:        B2 = 2.988860E-3
+*                                              +0.31 %, about 55 pcm
+*
+* Author: C. Bienvenue
+* Running time = ~ 1 sec
+*
+*----
+*  Define STRUCTURES and MODULES used
+*----
+LINKED_LIST MACRO GEOM TRACK SYS FLUX ;
+LINKED_LIST LIBRARY LIB2 GEOMD TRACKD SYSD FLUXD ;
+SEQ_ASCII SerpH    :: FILE './homog2g_res.m' ;
+MODULE LIB: GEO: SYBILT: SNT: USS: S2M: ASM: FLU: DELETE: END: ;
+PROCEDURE assertS ;
+*----
+*  Case 1: DRAGON solves the homogeneous medium from its own library
+*----
+LIBRARY := LIB: :: EDIT 0 NMIX 1 CTRA APOL ANIS 2 SUBG
+  MIXS LIB: DRAGON FIL: D295
+  MIX 1 300.0
+    U235 = U235   2.54731E-04 1
+    U238 = U238   9.80885E-03 1
+    O16  = O16    3.39424E-02
+    H1   = H1_H2O 2.37200E-02
+  ;
+GEOMD := GEO: :: HOMOGE MIX 1 ;
+TRACKD := SYBILT: GEOMD :: TITLE 'S2M: HOMOGENEOUS UO2/H2O' EDIT 0 MAXR 2 ;
+LIB2 := USS: LIBRARY TRACKD :: EDIT 0 ;
+SYSD := ASM: LIB2 TRACKD ;
+FLUXD := FLU: SYSD LIB2 TRACKD :: EDIT 1 TYPE B B1 ;
+assertS FLUXD :: 'B2  B1HOM' 1 2.998253E-03 ;
+*----
+*  Case 2: the same medium, through SERPENT and S2M:
+*----
+MACRO := S2M: SerpH :: EDIT 2 B1 ;
+GEOM := GEO: :: CAR1D 1
+  X- REFL X+ REFL
+  MIX 1
+  MESHX 0.0 1.0 ;
+TRACK := SNT: GEOM :: TITLE 'S2M CASE 0: THE SAME, FROM SERPENT'
+  EDIT 1 MAXR 5 SN 2 SCAT 1 ;
+SYS := ASM: MACRO TRACK :: ARM ;
+FLUX := FLU: SYS MACRO TRACK :: EDIT 1 TYPE B LKRD ;
+assertS FLUX :: 'K-EFFECTIVE' 1 1.000000 ;
+assertS FLUX :: 'B2  B1HOM'   1 2.988860E-03 ;
+MACRO GEOM TRACK SYS FLUX := DELETE: MACRO GEOM TRACK SYS FLUX ;
+END: ;

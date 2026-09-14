@@ -351,18 +351,6 @@
       GAS(:NGCOND,:MAXH)=0.0D0
       WSCAT(:NGCOND,:NGCOND,:NL)=0.0D0
       WDLA(:NDEL)=0.0
-*----
-*  RECOVER THE RADIOACTIVE DECAY CONSTANTS OF DELAYED NEUTRON
-*  GROUPS FROM THE MACROLIB IF THEY EXIST
-*----
-      LWD=.FALSE.
-      IF(CURNAM.NE.' ') THEN
-         CALL LCMSIX(IPEDIT,'MACROLIB',1)
-         CALL LCMLEN(IPEDIT,'LAMBDA-D',ILONG,ITYLCM)
-         LWD=(ILONG.EQ.NDEL).AND.(NDEL.GT.0)
-         IF(LWD) CALL LCMGET(IPEDIT,'LAMBDA-D',WDLA)
-         CALL LCMSIX(IPEDIT,' ',2)
-      ENDIF
 *
       HMAKE(1)='NWT0'
       LAWR=.FALSE.
@@ -419,6 +407,9 @@
                CALL LCMLEN(KPLIB,'DECAY',LENGTH,ITYLCM)
                IF(LENGTH.EQ.1) CALL LCMGET(KPLIB,'DECAY',DECAY(ISO))
                LDECA=(LENGTH.EQ.1).OR.(DECAY(ISO).GT.0.0)
+               CALL LCMLEN(KPLIB,'LAMBDA-D',LENGTH,ITYLCM)
+               LWD=(LENGTH.EQ.NDEL).AND.(NDEL.GT.0)
+               IF(LWD) CALL LCMGET(KPLIB,'LAMBDA-D',WDLA)
                LONE=.FALSE.
             ENDIF
             DO 170 IL=0,NL-1
@@ -443,8 +434,8 @@
   170       CONTINUE
             DO IW=0,MIN(NW,9)
               WRITE(HMAKE(3+2*NW+IW),'(4HNTOT,I1)') IW
-              CALL LCMLEN(KPLIB,HMAKE(3+2*NW+IW),ILONG,ITYLCM)
-              IF(ILONG.NE.0) THEN
+              CALL LCMLEN(KPLIB,HMAKE(3+2*NW+IW),LENGTH,ITYLCM)
+              IF(LENGTH.NE.0) THEN
                 CALL LCMGET(KPLIB,HMAKE(3+2*NW+IW),GAR(1,3+2*NW+IW))
               ELSE
                 CALL LCMGET(KPLIB,'NTOT0',GAR(1,3+2*NW+IW))
@@ -774,6 +765,7 @@
             IF(LAWR)  CALL LCMPUT(KPEDIT,'AWR',1,2,AWR)
             IF(LMEVF) CALL LCMPUT(KPEDIT,'MEVF',1,2,EMEVF(ISO))
             IF(LDECA) CALL LCMPUT(KPEDIT,'DECAY',1,2,DECAY(ISO))
+            IF(LWD)   CALL LCMPUT(KPEDIT,'LAMBDA-D',NDEL,2,WDLA)
             DO 380 J=1,MAXH
             IF(HMAKE(J).NE.' ') THEN
               TMPXS(:NGCOND)=REAL(GAS(:NGCOND,J))
@@ -800,13 +792,8 @@
             ENDDO
             CALL XDRLGS(KPEDIT,1,IPRINT,0,NL-1,1,NGCOND,GA1,GA2,ITYPRO)
             DEALLOCATE(GA2,GA1)
-  400       IF(NDEL.NE.0) THEN
-               IF(HMAKE(IOF0H+1).NE.' ') THEN
-                  CALL LCMPUT(KPEDIT,'LAMBDA-D',NDEL,2,WDLA)
-               ENDIF
-            ENDIF
          ENDIF
-         IF(IPRINT.GT.3) THEN
+  400    IF(IPRINT.GT.3) THEN
             DO 410 J=1,MAXH
             IF(HMAKE(J).NE.' ') THEN
                WRITE (6,610) HMAKE(J),(GAS(I,J),I=1,NGCOND)

@@ -1,0 +1,2692 @@
+****************************************************************************
+*                                                                          *
+* Procedure :  SetFMap.c2m adapted from simlpePOW test                     *
+* Purpose   :  Fuel-map specifications for BWR coupled calculation         *
+* Author(s) :  R. Guasch, adapted from M. Guyot (2010) & A. Hebert (2011)  *
+* Date : 19/09/2024                                                        *
+* Updated : 06/06/2025 (R. Guasch) to support 90 and 100 axial nodes       *
+*                                                                          *
+* CALL      :  FMAP MATEX := SetFMap MATEX ;                               *
+*                                                                          *
+****************************************************************************
+
+PARAMETER Fmap Matex guessPow ::
+      ::: LINKED_LIST
+          Fmap Matex guessPow ; ;
+MODULE RESINI: GREP: END: ;
+REAL pitch height BMass Iz1 powi ;
+:: >>pitch<< >>height<< >>BMass<< >>Iz1<< >>powi<< ; (*BMass = Bundle Mass : mass of UOX in an axial fuel slice*)
+
+REAL z1 z2 z3 z4 z5 z6 z7 z8 z9 z10 ; 
+REAL z11 z12 z13 z14 z15 z16 z17 z18 z19 z20 ; 
+REAL z21 z22 z23 z24 z25 z26 z27 z28 z29 z30 ; 
+REAL z31 z32 z33 z34 z35 z36 z37 z38 z39 z40 ; 
+REAL z41 z42 z43 z44 z45 z46 z47 z48 z49 z50 ; 
+REAL z51 z52 z53 z54 z55 z56 z57 z58 z59 z60 ; 
+REAL z61 z62 z63 z64 z65 z66 z67 z68 z69 z70 ; 
+REAL z71 z72 z73 z74 z75 z76 z77 z78 z79 z80 ; 
+REAL z81 z82 z83 z84 z85 z86 z87 z88 z89 z90 ; 
+REAL z91 z92 z93 z94 z95 z96 z97 z98 z99 z100 ; 
+REAL z101 z102 z103 z104 z105 z106 z107 z108 z109 z110 ; 
+REAL z111 z112 z113 z114 z115 z116 z117 z118 z119 z120 ; 
+REAL z121 z122 z123 z124 z125 z126 z127 z128 z129 z130 ; 
+REAL z131 z132 z133 z134 z135 z136 z137 z138 z139 z140 ; 
+REAL z141 z142 z143 z144 z145 z146 z147 z148 z149 z150 ; 
+REAL z151 z152 z153 z154 z155 z156 z157 z158 z159 z160 ; 
+REAL z161 z162 z163 z164 z165 z166 z167 z168 z169 z170 ;
+REAL z171 z172 z173 z174 z175 z176 z177 z178 z179 z180 ;
+REAL z181 z182 z183 z184 z185 z186 z187 z188 z189 z190 ;
+REAL z191 z192 z193 z194 z195 z196 z197 z198 z199 z200 ;
+
+REAL Pfact1 Pfact2 Pfact3 Pfact4 Pfact5 Pfact6 Pfact7 Pfact8 Pfact9 Pfact10 ;
+REAL Pfact11 Pfact12 Pfact13 Pfact14 Pfact15 Pfact16 Pfact17 Pfact18 Pfact19 Pfact20 ;
+REAL Pfact21 Pfact22 Pfact23 Pfact24 Pfact25 Pfact26 Pfact27 Pfact28 Pfact29 Pfact30 ;
+REAL Pfact31 Pfact32 Pfact33 Pfact34 Pfact35 Pfact36 Pfact37 Pfact38 Pfact39 Pfact40 ;
+REAL Pfact41 Pfact42 Pfact43 Pfact44 Pfact45 Pfact46 Pfact47 Pfact48 Pfact49 Pfact50 ;
+REAL Pfact51 Pfact52 Pfact53 Pfact54 Pfact55 Pfact56 Pfact57 Pfact58 Pfact59 Pfact60 ;
+REAL Pfact61 Pfact62 Pfact63 Pfact64 Pfact65 Pfact66 Pfact67 Pfact68 Pfact69 Pfact70 ;
+REAL Pfact71 Pfact72 Pfact73 Pfact74 Pfact75 Pfact76 Pfact77 Pfact78 Pfact79 Pfact80 ;
+REAL Pfact81 Pfact82 Pfact83 Pfact84 Pfact85 Pfact86 Pfact87 Pfact88 Pfact89 Pfact90 ;
+REAL Pfact91 Pfact92 Pfact93 Pfact94 Pfact95 Pfact96 Pfact97 Pfact98 Pfact99 Pfact100 ;
+REAL Pfact101 Pfact102 Pfact103 Pfact104 Pfact105 Pfact106 Pfact107 Pfact108 Pfact109 Pfact110 ;
+REAL Pfact111 Pfact112 Pfact113 Pfact114 Pfact115 Pfact116 Pfact117 Pfact118 Pfact119 Pfact120 ;
+REAL Pfact121 Pfact122 Pfact123 Pfact124 Pfact125 Pfact126 Pfact127 Pfact128 Pfact129 Pfact130 ;
+REAL Pfact131 Pfact132 Pfact133 Pfact134 Pfact135 Pfact136 Pfact137 Pfact138 Pfact139 Pfact140 ;
+REAL Pfact141 Pfact142 Pfact143 Pfact144 Pfact145 Pfact146 Pfact147 Pfact148 Pfact149 Pfact150 ;
+REAL Pfact151 Pfact152 Pfact153 Pfact154 Pfact155 Pfact156 Pfact157 Pfact158 Pfact159 Pfact160 ;
+REAL Pfact161 Pfact162 Pfact163 Pfact164 Pfact165 Pfact166 Pfact167 Pfact168 Pfact169 Pfact170 ;
+REAL Pfact171 Pfact172 Pfact173 Pfact174 Pfact175 Pfact176 Pfact177 Pfact178 Pfact179 Pfact180 ;
+REAL Pfact181 Pfact182 Pfact183 Pfact184 Pfact185 Pfact186 Pfact187 Pfact188 Pfact189 Pfact190 ;
+REAL Pfact191 Pfact192 Pfact193 Pfact194 Pfact195 Pfact196 Pfact197 Pfact198 Pfact199 Pfact200 ;
+
+
+IF Iz1 20.0 = THEN
+
+    GREP: guessPow :: GETVAL 'pform' 1 >>Pfact1<< ;
+    GREP: guessPow :: GETVAL 'pform' 2 >>Pfact2<< ;
+    GREP: guessPow :: GETVAL 'pform' 3 >>Pfact3<< ;
+    GREP: guessPow :: GETVAL 'pform' 4 >>Pfact4<< ;
+    GREP: guessPow :: GETVAL 'pform' 5 >>Pfact5<< ;
+    GREP: guessPow :: GETVAL 'pform' 6 >>Pfact6<< ;
+    GREP: guessPow :: GETVAL 'pform' 7 >>Pfact7<< ;
+    GREP: guessPow :: GETVAL 'pform' 8 >>Pfact8<< ;
+    GREP: guessPow :: GETVAL 'pform' 9 >>Pfact9<< ;
+    GREP: guessPow :: GETVAL 'pform' 10 >>Pfact10<< ;
+    GREP: guessPow :: GETVAL 'pform' 11 >>Pfact11<< ;
+    GREP: guessPow :: GETVAL 'pform' 12 >>Pfact12<< ;
+    GREP: guessPow :: GETVAL 'pform' 13 >>Pfact13<< ;
+    GREP: guessPow :: GETVAL 'pform' 14 >>Pfact14<< ;
+    GREP: guessPow :: GETVAL 'pform' 15 >>Pfact15<< ;
+    GREP: guessPow :: GETVAL 'pform' 16 >>Pfact16<< ;
+    GREP: guessPow :: GETVAL 'pform' 17 >>Pfact17<< ;
+    GREP: guessPow :: GETVAL 'pform' 18 >>Pfact18<< ;
+    GREP: guessPow :: GETVAL 'pform' 19 >>Pfact19<< ;
+    GREP: guessPow :: GETVAL 'pform' 20 >>Pfact20<< ;
+
+    EVALUATE z1 := height 20.0 / ;
+    EVALUATE z2 := height 20.0 / z1 + ;
+    EVALUATE z3 := height 20.0 / z2 + ;
+    EVALUATE z4 := height 20.0 / z3 + ;
+    EVALUATE z5 := height 20.0 / z4 + ;
+    EVALUATE z6 := height 20.0 / z5 + ;
+    EVALUATE z7 := height 20.0 / z6 + ;
+    EVALUATE z8 := height 20.0 / z7 + ;
+    EVALUATE z9 := height 20.0 / z8 + ;
+    EVALUATE z10 := height 20.0 / z9 + ;
+    EVALUATE z11 := height 20.0 / z10 + ;
+    EVALUATE z12 := height 20.0 / z11 + ;
+    EVALUATE z13 := height 20.0 / z12 + ;
+    EVALUATE z14 := height 20.0 / z13 + ;
+    EVALUATE z15 := height 20.0 / z14 + ;
+    EVALUATE z16 := height 20.0 / z15 + ;
+    EVALUATE z17 := height 20.0 / z16 + ;
+    EVALUATE z18 := height 20.0 / z17 + ;
+    EVALUATE z19 := height 20.0 / z18 + ;
+    EVALUATE z20 := height 20.0 / z19 + ;
+
+    *--
+    * Fuel map definition
+    *--
+    Fmap Matex := RESINI: Matex ::
+    EDIT 1
+        ::: GEO: CAR3D 1 1 20
+                EDIT  0
+                X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID
+    MESHX 0.0 <<pitch>>
+    MESHY 0.0 <<pitch>>
+    MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>>
+        <<z9>> <<z10>> <<z11>> <<z12>> <<z13>> <<z14>> <<z15>> <<z16>>
+        <<z17>> <<z18>> <<z19>> <<z20>>
+    MIX
+    PLANE 1 1
+    PLANE 2 2
+    PLANE 3 3
+    PLANE 4 4
+    PLANE 5 5
+    PLANE 6 6
+    PLANE 7 7
+    PLANE 8 8
+    PLANE 9 9
+    PLANE 10 10
+    PLANE 11 11
+    PLANE 12 12
+    PLANE 13 13
+    PLANE 14 14
+    PLANE 15 15
+    PLANE 16 16
+    PLANE 17 17
+    PLANE 18 18
+    PLANE 19 19
+    PLANE 20 20
+    ;
+    !
+    NXNAME '01' NYNAME  'A'
+    NCOMB 1
+    B-ZONE 1
+
+    BTYPE INST-BURN
+    INST-BVAL CHAN 0.0
+
+    ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL
+    ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL
+    ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL
+
+    FUEL WEIGHT <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+
+    SET-PARAM 'T-FUEL' BUND 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+    SET-PARAM 'T-COOL' BUND 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+    SET-PARAM 'D-COOL' BUND 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+    REACTOR-POW <<powi>> 
+    AXIAL-PFORM <<Pfact1>> <<Pfact2>> <<Pfact3>> <<Pfact4>> <<Pfact5>> 
+    <<Pfact6>> <<Pfact7>> <<Pfact8>> <<Pfact9>> <<Pfact10>>
+    <<Pfact11>> <<Pfact12>> <<Pfact13>> <<Pfact14>> <<Pfact15>> 
+    <<Pfact16>> <<Pfact17>> <<Pfact18>> <<Pfact19>> <<Pfact20>>
+    ;
+
+ELSEIF Iz1 40.0 = THEN
+
+    GREP: guessPow :: GETVAL 'pform' 1 >>Pfact1<< ;
+    GREP: guessPow :: GETVAL 'pform' 2 >>Pfact2<< ;
+    GREP: guessPow :: GETVAL 'pform' 3 >>Pfact3<< ;
+    GREP: guessPow :: GETVAL 'pform' 4 >>Pfact4<< ;
+    GREP: guessPow :: GETVAL 'pform' 5 >>Pfact5<< ;
+    GREP: guessPow :: GETVAL 'pform' 6 >>Pfact6<< ;
+    GREP: guessPow :: GETVAL 'pform' 7 >>Pfact7<< ;
+    GREP: guessPow :: GETVAL 'pform' 8 >>Pfact8<< ;
+    GREP: guessPow :: GETVAL 'pform' 9 >>Pfact9<< ;
+    GREP: guessPow :: GETVAL 'pform' 10 >>Pfact10<< ;
+    GREP: guessPow :: GETVAL 'pform' 11 >>Pfact11<< ;
+    GREP: guessPow :: GETVAL 'pform' 12 >>Pfact12<< ;
+    GREP: guessPow :: GETVAL 'pform' 13 >>Pfact13<< ;
+    GREP: guessPow :: GETVAL 'pform' 14 >>Pfact14<< ;
+    GREP: guessPow :: GETVAL 'pform' 15 >>Pfact15<< ;
+    GREP: guessPow :: GETVAL 'pform' 16 >>Pfact16<< ;
+    GREP: guessPow :: GETVAL 'pform' 17 >>Pfact17<< ;
+    GREP: guessPow :: GETVAL 'pform' 18 >>Pfact18<< ;
+    GREP: guessPow :: GETVAL 'pform' 19 >>Pfact19<< ;
+    GREP: guessPow :: GETVAL 'pform' 20 >>Pfact20<< ;
+    GREP: guessPow :: GETVAL 'pform' 21 >>Pfact21<< ;
+    GREP: guessPow :: GETVAL 'pform' 22 >>Pfact22<< ;
+    GREP: guessPow :: GETVAL 'pform' 23 >>Pfact23<< ;
+    GREP: guessPow :: GETVAL 'pform' 24 >>Pfact24<< ;
+    GREP: guessPow :: GETVAL 'pform' 25 >>Pfact25<< ;
+    GREP: guessPow :: GETVAL 'pform' 26 >>Pfact26<< ;
+    GREP: guessPow :: GETVAL 'pform' 27 >>Pfact27<< ;
+    GREP: guessPow :: GETVAL 'pform' 28 >>Pfact28<< ;
+    GREP: guessPow :: GETVAL 'pform' 29 >>Pfact29<< ;
+    GREP: guessPow :: GETVAL 'pform' 30 >>Pfact30<< ;
+    GREP: guessPow :: GETVAL 'pform' 31 >>Pfact31<< ;
+    GREP: guessPow :: GETVAL 'pform' 32 >>Pfact32<< ;
+    GREP: guessPow :: GETVAL 'pform' 33 >>Pfact33<< ;
+    GREP: guessPow :: GETVAL 'pform' 34 >>Pfact34<< ;
+    GREP: guessPow :: GETVAL 'pform' 35 >>Pfact35<< ;
+    GREP: guessPow :: GETVAL 'pform' 36 >>Pfact36<< ;
+    GREP: guessPow :: GETVAL 'pform' 37 >>Pfact37<< ;
+    GREP: guessPow :: GETVAL 'pform' 38 >>Pfact38<< ;
+    GREP: guessPow :: GETVAL 'pform' 39 >>Pfact39<< ;
+    GREP: guessPow :: GETVAL 'pform' 40 >>Pfact40<< ;
+
+    EVALUATE z1 := height 40.0 / ;
+    EVALUATE z2 := height 40.0 / z1 + ;
+    EVALUATE z3 := height 40.0 / z2 + ;
+    EVALUATE z4 := height 40.0 / z3 + ;
+    EVALUATE z5 := height 40.0 / z4 + ;
+    EVALUATE z6 := height 40.0 / z5 + ;
+    EVALUATE z7 := height 40.0 / z6 + ;
+    EVALUATE z8 := height 40.0 / z7 + ;
+    EVALUATE z9 := height 40.0 / z8 + ;
+    EVALUATE z10 := height 40.0 / z9 + ;
+    EVALUATE z11 := height 40.0 / z10 + ;
+    EVALUATE z12 := height 40.0 / z11 + ;
+    EVALUATE z13 := height 40.0 / z12 + ;
+    EVALUATE z14 := height 40.0 / z13 + ;
+    EVALUATE z15 := height 40.0 / z14 + ;
+    EVALUATE z16 := height 40.0 / z15 + ;
+    EVALUATE z17 := height 40.0 / z16 + ;
+    EVALUATE z18 := height 40.0 / z17 + ;
+    EVALUATE z19 := height 40.0 / z18 + ;
+    EVALUATE z20 := height 40.0 / z19 + ;
+    EVALUATE z21 := height 40.0 / z20 + ;
+    EVALUATE z22 := height 40.0 / z21 + ;
+    EVALUATE z23 := height 40.0 / z22 + ;
+    EVALUATE z24 := height 40.0 / z23 + ;
+    EVALUATE z25 := height 40.0 / z24 + ;
+    EVALUATE z26 := height 40.0 / z25 + ;
+    EVALUATE z27 := height 40.0 / z26 + ;
+    EVALUATE z28 := height 40.0 / z27 + ;
+    EVALUATE z29 := height 40.0 / z28 + ;
+    EVALUATE z30 := height 40.0 / z29 + ;
+    EVALUATE z31 := height 40.0 / z30 + ;
+    EVALUATE z32 := height 40.0 / z31 + ;
+    EVALUATE z33 := height 40.0 / z32 + ;
+    EVALUATE z34 := height 40.0 / z33 + ;
+    EVALUATE z35 := height 40.0 / z34 + ;
+    EVALUATE z36 := height 40.0 / z35 + ;
+    EVALUATE z37 := height 40.0 / z36 + ;
+    EVALUATE z38 := height 40.0 / z37 + ;
+    EVALUATE z39 := height 40.0 / z38 + ;
+    EVALUATE z40 := height 40.0 / z39 + ;
+
+    *--
+    * Fuel map definition
+    *--
+    Fmap Matex := RESINI: Matex ::
+    EDIT 1
+        ::: GEO: CAR3D 1 1 40
+                EDIT  0
+                X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID
+    MESHX 0.0 <<pitch>>
+    MESHY 0.0 <<pitch>>
+    MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>>
+            <<z11>> <<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>>
+            <<z21>> <<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>>
+            <<z31>> <<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>>
+        
+    MIX
+    PLANE 1 1
+    PLANE 2 2
+    PLANE 3 3
+    PLANE 4 4
+    PLANE 5 5
+    PLANE 6 6
+    PLANE 7 7
+    PLANE 8 8
+    PLANE 9 9
+    PLANE 10 10
+    PLANE 11 11
+    PLANE 12 12
+    PLANE 13 13
+    PLANE 14 14
+    PLANE 15 15
+    PLANE 16 16
+    PLANE 17 17
+    PLANE 18 18
+    PLANE 19 19
+    PLANE 20 20
+    PLANE 21 21
+    PLANE 22 22
+    PLANE 23 23
+    PLANE 24 24
+    PLANE 25 25
+    PLANE 26 26
+    PLANE 27 27
+    PLANE 28 28
+    PLANE 29 29
+    PLANE 30 30
+    PLANE 31 31
+    PLANE 32 32
+    PLANE 33 33
+    PLANE 34 34
+    PLANE 35 35
+    PLANE 36 36
+    PLANE 37 37
+    PLANE 38 38
+    PLANE 39 39
+    PLANE 40 40
+    ;
+    !
+    NXNAME '01' NYNAME  'A'
+    NCOMB 1
+    B-ZONE 1
+
+    BTYPE INST-BURN
+    INST-BVAL CHAN 0.0
+
+    ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL
+    ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL
+    ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL
+
+    FUEL WEIGHT <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+
+    SET-PARAM 'T-FUEL' BUND 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+    SET-PARAM 'T-COOL' BUND 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+    SET-PARAM 'D-COOL' BUND 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+
+    REACTOR-POW <<powi>> 
+    AXIAL-PFORM <<Pfact1>> <<Pfact2>> <<Pfact3>> <<Pfact4>> <<Pfact5>> 
+    <<Pfact6>> <<Pfact7>> <<Pfact8>> <<Pfact9>> <<Pfact10>>
+    <<Pfact11>> <<Pfact12>> <<Pfact13>> <<Pfact14>> <<Pfact15>> 
+    <<Pfact16>> <<Pfact17>> <<Pfact18>> <<Pfact19>> <<Pfact20>>
+    <<Pfact21>> <<Pfact22>> <<Pfact23>> <<Pfact24>> <<Pfact25>> 
+    <<Pfact26>> <<Pfact27>> <<Pfact28>> <<Pfact29>> <<Pfact30>>
+    <<Pfact31>> <<Pfact32>> <<Pfact33>> <<Pfact34>> <<Pfact35>> 
+    <<Pfact36>> <<Pfact37>> <<Pfact38>> <<Pfact39>> <<Pfact40>>
+    ;
+ELSEIF Iz1 10.0 = THEN
+
+    GREP: guessPow :: GETVAL 'pform' 1 >>Pfact1<< ;
+    GREP: guessPow :: GETVAL 'pform' 2 >>Pfact2<< ;
+    GREP: guessPow :: GETVAL 'pform' 3 >>Pfact3<< ;
+    GREP: guessPow :: GETVAL 'pform' 4 >>Pfact4<< ;
+    GREP: guessPow :: GETVAL 'pform' 5 >>Pfact5<< ;
+    GREP: guessPow :: GETVAL 'pform' 6 >>Pfact6<< ;
+    GREP: guessPow :: GETVAL 'pform' 7 >>Pfact7<< ;
+    GREP: guessPow :: GETVAL 'pform' 8 >>Pfact8<< ;
+    GREP: guessPow :: GETVAL 'pform' 9 >>Pfact9<< ;
+    GREP: guessPow :: GETVAL 'pform' 10 >>Pfact10<< ;
+
+    EVALUATE z1 := height 10.0 / ;
+    EVALUATE z2 := height 10.0 / z1 + ;
+    EVALUATE z3 := height 10.0 / z2 + ;
+    EVALUATE z4 := height 10.0 / z3 + ;
+    EVALUATE z5 := height 10.0 / z4 + ;
+    EVALUATE z6 := height 10.0 / z5 + ;
+    EVALUATE z7 := height 10.0 / z6 + ;
+    EVALUATE z8 := height 10.0 / z7 + ;
+    EVALUATE z9 := height 10.0 / z8 + ;
+    EVALUATE z10 := height 10.0 / z9 + ;
+
+    *--
+    * Fuel map definition
+    *--
+    Fmap Matex := RESINI: Matex ::
+    EDIT 1
+            ::: GEO: CAR3D 1 1 10
+                EDIT  0
+                X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID
+    MESHX 0.0 <<pitch>>
+    MESHY 0.0 <<pitch>>
+    MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>>
+            
+    MIX
+    PLANE 1 1
+    PLANE 2 2
+    PLANE 3 3
+    PLANE 4 4
+    PLANE 5 5
+    PLANE 6 6
+    PLANE 7 7
+    PLANE 8 8
+    PLANE 9 9
+    PLANE 10 10
+    ;
+    !
+    NXNAME '01' NYNAME  'A'
+    NCOMB 1
+    B-ZONE 1
+
+    BTYPE INST-BURN
+    INST-BVAL CHAN 0.0
+
+    ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL
+    ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL
+    ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL
+
+    FUEL WEIGHT <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+
+    SET-PARAM 'T-FUEL' BUND 900.0 900.0 900.0 900.0 900.0 900.0 900.0 900.0 900.0 900.0 
+    SET-PARAM 'T-COOL' BUND 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+    SET-PARAM 'D-COOL' BUND 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+    
+    REACTOR-POW <<powi>> 
+    AXIAL-PFORM <<Pfact1>> <<Pfact2>> <<Pfact3>> <<Pfact4>> <<Pfact5>> 
+    <<Pfact6>> <<Pfact7>> <<Pfact8>> <<Pfact9>> <<Pfact10>>
+
+;
+
+ELSEIF Iz1 50.0 = THEN 
+
+    GREP: guessPow :: GETVAL 'pform' 1 >>Pfact1<< ;
+    GREP: guessPow :: GETVAL 'pform' 2 >>Pfact2<< ;
+    GREP: guessPow :: GETVAL 'pform' 3 >>Pfact3<< ;
+    GREP: guessPow :: GETVAL 'pform' 4 >>Pfact4<< ;
+    GREP: guessPow :: GETVAL 'pform' 5 >>Pfact5<< ;
+    GREP: guessPow :: GETVAL 'pform' 6 >>Pfact6<< ;
+    GREP: guessPow :: GETVAL 'pform' 7 >>Pfact7<< ;
+    GREP: guessPow :: GETVAL 'pform' 8 >>Pfact8<< ;
+    GREP: guessPow :: GETVAL 'pform' 9 >>Pfact9<< ;
+    GREP: guessPow :: GETVAL 'pform' 10 >>Pfact10<< ;
+    GREP: guessPow :: GETVAL 'pform' 11 >>Pfact11<< ;
+    GREP: guessPow :: GETVAL 'pform' 12 >>Pfact12<< ;
+    GREP: guessPow :: GETVAL 'pform' 13 >>Pfact13<< ;
+    GREP: guessPow :: GETVAL 'pform' 14 >>Pfact14<< ;
+    GREP: guessPow :: GETVAL 'pform' 15 >>Pfact15<< ;
+    GREP: guessPow :: GETVAL 'pform' 16 >>Pfact16<< ;
+    GREP: guessPow :: GETVAL 'pform' 17 >>Pfact17<< ;
+    GREP: guessPow :: GETVAL 'pform' 18 >>Pfact18<< ;
+    GREP: guessPow :: GETVAL 'pform' 19 >>Pfact19<< ;
+    GREP: guessPow :: GETVAL 'pform' 20 >>Pfact20<< ;
+    GREP: guessPow :: GETVAL 'pform' 21 >>Pfact21<< ;
+    GREP: guessPow :: GETVAL 'pform' 22 >>Pfact22<< ;
+    GREP: guessPow :: GETVAL 'pform' 23 >>Pfact23<< ;
+    GREP: guessPow :: GETVAL 'pform' 24 >>Pfact24<< ;
+    GREP: guessPow :: GETVAL 'pform' 25 >>Pfact25<< ;
+    GREP: guessPow :: GETVAL 'pform' 26 >>Pfact26<< ;
+    GREP: guessPow :: GETVAL 'pform' 27 >>Pfact27<< ;
+    GREP: guessPow :: GETVAL 'pform' 28 >>Pfact28<< ;
+    GREP: guessPow :: GETVAL 'pform' 29 >>Pfact29<< ;
+    GREP: guessPow :: GETVAL 'pform' 30 >>Pfact30<< ;
+    GREP: guessPow :: GETVAL 'pform' 31 >>Pfact31<< ;
+    GREP: guessPow :: GETVAL 'pform' 32 >>Pfact32<< ;
+    GREP: guessPow :: GETVAL 'pform' 33 >>Pfact33<< ;
+    GREP: guessPow :: GETVAL 'pform' 34 >>Pfact34<< ;
+    GREP: guessPow :: GETVAL 'pform' 35 >>Pfact35<< ;
+    GREP: guessPow :: GETVAL 'pform' 36 >>Pfact36<< ;
+    GREP: guessPow :: GETVAL 'pform' 37 >>Pfact37<< ;
+    GREP: guessPow :: GETVAL 'pform' 38 >>Pfact38<< ;
+    GREP: guessPow :: GETVAL 'pform' 39 >>Pfact39<< ;
+    GREP: guessPow :: GETVAL 'pform' 40 >>Pfact40<< ;
+    GREP: guessPow :: GETVAL 'pform' 41 >>Pfact41<< ;
+    GREP: guessPow :: GETVAL 'pform' 42 >>Pfact42<< ;
+    GREP: guessPow :: GETVAL 'pform' 43 >>Pfact43<< ;
+    GREP: guessPow :: GETVAL 'pform' 44 >>Pfact44<< ;
+    GREP: guessPow :: GETVAL 'pform' 45 >>Pfact45<< ;
+    GREP: guessPow :: GETVAL 'pform' 46 >>Pfact46<< ;
+    GREP: guessPow :: GETVAL 'pform' 47 >>Pfact47<< ;
+    GREP: guessPow :: GETVAL 'pform' 48 >>Pfact48<< ;
+    GREP: guessPow :: GETVAL 'pform' 49 >>Pfact49<< ;
+    GREP: guessPow :: GETVAL 'pform' 50 >>Pfact50<< ;
+
+    EVALUATE z1 := height 50.0 / ; 
+    EVALUATE z2 := height 50.0 / z1 + ; 
+    EVALUATE z3 := height 50.0 / z2 + ; 
+    EVALUATE z4 := height 50.0 / z3 + ; 
+    EVALUATE z5 := height 50.0 / z4 + ; 
+    EVALUATE z6 := height 50.0 / z5 + ; 
+    EVALUATE z7 := height 50.0 / z6 + ; 
+    EVALUATE z8 := height 50.0 / z7 + ; 
+    EVALUATE z9 := height 50.0 / z8 + ; 
+    EVALUATE z10 := height 50.0 / z9 + ; 
+    EVALUATE z11 := height 50.0 / z10 + ; 
+    EVALUATE z12 := height 50.0 / z11 + ; 
+    EVALUATE z13 := height 50.0 / z12 + ; 
+    EVALUATE z14 := height 50.0 / z13 + ; 
+    EVALUATE z15 := height 50.0 / z14 + ; 
+    EVALUATE z16 := height 50.0 / z15 + ; 
+    EVALUATE z17 := height 50.0 / z16 + ; 
+    EVALUATE z18 := height 50.0 / z17 + ; 
+    EVALUATE z19 := height 50.0 / z18 + ; 
+    EVALUATE z20 := height 50.0 / z19 + ; 
+    EVALUATE z21 := height 50.0 / z20 + ; 
+    EVALUATE z22 := height 50.0 / z21 + ; 
+    EVALUATE z23 := height 50.0 / z22 + ; 
+    EVALUATE z24 := height 50.0 / z23 + ; 
+    EVALUATE z25 := height 50.0 / z24 + ; 
+    EVALUATE z26 := height 50.0 / z25 + ; 
+    EVALUATE z27 := height 50.0 / z26 + ; 
+    EVALUATE z28 := height 50.0 / z27 + ; 
+    EVALUATE z29 := height 50.0 / z28 + ; 
+    EVALUATE z30 := height 50.0 / z29 + ; 
+    EVALUATE z31 := height 50.0 / z30 + ; 
+    EVALUATE z32 := height 50.0 / z31 + ; 
+    EVALUATE z33 := height 50.0 / z32 + ; 
+    EVALUATE z34 := height 50.0 / z33 + ; 
+    EVALUATE z35 := height 50.0 / z34 + ; 
+    EVALUATE z36 := height 50.0 / z35 + ; 
+    EVALUATE z37 := height 50.0 / z36 + ; 
+    EVALUATE z38 := height 50.0 / z37 + ; 
+    EVALUATE z39 := height 50.0 / z38 + ; 
+    EVALUATE z40 := height 50.0 / z39 + ; 
+    EVALUATE z41 := height 50.0 / z40 + ; 
+    EVALUATE z42 := height 50.0 / z41 + ; 
+    EVALUATE z43 := height 50.0 / z42 + ; 
+    EVALUATE z44 := height 50.0 / z43 + ; 
+    EVALUATE z45 := height 50.0 / z44 + ; 
+    EVALUATE z46 := height 50.0 / z45 + ; 
+    EVALUATE z47 := height 50.0 / z46 + ; 
+    EVALUATE z48 := height 50.0 / z47 + ; 
+    EVALUATE z49 := height 50.0 / z48 + ; 
+    EVALUATE z50 := height 50.0 / z49 + ; 
+    
+    *-- 
+    * Fuel map definition 
+    *-- 
+    Fmap Matex := RESINI: Matex :: 
+        EDIT 1
+            ::: GEO: CAR3D 1 1 50 
+                    EDIT  0 
+                    X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID 
+        MESHX 0.0 <<pitch>> 
+        MESHY 0.0 <<pitch>> 
+        MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>> <<z11>>  
+        <<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>> <<z21>>  
+        <<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>> <<z31>>  
+        <<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>> <<z41>>  
+        <<z42>> <<z43>> <<z44>> <<z45>> <<z46>> <<z47>> <<z48>> <<z49>> <<z50>>
+
+        MIX 
+        PLANE 1 1 
+        PLANE 2 2 
+        PLANE 3 3 
+        PLANE 4 4 
+        PLANE 5 5 
+        PLANE 6 6 
+        PLANE 7 7 
+        PLANE 8 8 
+        PLANE 9 9 
+        PLANE 10 10 
+        PLANE 11 11 
+        PLANE 12 12 
+        PLANE 13 13 
+        PLANE 14 14 
+        PLANE 15 15 
+        PLANE 16 16 
+        PLANE 17 17 
+        PLANE 18 18 
+        PLANE 19 19 
+        PLANE 20 20 
+        PLANE 21 21 
+        PLANE 22 22 
+        PLANE 23 23 
+        PLANE 24 24 
+        PLANE 25 25 
+        PLANE 26 26 
+        PLANE 27 27 
+        PLANE 28 28 
+        PLANE 29 29 
+        PLANE 30 30 
+        PLANE 31 31 
+        PLANE 32 32 
+        PLANE 33 33 
+        PLANE 34 34 
+        PLANE 35 35 
+        PLANE 36 36 
+        PLANE 37 37 
+        PLANE 38 38 
+        PLANE 39 39 
+        PLANE 40 40 
+        PLANE 41 41 
+        PLANE 42 42 
+        PLANE 43 43 
+        PLANE 44 44 
+        PLANE 45 45 
+        PLANE 46 46 
+        PLANE 47 47 
+        PLANE 48 48 
+        PLANE 49 49 
+        PLANE 50 50 
+        
+    ; 
+    ! 
+    NXNAME '01' NYNAME  'A' 
+    NCOMB 1 
+    B-ZONE 1 
+    
+    BTYPE INST-BURN 
+    INST-BVAL CHAN 0.0 
+
+    ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL 
+    ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL 
+    ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL 
+
+    FUEL WEIGHT 
+            <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+            <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+            <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+            <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+            <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+
+    SET-PARAM 'T-FUEL' BUND 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+    SET-PARAM 'T-COOL' BUND 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+    SET-PARAM 'D-COOL' BUND 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+    
+    REACTOR-POW <<powi>> 
+    AXIAL-PFORM <<Pfact1>> <<Pfact2>> <<Pfact3>> <<Pfact4>> <<Pfact5>> 
+    <<Pfact6>> <<Pfact7>> <<Pfact8>> <<Pfact9>> <<Pfact10>>
+    <<Pfact11>> <<Pfact12>> <<Pfact13>> <<Pfact14>> <<Pfact15>> 
+    <<Pfact16>> <<Pfact17>> <<Pfact18>> <<Pfact19>> <<Pfact20>>
+    <<Pfact21>> <<Pfact22>> <<Pfact23>> <<Pfact24>> <<Pfact25>> 
+    <<Pfact26>> <<Pfact27>> <<Pfact28>> <<Pfact29>> <<Pfact30>>
+    <<Pfact31>> <<Pfact32>> <<Pfact33>> <<Pfact34>> <<Pfact35>> 
+    <<Pfact36>> <<Pfact37>> <<Pfact38>> <<Pfact39>> <<Pfact40>>
+    <<Pfact41>> <<Pfact42>> <<Pfact43>> <<Pfact44>> <<Pfact45>> 
+    <<Pfact46>> <<Pfact47>> <<Pfact48>> <<Pfact49>> <<Pfact50>>
+
+    ; 
+
+
+
+ELSEIF Iz1 70.0 = THEN 
+
+    GREP: guessPow :: GETVAL 'pform' 1 >>Pfact1<< ;
+    GREP: guessPow :: GETVAL 'pform' 2 >>Pfact2<< ;
+    GREP: guessPow :: GETVAL 'pform' 3 >>Pfact3<< ;
+    GREP: guessPow :: GETVAL 'pform' 4 >>Pfact4<< ;
+    GREP: guessPow :: GETVAL 'pform' 5 >>Pfact5<< ;
+    GREP: guessPow :: GETVAL 'pform' 6 >>Pfact6<< ;
+    GREP: guessPow :: GETVAL 'pform' 7 >>Pfact7<< ;
+    GREP: guessPow :: GETVAL 'pform' 8 >>Pfact8<< ;
+    GREP: guessPow :: GETVAL 'pform' 9 >>Pfact9<< ;
+    GREP: guessPow :: GETVAL 'pform' 10 >>Pfact10<< ;
+    GREP: guessPow :: GETVAL 'pform' 11 >>Pfact11<< ;
+    GREP: guessPow :: GETVAL 'pform' 12 >>Pfact12<< ;
+    GREP: guessPow :: GETVAL 'pform' 13 >>Pfact13<< ;
+    GREP: guessPow :: GETVAL 'pform' 14 >>Pfact14<< ;
+    GREP: guessPow :: GETVAL 'pform' 15 >>Pfact15<< ;
+    GREP: guessPow :: GETVAL 'pform' 16 >>Pfact16<< ;
+    GREP: guessPow :: GETVAL 'pform' 17 >>Pfact17<< ;
+    GREP: guessPow :: GETVAL 'pform' 18 >>Pfact18<< ;
+    GREP: guessPow :: GETVAL 'pform' 19 >>Pfact19<< ;
+    GREP: guessPow :: GETVAL 'pform' 20 >>Pfact20<< ;
+    GREP: guessPow :: GETVAL 'pform' 21 >>Pfact21<< ;
+    GREP: guessPow :: GETVAL 'pform' 22 >>Pfact22<< ;
+    GREP: guessPow :: GETVAL 'pform' 23 >>Pfact23<< ;
+    GREP: guessPow :: GETVAL 'pform' 24 >>Pfact24<< ;
+    GREP: guessPow :: GETVAL 'pform' 25 >>Pfact25<< ;
+    GREP: guessPow :: GETVAL 'pform' 26 >>Pfact26<< ;
+    GREP: guessPow :: GETVAL 'pform' 27 >>Pfact27<< ;
+    GREP: guessPow :: GETVAL 'pform' 28 >>Pfact28<< ;
+    GREP: guessPow :: GETVAL 'pform' 29 >>Pfact29<< ;
+    GREP: guessPow :: GETVAL 'pform' 30 >>Pfact30<< ;
+    GREP: guessPow :: GETVAL 'pform' 31 >>Pfact31<< ;
+    GREP: guessPow :: GETVAL 'pform' 32 >>Pfact32<< ;
+    GREP: guessPow :: GETVAL 'pform' 33 >>Pfact33<< ;
+    GREP: guessPow :: GETVAL 'pform' 34 >>Pfact34<< ;
+    GREP: guessPow :: GETVAL 'pform' 35 >>Pfact35<< ;
+    GREP: guessPow :: GETVAL 'pform' 36 >>Pfact36<< ;
+    GREP: guessPow :: GETVAL 'pform' 37 >>Pfact37<< ;
+    GREP: guessPow :: GETVAL 'pform' 38 >>Pfact38<< ;
+    GREP: guessPow :: GETVAL 'pform' 39 >>Pfact39<< ;
+    GREP: guessPow :: GETVAL 'pform' 40 >>Pfact40<< ;
+    GREP: guessPow :: GETVAL 'pform' 41 >>Pfact41<< ;
+    GREP: guessPow :: GETVAL 'pform' 42 >>Pfact42<< ;
+    GREP: guessPow :: GETVAL 'pform' 43 >>Pfact43<< ;
+    GREP: guessPow :: GETVAL 'pform' 44 >>Pfact44<< ;
+    GREP: guessPow :: GETVAL 'pform' 45 >>Pfact45<< ;
+    GREP: guessPow :: GETVAL 'pform' 46 >>Pfact46<< ;
+    GREP: guessPow :: GETVAL 'pform' 47 >>Pfact47<< ;
+    GREP: guessPow :: GETVAL 'pform' 48 >>Pfact48<< ;
+    GREP: guessPow :: GETVAL 'pform' 49 >>Pfact49<< ;
+    GREP: guessPow :: GETVAL 'pform' 50 >>Pfact50<< ;
+    GREP: guessPow :: GETVAL 'pform' 51 >>Pfact51<< ;
+    GREP: guessPow :: GETVAL 'pform' 52 >>Pfact52<< ;
+    GREP: guessPow :: GETVAL 'pform' 53 >>Pfact53<< ;
+    GREP: guessPow :: GETVAL 'pform' 54 >>Pfact54<< ;
+    GREP: guessPow :: GETVAL 'pform' 55 >>Pfact55<< ;
+    GREP: guessPow :: GETVAL 'pform' 56 >>Pfact56<< ;
+    GREP: guessPow :: GETVAL 'pform' 57 >>Pfact57<< ;
+    GREP: guessPow :: GETVAL 'pform' 58 >>Pfact58<< ;
+    GREP: guessPow :: GETVAL 'pform' 59 >>Pfact59<< ;
+    GREP: guessPow :: GETVAL 'pform' 60 >>Pfact60<< ;
+    GREP: guessPow :: GETVAL 'pform' 61 >>Pfact61<< ;
+    GREP: guessPow :: GETVAL 'pform' 62 >>Pfact62<< ;
+    GREP: guessPow :: GETVAL 'pform' 63 >>Pfact63<< ;
+    GREP: guessPow :: GETVAL 'pform' 64 >>Pfact64<< ;
+    GREP: guessPow :: GETVAL 'pform' 65 >>Pfact65<< ;
+    GREP: guessPow :: GETVAL 'pform' 66 >>Pfact66<< ;
+    GREP: guessPow :: GETVAL 'pform' 67 >>Pfact67<< ;
+    GREP: guessPow :: GETVAL 'pform' 68 >>Pfact68<< ;
+    GREP: guessPow :: GETVAL 'pform' 69 >>Pfact69<< ;
+    GREP: guessPow :: GETVAL 'pform' 70 >>Pfact70<< ;
+
+    EVALUATE z1 := height 70.0 / ; 
+    EVALUATE z2 := height 70.0 / z1 + ; 
+    EVALUATE z3 := height 70.0 / z2 + ; 
+    EVALUATE z4 := height 70.0 / z3 + ; 
+    EVALUATE z5 := height 70.0 / z4 + ; 
+    EVALUATE z6 := height 70.0 / z5 + ; 
+    EVALUATE z7 := height 70.0 / z6 + ; 
+    EVALUATE z8 := height 70.0 / z7 + ; 
+    EVALUATE z9 := height 70.0 / z8 + ; 
+    EVALUATE z10 := height 70.0 / z9 + ; 
+    EVALUATE z11 := height 70.0 / z10 + ; 
+    EVALUATE z12 := height 70.0 / z11 + ; 
+    EVALUATE z13 := height 70.0 / z12 + ; 
+    EVALUATE z14 := height 70.0 / z13 + ; 
+    EVALUATE z15 := height 70.0 / z14 + ; 
+    EVALUATE z16 := height 70.0 / z15 + ; 
+    EVALUATE z17 := height 70.0 / z16 + ; 
+    EVALUATE z18 := height 70.0 / z17 + ; 
+    EVALUATE z19 := height 70.0 / z18 + ; 
+    EVALUATE z20 := height 70.0 / z19 + ; 
+    EVALUATE z21 := height 70.0 / z20 + ; 
+    EVALUATE z22 := height 70.0 / z21 + ; 
+    EVALUATE z23 := height 70.0 / z22 + ; 
+    EVALUATE z24 := height 70.0 / z23 + ; 
+    EVALUATE z25 := height 70.0 / z24 + ; 
+    EVALUATE z26 := height 70.0 / z25 + ; 
+    EVALUATE z27 := height 70.0 / z26 + ; 
+    EVALUATE z28 := height 70.0 / z27 + ; 
+    EVALUATE z29 := height 70.0 / z28 + ; 
+    EVALUATE z30 := height 70.0 / z29 + ; 
+    EVALUATE z31 := height 70.0 / z30 + ; 
+    EVALUATE z32 := height 70.0 / z31 + ; 
+    EVALUATE z33 := height 70.0 / z32 + ; 
+    EVALUATE z34 := height 70.0 / z33 + ; 
+    EVALUATE z35 := height 70.0 / z34 + ; 
+    EVALUATE z36 := height 70.0 / z35 + ; 
+    EVALUATE z37 := height 70.0 / z36 + ; 
+    EVALUATE z38 := height 70.0 / z37 + ; 
+    EVALUATE z39 := height 70.0 / z38 + ; 
+    EVALUATE z40 := height 70.0 / z39 + ; 
+    EVALUATE z41 := height 70.0 / z40 + ; 
+    EVALUATE z42 := height 70.0 / z41 + ; 
+    EVALUATE z43 := height 70.0 / z42 + ; 
+    EVALUATE z44 := height 70.0 / z43 + ; 
+    EVALUATE z45 := height 70.0 / z44 + ; 
+    EVALUATE z46 := height 70.0 / z45 + ; 
+    EVALUATE z47 := height 70.0 / z46 + ; 
+    EVALUATE z48 := height 70.0 / z47 + ; 
+    EVALUATE z49 := height 70.0 / z48 + ; 
+    EVALUATE z50 := height 70.0 / z49 + ; 
+    EVALUATE z51 := height 70.0 / z50 + ; 
+    EVALUATE z52 := height 70.0 / z51 + ; 
+    EVALUATE z53 := height 70.0 / z52 + ; 
+    EVALUATE z54 := height 70.0 / z53 + ; 
+    EVALUATE z55 := height 70.0 / z54 + ; 
+    EVALUATE z56 := height 70.0 / z55 + ; 
+    EVALUATE z57 := height 70.0 / z56 + ; 
+    EVALUATE z58 := height 70.0 / z57 + ; 
+    EVALUATE z59 := height 70.0 / z58 + ; 
+    EVALUATE z60 := height 70.0 / z59 + ; 
+    EVALUATE z61 := height 70.0 / z60 + ; 
+    EVALUATE z62 := height 70.0 / z61 + ; 
+    EVALUATE z63 := height 70.0 / z62 + ; 
+    EVALUATE z64 := height 70.0 / z63 + ; 
+    EVALUATE z65 := height 70.0 / z64 + ; 
+    EVALUATE z66 := height 70.0 / z65 + ; 
+    EVALUATE z67 := height 70.0 / z66 + ; 
+    EVALUATE z68 := height 70.0 / z67 + ; 
+    EVALUATE z69 := height 70.0 / z68 + ; 
+    EVALUATE z70 := height ; 
+    
+    *-- 
+    * Fuel map definition 
+    *-- 
+    Fmap Matex := RESINI: Matex :: 
+        EDIT 1 
+            ::: GEO: CAR3D 1 1 70 
+            EDIT  0 
+            X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID 
+            MESHX 0.0 <<pitch>> 
+            MESHY 0.0 <<pitch>> 
+            MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>> <<z11>>  
+        <<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>> <<z21>>  
+        <<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>> <<z31>>  
+        <<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>> <<z41>>  
+        <<z42>> <<z43>> <<z44>> <<z45>> <<z46>> <<z47>> <<z48>> <<z49>> <<z50>> <<z51>>  
+        <<z52>> <<z53>> <<z54>> <<z55>> <<z56>> <<z57>> <<z58>> <<z59>> <<z60>> <<z61>>  
+        <<z62>> <<z63>> <<z64>> <<z65>> <<z66>> <<z67>> <<z68>> <<z69>> <<z70>>
+
+            MIX 
+            PLANE 1 1 
+            PLANE 2 2 
+            PLANE 3 3 
+            PLANE 4 4 
+            PLANE 5 5 
+            PLANE 6 6 
+            PLANE 7 7 
+            PLANE 8 8 
+            PLANE 9 9 
+            PLANE 10 10 
+            PLANE 11 11 
+            PLANE 12 12 
+            PLANE 13 13 
+            PLANE 14 14 
+            PLANE 15 15 
+            PLANE 16 16 
+            PLANE 17 17 
+            PLANE 18 18 
+            PLANE 19 19 
+            PLANE 20 20 
+            PLANE 21 21 
+            PLANE 22 22 
+            PLANE 23 23 
+            PLANE 24 24 
+            PLANE 25 25 
+            PLANE 26 26 
+            PLANE 27 27 
+            PLANE 28 28 
+            PLANE 29 29 
+            PLANE 30 30 
+            PLANE 31 31 
+            PLANE 32 32 
+            PLANE 33 33 
+            PLANE 34 34 
+            PLANE 35 35 
+            PLANE 36 36 
+            PLANE 37 37 
+            PLANE 38 38 
+            PLANE 39 39 
+            PLANE 40 40 
+            PLANE 41 41 
+            PLANE 42 42 
+            PLANE 43 43 
+            PLANE 44 44 
+            PLANE 45 45 
+            PLANE 46 46 
+            PLANE 47 47 
+            PLANE 48 48 
+            PLANE 49 49 
+            PLANE 50 50 
+            PLANE 51 51 
+            PLANE 52 52 
+            PLANE 53 53 
+            PLANE 54 54 
+            PLANE 55 55 
+            PLANE 56 56 
+            PLANE 57 57 
+            PLANE 58 58 
+            PLANE 59 59 
+            PLANE 60 60 
+            PLANE 61 61 
+            PLANE 62 62 
+            PLANE 63 63 
+            PLANE 64 64 
+            PLANE 65 65 
+            PLANE 66 66 
+            PLANE 67 67 
+            PLANE 68 68 
+            PLANE 69 69 
+            PLANE 70 70 
+            
+        ; 
+        ! 
+        NXNAME '01' NYNAME  'A' 
+        NCOMB 1 
+        B-ZONE 1 
+        
+        BTYPE INST-BURN 
+        INST-BVAL CHAN 0.0 
+
+        ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL 
+        ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL 
+        ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL 
+
+        FUEL WEIGHT 
+        <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+        <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+        <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+        <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+        <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+        <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+        <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> 
+
+    SET-PARAM 'T-FUEL' BUND 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+    SET-PARAM 'T-COOL' BUND 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+    SET-PARAM 'D-COOL' BUND 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+
+        REACTOR-POW <<powi>> 
+        AXIAL-PFORM <<Pfact1>> <<Pfact2>> <<Pfact3>> <<Pfact4>> <<Pfact5>> 
+        <<Pfact6>> <<Pfact7>> <<Pfact8>> <<Pfact9>> <<Pfact10>>
+        <<Pfact11>> <<Pfact12>> <<Pfact13>> <<Pfact14>> <<Pfact15>> 
+        <<Pfact16>> <<Pfact17>> <<Pfact18>> <<Pfact19>> <<Pfact20>>
+        <<Pfact21>> <<Pfact22>> <<Pfact23>> <<Pfact24>> <<Pfact25>> 
+        <<Pfact26>> <<Pfact27>> <<Pfact28>> <<Pfact29>> <<Pfact30>>
+        <<Pfact31>> <<Pfact32>> <<Pfact33>> <<Pfact34>> <<Pfact35>> 
+        <<Pfact36>> <<Pfact37>> <<Pfact38>> <<Pfact39>> <<Pfact40>>
+        <<Pfact41>> <<Pfact42>> <<Pfact43>> <<Pfact44>> <<Pfact45>> 
+        <<Pfact46>> <<Pfact47>> <<Pfact48>> <<Pfact49>> <<Pfact50>>    
+        <<Pfact51>> <<Pfact52>> <<Pfact53>> <<Pfact54>> <<Pfact55>> 
+        <<Pfact56>> <<Pfact57>> <<Pfact58>> <<Pfact59>> <<Pfact60>>     
+        <<Pfact61>> <<Pfact62>> <<Pfact63>> <<Pfact64>> <<Pfact65>> 
+        <<Pfact66>> <<Pfact67>> <<Pfact68>> <<Pfact69>> <<Pfact70>>  
+
+    ; 
+
+ELSEIF Iz1 80.0 = THEN 
+
+    GREP: guessPow :: GETVAL 'pform' 1 >>Pfact1<< ;
+    GREP: guessPow :: GETVAL 'pform' 2 >>Pfact2<< ;
+    GREP: guessPow :: GETVAL 'pform' 3 >>Pfact3<< ;
+    GREP: guessPow :: GETVAL 'pform' 4 >>Pfact4<< ;
+    GREP: guessPow :: GETVAL 'pform' 5 >>Pfact5<< ;
+    GREP: guessPow :: GETVAL 'pform' 6 >>Pfact6<< ;
+    GREP: guessPow :: GETVAL 'pform' 7 >>Pfact7<< ;
+    GREP: guessPow :: GETVAL 'pform' 8 >>Pfact8<< ;
+    GREP: guessPow :: GETVAL 'pform' 9 >>Pfact9<< ;
+    GREP: guessPow :: GETVAL 'pform' 10 >>Pfact10<< ;
+    GREP: guessPow :: GETVAL 'pform' 11 >>Pfact11<< ;
+    GREP: guessPow :: GETVAL 'pform' 12 >>Pfact12<< ;
+    GREP: guessPow :: GETVAL 'pform' 13 >>Pfact13<< ;
+    GREP: guessPow :: GETVAL 'pform' 14 >>Pfact14<< ;
+    GREP: guessPow :: GETVAL 'pform' 15 >>Pfact15<< ;
+    GREP: guessPow :: GETVAL 'pform' 16 >>Pfact16<< ;
+    GREP: guessPow :: GETVAL 'pform' 17 >>Pfact17<< ;
+    GREP: guessPow :: GETVAL 'pform' 18 >>Pfact18<< ;
+    GREP: guessPow :: GETVAL 'pform' 19 >>Pfact19<< ;
+    GREP: guessPow :: GETVAL 'pform' 20 >>Pfact20<< ;
+    GREP: guessPow :: GETVAL 'pform' 21 >>Pfact21<< ;
+    GREP: guessPow :: GETVAL 'pform' 22 >>Pfact22<< ;
+    GREP: guessPow :: GETVAL 'pform' 23 >>Pfact23<< ;
+    GREP: guessPow :: GETVAL 'pform' 24 >>Pfact24<< ;
+    GREP: guessPow :: GETVAL 'pform' 25 >>Pfact25<< ;
+    GREP: guessPow :: GETVAL 'pform' 26 >>Pfact26<< ;
+    GREP: guessPow :: GETVAL 'pform' 27 >>Pfact27<< ;
+    GREP: guessPow :: GETVAL 'pform' 28 >>Pfact28<< ;
+    GREP: guessPow :: GETVAL 'pform' 29 >>Pfact29<< ;
+    GREP: guessPow :: GETVAL 'pform' 30 >>Pfact30<< ;
+    GREP: guessPow :: GETVAL 'pform' 31 >>Pfact31<< ;
+    GREP: guessPow :: GETVAL 'pform' 32 >>Pfact32<< ;
+    GREP: guessPow :: GETVAL 'pform' 33 >>Pfact33<< ;
+    GREP: guessPow :: GETVAL 'pform' 34 >>Pfact34<< ;
+    GREP: guessPow :: GETVAL 'pform' 35 >>Pfact35<< ;
+    GREP: guessPow :: GETVAL 'pform' 36 >>Pfact36<< ;
+    GREP: guessPow :: GETVAL 'pform' 37 >>Pfact37<< ;
+    GREP: guessPow :: GETVAL 'pform' 38 >>Pfact38<< ;
+    GREP: guessPow :: GETVAL 'pform' 39 >>Pfact39<< ;
+    GREP: guessPow :: GETVAL 'pform' 40 >>Pfact40<< ;
+    GREP: guessPow :: GETVAL 'pform' 41 >>Pfact41<< ;
+    GREP: guessPow :: GETVAL 'pform' 42 >>Pfact42<< ;
+    GREP: guessPow :: GETVAL 'pform' 43 >>Pfact43<< ;
+    GREP: guessPow :: GETVAL 'pform' 44 >>Pfact44<< ;
+    GREP: guessPow :: GETVAL 'pform' 45 >>Pfact45<< ;
+    GREP: guessPow :: GETVAL 'pform' 46 >>Pfact46<< ;
+    GREP: guessPow :: GETVAL 'pform' 47 >>Pfact47<< ;
+    GREP: guessPow :: GETVAL 'pform' 48 >>Pfact48<< ;
+    GREP: guessPow :: GETVAL 'pform' 49 >>Pfact49<< ;
+    GREP: guessPow :: GETVAL 'pform' 50 >>Pfact50<< ;
+    GREP: guessPow :: GETVAL 'pform' 51 >>Pfact51<< ;
+    GREP: guessPow :: GETVAL 'pform' 52 >>Pfact52<< ;
+    GREP: guessPow :: GETVAL 'pform' 53 >>Pfact53<< ;
+    GREP: guessPow :: GETVAL 'pform' 54 >>Pfact54<< ;
+    GREP: guessPow :: GETVAL 'pform' 55 >>Pfact55<< ;
+    GREP: guessPow :: GETVAL 'pform' 56 >>Pfact56<< ;
+    GREP: guessPow :: GETVAL 'pform' 57 >>Pfact57<< ;
+    GREP: guessPow :: GETVAL 'pform' 58 >>Pfact58<< ;
+    GREP: guessPow :: GETVAL 'pform' 59 >>Pfact59<< ;
+    GREP: guessPow :: GETVAL 'pform' 60 >>Pfact60<< ;
+    GREP: guessPow :: GETVAL 'pform' 61 >>Pfact61<< ;
+    GREP: guessPow :: GETVAL 'pform' 62 >>Pfact62<< ;
+    GREP: guessPow :: GETVAL 'pform' 63 >>Pfact63<< ;
+    GREP: guessPow :: GETVAL 'pform' 64 >>Pfact64<< ;
+    GREP: guessPow :: GETVAL 'pform' 65 >>Pfact65<< ;
+    GREP: guessPow :: GETVAL 'pform' 66 >>Pfact66<< ;
+    GREP: guessPow :: GETVAL 'pform' 67 >>Pfact67<< ;
+    GREP: guessPow :: GETVAL 'pform' 68 >>Pfact68<< ;
+    GREP: guessPow :: GETVAL 'pform' 69 >>Pfact69<< ;
+    GREP: guessPow :: GETVAL 'pform' 70 >>Pfact70<< ;
+    GREP: guessPow :: GETVAL 'pform' 71 >>Pfact71<< ;
+    GREP: guessPow :: GETVAL 'pform' 72 >>Pfact72<< ;
+    GREP: guessPow :: GETVAL 'pform' 73 >>Pfact73<< ;
+    GREP: guessPow :: GETVAL 'pform' 74 >>Pfact74<< ;
+    GREP: guessPow :: GETVAL 'pform' 75 >>Pfact75<< ;
+    GREP: guessPow :: GETVAL 'pform' 76 >>Pfact76<< ;
+    GREP: guessPow :: GETVAL 'pform' 77 >>Pfact77<< ;
+    GREP: guessPow :: GETVAL 'pform' 78 >>Pfact78<< ;
+    GREP: guessPow :: GETVAL 'pform' 79 >>Pfact79<< ;
+    GREP: guessPow :: GETVAL 'pform' 80 >>Pfact80<< ;
+
+    EVALUATE z1 := height 80.0 / ; 
+    EVALUATE z2 := height 80.0 / z1 + ; 
+    EVALUATE z3 := height 80.0 / z2 + ; 
+    EVALUATE z4 := height 80.0 / z3 + ; 
+    EVALUATE z5 := height 80.0 / z4 + ; 
+    EVALUATE z6 := height 80.0 / z5 + ; 
+    EVALUATE z7 := height 80.0 / z6 + ; 
+    EVALUATE z8 := height 80.0 / z7 + ; 
+    EVALUATE z9 := height 80.0 / z8 + ; 
+    EVALUATE z10 := height 80.0 / z9 + ; 
+    EVALUATE z11 := height 80.0 / z10 + ; 
+    EVALUATE z12 := height 80.0 / z11 + ; 
+    EVALUATE z13 := height 80.0 / z12 + ; 
+    EVALUATE z14 := height 80.0 / z13 + ; 
+    EVALUATE z15 := height 80.0 / z14 + ; 
+    EVALUATE z16 := height 80.0 / z15 + ; 
+    EVALUATE z17 := height 80.0 / z16 + ; 
+    EVALUATE z18 := height 80.0 / z17 + ; 
+    EVALUATE z19 := height 80.0 / z18 + ; 
+    EVALUATE z20 := height 80.0 / z19 + ; 
+    EVALUATE z21 := height 80.0 / z20 + ; 
+    EVALUATE z22 := height 80.0 / z21 + ; 
+    EVALUATE z23 := height 80.0 / z22 + ; 
+    EVALUATE z24 := height 80.0 / z23 + ; 
+    EVALUATE z25 := height 80.0 / z24 + ; 
+    EVALUATE z26 := height 80.0 / z25 + ; 
+    EVALUATE z27 := height 80.0 / z26 + ; 
+    EVALUATE z28 := height 80.0 / z27 + ; 
+    EVALUATE z29 := height 80.0 / z28 + ; 
+    EVALUATE z30 := height 80.0 / z29 + ; 
+    EVALUATE z31 := height 80.0 / z30 + ; 
+    EVALUATE z32 := height 80.0 / z31 + ; 
+    EVALUATE z33 := height 80.0 / z32 + ; 
+    EVALUATE z34 := height 80.0 / z33 + ; 
+    EVALUATE z35 := height 80.0 / z34 + ; 
+    EVALUATE z36 := height 80.0 / z35 + ; 
+    EVALUATE z37 := height 80.0 / z36 + ; 
+    EVALUATE z38 := height 80.0 / z37 + ; 
+    EVALUATE z39 := height 80.0 / z38 + ; 
+    EVALUATE z40 := height 80.0 / z39 + ; 
+    EVALUATE z41 := height 80.0 / z40 + ; 
+    EVALUATE z42 := height 80.0 / z41 + ; 
+    EVALUATE z43 := height 80.0 / z42 + ; 
+    EVALUATE z44 := height 80.0 / z43 + ; 
+    EVALUATE z45 := height 80.0 / z44 + ; 
+    EVALUATE z46 := height 80.0 / z45 + ; 
+    EVALUATE z47 := height 80.0 / z46 + ; 
+    EVALUATE z48 := height 80.0 / z47 + ; 
+    EVALUATE z49 := height 80.0 / z48 + ; 
+    EVALUATE z50 := height 80.0 / z49 + ; 
+    EVALUATE z51 := height 80.0 / z50 + ; 
+    EVALUATE z52 := height 80.0 / z51 + ; 
+    EVALUATE z53 := height 80.0 / z52 + ; 
+    EVALUATE z54 := height 80.0 / z53 + ; 
+    EVALUATE z55 := height 80.0 / z54 + ; 
+    EVALUATE z56 := height 80.0 / z55 + ; 
+    EVALUATE z57 := height 80.0 / z56 + ; 
+    EVALUATE z58 := height 80.0 / z57 + ; 
+    EVALUATE z59 := height 80.0 / z58 + ; 
+    EVALUATE z60 := height 80.0 / z59 + ; 
+    EVALUATE z61 := height 80.0 / z60 + ; 
+    EVALUATE z62 := height 80.0 / z61 + ; 
+    EVALUATE z63 := height 80.0 / z62 + ; 
+    EVALUATE z64 := height 80.0 / z63 + ; 
+    EVALUATE z65 := height 80.0 / z64 + ; 
+    EVALUATE z66 := height 80.0 / z65 + ; 
+    EVALUATE z67 := height 80.0 / z66 + ; 
+    EVALUATE z68 := height 80.0 / z67 + ; 
+    EVALUATE z69 := height 80.0 / z68 + ; 
+    EVALUATE z70 := height 80.0 / z69 + ; 
+    EVALUATE z71 := height 80.0 / z70 + ; 
+    EVALUATE z72 := height 80.0 / z71 + ; 
+    EVALUATE z73 := height 80.0 / z72 + ; 
+    EVALUATE z74 := height 80.0 / z73 + ; 
+    EVALUATE z75 := height 80.0 / z74 + ; 
+    EVALUATE z76 := height 80.0 / z75 + ; 
+    EVALUATE z77 := height 80.0 / z76 + ; 
+    EVALUATE z78 := height 80.0 / z77 + ; 
+    EVALUATE z79 := height 80.0 / z78 + ; 
+    EVALUATE z80 := height 80.0 / z79 + ; 
+    
+    *-- 
+    * Fuel map definition 
+    *-- 
+    Fmap Matex := RESINI: Matex :: 
+        EDIT 1 
+            ::: GEO: CAR3D 1 1 80 
+                    EDIT  0 
+                    X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID 
+        MESHX 0.0 <<pitch>> 
+        MESHY 0.0 <<pitch>> 
+        MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>> <<z11>>  
+    <<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>> <<z21>>  
+    <<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>> <<z31>>  
+    <<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>> <<z41>>  
+    <<z42>> <<z43>> <<z44>> <<z45>> <<z46>> <<z47>> <<z48>> <<z49>> <<z50>> <<z51>>  
+    <<z52>> <<z53>> <<z54>> <<z55>> <<z56>> <<z57>> <<z58>> <<z59>> <<z60>> <<z61>>  
+    <<z62>> <<z63>> <<z64>> <<z65>> <<z66>> <<z67>> <<z68>> <<z69>> <<z70>> <<z71>>  
+    <<z72>> <<z73>> <<z74>> <<z75>> <<z76>> <<z77>> <<z78>> <<z79>> <<z80>> 
+
+        MIX 
+        PLANE 1 1 
+        PLANE 2 2 
+        PLANE 3 3 
+        PLANE 4 4 
+        PLANE 5 5 
+        PLANE 6 6 
+        PLANE 7 7 
+        PLANE 8 8 
+        PLANE 9 9 
+        PLANE 10 10 
+        PLANE 11 11 
+        PLANE 12 12 
+        PLANE 13 13 
+        PLANE 14 14 
+        PLANE 15 15 
+        PLANE 16 16 
+        PLANE 17 17 
+        PLANE 18 18 
+        PLANE 19 19 
+        PLANE 20 20 
+        PLANE 21 21 
+        PLANE 22 22 
+        PLANE 23 23 
+        PLANE 24 24 
+        PLANE 25 25 
+        PLANE 26 26 
+        PLANE 27 27 
+        PLANE 28 28 
+        PLANE 29 29 
+        PLANE 30 30 
+        PLANE 31 31 
+        PLANE 32 32 
+        PLANE 33 33 
+        PLANE 34 34 
+        PLANE 35 35 
+        PLANE 36 36 
+        PLANE 37 37 
+        PLANE 38 38 
+        PLANE 39 39 
+        PLANE 40 40 
+        PLANE 41 41 
+        PLANE 42 42 
+        PLANE 43 43 
+        PLANE 44 44 
+        PLANE 45 45 
+        PLANE 46 46 
+        PLANE 47 47 
+        PLANE 48 48 
+        PLANE 49 49 
+        PLANE 50 50 
+        PLANE 51 51 
+        PLANE 52 52 
+        PLANE 53 53 
+        PLANE 54 54 
+        PLANE 55 55 
+        PLANE 56 56 
+        PLANE 57 57 
+        PLANE 58 58 
+        PLANE 59 59 
+        PLANE 60 60 
+        PLANE 61 61 
+        PLANE 62 62 
+        PLANE 63 63 
+        PLANE 64 64 
+        PLANE 65 65 
+        PLANE 66 66 
+        PLANE 67 67 
+        PLANE 68 68 
+        PLANE 69 69 
+        PLANE 70 70 
+        PLANE 71 71 
+        PLANE 72 72 
+        PLANE 73 73 
+        PLANE 74 74 
+        PLANE 75 75 
+        PLANE 76 76 
+        PLANE 77 77 
+        PLANE 78 78 
+        PLANE 79 79 
+        PLANE 80 80 
+        
+    ; 
+    ! 
+    NXNAME '01' NYNAME  'A' 
+    NCOMB 1 
+    B-ZONE 1 
+    
+    BTYPE INST-BURN 
+    INST-BVAL CHAN 0.0 
+
+    ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL 
+    ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL 
+    ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL 
+
+    FUEL WEIGHT <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> 
+    
+    SET-PARAM 'T-FUEL' BUND 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+    SET-PARAM 'T-COOL' BUND 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+    SET-PARAM 'D-COOL' BUND 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+    REACTOR-POW <<powi>> 
+    AXIAL-PFORM <<Pfact1>> <<Pfact2>> <<Pfact3>> <<Pfact4>> <<Pfact5>> 
+    <<Pfact6>> <<Pfact7>> <<Pfact8>> <<Pfact9>> <<Pfact10>>
+    <<Pfact11>> <<Pfact12>> <<Pfact13>> <<Pfact14>> <<Pfact15>> 
+    <<Pfact16>> <<Pfact17>> <<Pfact18>> <<Pfact19>> <<Pfact20>>
+    <<Pfact21>> <<Pfact22>> <<Pfact23>> <<Pfact24>> <<Pfact25>> 
+    <<Pfact26>> <<Pfact27>> <<Pfact28>> <<Pfact29>> <<Pfact30>>
+    <<Pfact31>> <<Pfact32>> <<Pfact33>> <<Pfact34>> <<Pfact35>> 
+    <<Pfact36>> <<Pfact37>> <<Pfact38>> <<Pfact39>> <<Pfact40>>
+    <<Pfact41>> <<Pfact42>> <<Pfact43>> <<Pfact44>> <<Pfact45>> 
+    <<Pfact46>> <<Pfact47>> <<Pfact48>> <<Pfact49>> <<Pfact50>>    
+    <<Pfact51>> <<Pfact52>> <<Pfact53>> <<Pfact54>> <<Pfact55>> 
+    <<Pfact56>> <<Pfact57>> <<Pfact58>> <<Pfact59>> <<Pfact60>>     
+    <<Pfact61>> <<Pfact62>> <<Pfact63>> <<Pfact64>> <<Pfact65>> 
+    <<Pfact66>> <<Pfact67>> <<Pfact68>> <<Pfact69>> <<Pfact70>>  
+    <<Pfact71>> <<Pfact72>> <<Pfact73>> <<Pfact74>> <<Pfact75>>
+    <<Pfact76>> <<Pfact77>> <<Pfact78>> <<Pfact79>> <<Pfact80>>
+    ; 
+
+    ELSEIF Iz1 90.0 = THEN 
+    GREP: guessPow :: GETVAL 'pform' 1 >>Pfact1<< ;
+    GREP: guessPow :: GETVAL 'pform' 2 >>Pfact2<< ;
+    GREP: guessPow :: GETVAL 'pform' 3 >>Pfact3<< ;
+    GREP: guessPow :: GETVAL 'pform' 4 >>Pfact4<< ;
+    GREP: guessPow :: GETVAL 'pform' 5 >>Pfact5<< ;
+    GREP: guessPow :: GETVAL 'pform' 6 >>Pfact6<< ;
+    GREP: guessPow :: GETVAL 'pform' 7 >>Pfact7<< ;
+    GREP: guessPow :: GETVAL 'pform' 8 >>Pfact8<< ;
+    GREP: guessPow :: GETVAL 'pform' 9 >>Pfact9<< ;
+    GREP: guessPow :: GETVAL 'pform' 10 >>Pfact10<< ;
+    GREP: guessPow :: GETVAL 'pform' 11 >>Pfact11<< ;
+    GREP: guessPow :: GETVAL 'pform' 12 >>Pfact12<< ;
+    GREP: guessPow :: GETVAL 'pform' 13 >>Pfact13<< ;
+    GREP: guessPow :: GETVAL 'pform' 14 >>Pfact14<< ;
+    GREP: guessPow :: GETVAL 'pform' 15 >>Pfact15<< ;
+    GREP: guessPow :: GETVAL 'pform' 16 >>Pfact16<< ;
+    GREP: guessPow :: GETVAL 'pform' 17 >>Pfact17<< ;
+    GREP: guessPow :: GETVAL 'pform' 18 >>Pfact18<< ;
+    GREP: guessPow :: GETVAL 'pform' 19 >>Pfact19<< ;
+    GREP: guessPow :: GETVAL 'pform' 20 >>Pfact20<< ;
+    GREP: guessPow :: GETVAL 'pform' 21 >>Pfact21<< ;
+    GREP: guessPow :: GETVAL 'pform' 22 >>Pfact22<< ;
+    GREP: guessPow :: GETVAL 'pform' 23 >>Pfact23<< ;
+    GREP: guessPow :: GETVAL 'pform' 24 >>Pfact24<< ;
+    GREP: guessPow :: GETVAL 'pform' 25 >>Pfact25<< ;
+    GREP: guessPow :: GETVAL 'pform' 26 >>Pfact26<< ;
+    GREP: guessPow :: GETVAL 'pform' 27 >>Pfact27<< ;
+    GREP: guessPow :: GETVAL 'pform' 28 >>Pfact28<< ;
+    GREP: guessPow :: GETVAL 'pform' 29 >>Pfact29<< ;
+    GREP: guessPow :: GETVAL 'pform' 30 >>Pfact30<< ;
+    GREP: guessPow :: GETVAL 'pform' 31 >>Pfact31<< ;
+    GREP: guessPow :: GETVAL 'pform' 32 >>Pfact32<< ;
+    GREP: guessPow :: GETVAL 'pform' 33 >>Pfact33<< ;
+    GREP: guessPow :: GETVAL 'pform' 34 >>Pfact34<< ;
+    GREP: guessPow :: GETVAL 'pform' 35 >>Pfact35<< ;
+    GREP: guessPow :: GETVAL 'pform' 36 >>Pfact36<< ;
+    GREP: guessPow :: GETVAL 'pform' 37 >>Pfact37<< ;
+    GREP: guessPow :: GETVAL 'pform' 38 >>Pfact38<< ;
+    GREP: guessPow :: GETVAL 'pform' 39 >>Pfact39<< ;
+    GREP: guessPow :: GETVAL 'pform' 40 >>Pfact40<< ;
+    GREP: guessPow :: GETVAL 'pform' 41 >>Pfact41<< ;
+    GREP: guessPow :: GETVAL 'pform' 42 >>Pfact42<< ;
+    GREP: guessPow :: GETVAL 'pform' 43 >>Pfact43<< ;
+    GREP: guessPow :: GETVAL 'pform' 44 >>Pfact44<< ;
+    GREP: guessPow :: GETVAL 'pform' 45 >>Pfact45<< ;
+    GREP: guessPow :: GETVAL 'pform' 46 >>Pfact46<< ;
+    GREP: guessPow :: GETVAL 'pform' 47 >>Pfact47<< ;
+    GREP: guessPow :: GETVAL 'pform' 48 >>Pfact48<< ;
+    GREP: guessPow :: GETVAL 'pform' 49 >>Pfact49<< ;
+    GREP: guessPow :: GETVAL 'pform' 50 >>Pfact50<< ;
+    GREP: guessPow :: GETVAL 'pform' 51 >>Pfact51<< ;
+    GREP: guessPow :: GETVAL 'pform' 52 >>Pfact52<< ;
+    GREP: guessPow :: GETVAL 'pform' 53 >>Pfact53<< ;
+    GREP: guessPow :: GETVAL 'pform' 54 >>Pfact54<< ;
+    GREP: guessPow :: GETVAL 'pform' 55 >>Pfact55<< ;
+    GREP: guessPow :: GETVAL 'pform' 56 >>Pfact56<< ;
+    GREP: guessPow :: GETVAL 'pform' 57 >>Pfact57<< ;
+    GREP: guessPow :: GETVAL 'pform' 58 >>Pfact58<< ;
+    GREP: guessPow :: GETVAL 'pform' 59 >>Pfact59<< ;
+    GREP: guessPow :: GETVAL 'pform' 60 >>Pfact60<< ;
+    GREP: guessPow :: GETVAL 'pform' 61 >>Pfact61<< ;
+    GREP: guessPow :: GETVAL 'pform' 62 >>Pfact62<< ;
+    GREP: guessPow :: GETVAL 'pform' 63 >>Pfact63<< ;
+    GREP: guessPow :: GETVAL 'pform' 64 >>Pfact64<< ;
+    GREP: guessPow :: GETVAL 'pform' 65 >>Pfact65<< ;
+    GREP: guessPow :: GETVAL 'pform' 66 >>Pfact66<< ;
+    GREP: guessPow :: GETVAL 'pform' 67 >>Pfact67<< ;
+    GREP: guessPow :: GETVAL 'pform' 68 >>Pfact68<< ;
+    GREP: guessPow :: GETVAL 'pform' 69 >>Pfact69<< ;
+    GREP: guessPow :: GETVAL 'pform' 70 >>Pfact70<< ;
+    GREP: guessPow :: GETVAL 'pform' 71 >>Pfact71<< ;
+    GREP: guessPow :: GETVAL 'pform' 72 >>Pfact72<< ;
+    GREP: guessPow :: GETVAL 'pform' 73 >>Pfact73<< ;
+    GREP: guessPow :: GETVAL 'pform' 74 >>Pfact74<< ;
+    GREP: guessPow :: GETVAL 'pform' 75 >>Pfact75<< ;
+    GREP: guessPow :: GETVAL 'pform' 76 >>Pfact76<< ;
+    GREP: guessPow :: GETVAL 'pform' 77 >>Pfact77<< ;
+    GREP: guessPow :: GETVAL 'pform' 78 >>Pfact78<< ;
+    GREP: guessPow :: GETVAL 'pform' 79 >>Pfact79<< ;
+    GREP: guessPow :: GETVAL 'pform' 80 >>Pfact80<< ;
+    GREP: guessPow :: GETVAL 'pform' 81 >>Pfact81<< ;
+    GREP: guessPow :: GETVAL 'pform' 82 >>Pfact82<< ;
+    GREP: guessPow :: GETVAL 'pform' 83 >>Pfact83<< ;
+    GREP: guessPow :: GETVAL 'pform' 84 >>Pfact84<< ;
+    GREP: guessPow :: GETVAL 'pform' 85 >>Pfact85<< ;
+    GREP: guessPow :: GETVAL 'pform' 86 >>Pfact86<< ;
+    GREP: guessPow :: GETVAL 'pform' 87 >>Pfact87<< ;
+    GREP: guessPow :: GETVAL 'pform' 88 >>Pfact88<< ;
+    GREP: guessPow :: GETVAL 'pform' 89 >>Pfact89<< ;
+    GREP: guessPow :: GETVAL 'pform' 90 >>Pfact90<< ;
+
+    EVALUATE z1 := height Iz1 / ; 
+    EVALUATE z2 := height Iz1 / z1 + ; 
+    EVALUATE z3 := height Iz1 / z2 + ; 
+    EVALUATE z4 := height Iz1 / z3 + ; 
+    EVALUATE z5 := height Iz1 / z4 + ; 
+    EVALUATE z6 := height Iz1 / z5 + ; 
+    EVALUATE z7 := height Iz1 / z6 + ; 
+    EVALUATE z8 := height Iz1 / z7 + ; 
+    EVALUATE z9 := height Iz1 / z8 + ; 
+    EVALUATE z10 := height Iz1 / z9 + ; 
+    EVALUATE z11 := height Iz1 / z10 + ; 
+    EVALUATE z12 := height Iz1 / z11 + ; 
+    EVALUATE z13 := height Iz1 / z12 + ; 
+    EVALUATE z14 := height Iz1 / z13 + ; 
+    EVALUATE z15 := height Iz1 / z14 + ; 
+    EVALUATE z16 := height Iz1 / z15 + ; 
+    EVALUATE z17 := height Iz1 / z16 + ; 
+    EVALUATE z18 := height Iz1 / z17 + ; 
+    EVALUATE z19 := height Iz1 / z18 + ; 
+    EVALUATE z20 := height Iz1 / z19 + ; 
+    EVALUATE z21 := height Iz1 / z20 + ; 
+    EVALUATE z22 := height Iz1 / z21 + ; 
+    EVALUATE z23 := height Iz1 / z22 + ; 
+    EVALUATE z24 := height Iz1 / z23 + ; 
+    EVALUATE z25 := height Iz1 / z24 + ; 
+    EVALUATE z26 := height Iz1 / z25 + ; 
+    EVALUATE z27 := height Iz1 / z26 + ; 
+    EVALUATE z28 := height Iz1 / z27 + ; 
+    EVALUATE z29 := height Iz1 / z28 + ; 
+    EVALUATE z30 := height Iz1 / z29 + ; 
+    EVALUATE z31 := height Iz1 / z30 + ; 
+    EVALUATE z32 := height Iz1 / z31 + ; 
+    EVALUATE z33 := height Iz1 / z32 + ; 
+    EVALUATE z34 := height Iz1 / z33 + ; 
+    EVALUATE z35 := height Iz1 / z34 + ; 
+    EVALUATE z36 := height Iz1 / z35 + ; 
+    EVALUATE z37 := height Iz1 / z36 + ; 
+    EVALUATE z38 := height Iz1 / z37 + ; 
+    EVALUATE z39 := height Iz1 / z38 + ; 
+    EVALUATE z40 := height Iz1 / z39 + ; 
+    EVALUATE z41 := height Iz1 / z40 + ; 
+    EVALUATE z42 := height Iz1 / z41 + ; 
+    EVALUATE z43 := height Iz1 / z42 + ; 
+    EVALUATE z44 := height Iz1 / z43 + ; 
+    EVALUATE z45 := height Iz1 / z44 + ; 
+    EVALUATE z46 := height Iz1 / z45 + ; 
+    EVALUATE z47 := height Iz1 / z46 + ; 
+    EVALUATE z48 := height Iz1 / z47 + ; 
+    EVALUATE z49 := height Iz1 / z48 + ; 
+    EVALUATE z50 := height Iz1 / z49 + ; 
+    EVALUATE z51 := height Iz1 / z50 + ; 
+    EVALUATE z52 := height Iz1 / z51 + ; 
+    EVALUATE z53 := height Iz1 / z52 + ; 
+    EVALUATE z54 := height Iz1 / z53 + ; 
+    EVALUATE z55 := height Iz1 / z54 + ; 
+    EVALUATE z56 := height Iz1 / z55 + ; 
+    EVALUATE z57 := height Iz1 / z56 + ; 
+    EVALUATE z58 := height Iz1 / z57 + ; 
+    EVALUATE z59 := height Iz1 / z58 + ; 
+    EVALUATE z60 := height Iz1 / z59 + ; 
+    EVALUATE z61 := height Iz1 / z60 + ; 
+    EVALUATE z62 := height Iz1 / z61 + ; 
+    EVALUATE z63 := height Iz1 / z62 + ; 
+    EVALUATE z64 := height Iz1 / z63 + ; 
+    EVALUATE z65 := height Iz1 / z64 + ; 
+    EVALUATE z66 := height Iz1 / z65 + ; 
+    EVALUATE z67 := height Iz1 / z66 + ; 
+    EVALUATE z68 := height Iz1 / z67 + ; 
+    EVALUATE z69 := height Iz1 / z68 + ; 
+    EVALUATE z70 := height Iz1 / z69 + ; 
+    EVALUATE z71 := height Iz1 / z70 + ; 
+    EVALUATE z72 := height Iz1 / z71 + ; 
+    EVALUATE z73 := height Iz1 / z72 + ; 
+    EVALUATE z74 := height Iz1 / z73 + ; 
+    EVALUATE z75 := height Iz1 / z74 + ; 
+    EVALUATE z76 := height Iz1 / z75 + ; 
+    EVALUATE z77 := height Iz1 / z76 + ; 
+    EVALUATE z78 := height Iz1 / z77 + ; 
+    EVALUATE z79 := height Iz1 / z78 + ; 
+    EVALUATE z80 := height Iz1 / z79 + ; 
+    EVALUATE z81 := height Iz1 / z80 + ; 
+    EVALUATE z82 := height Iz1 / z81 + ; 
+    EVALUATE z83 := height Iz1 / z82 + ; 
+    EVALUATE z84 := height Iz1 / z83 + ; 
+    EVALUATE z85 := height Iz1 / z84 + ; 
+    EVALUATE z86 := height Iz1 / z85 + ; 
+    EVALUATE z87 := height Iz1 / z86 + ; 
+    EVALUATE z88 := height Iz1 / z87 + ; 
+    EVALUATE z89 := height Iz1 / z88 + ; 
+    EVALUATE z90 := height ; 
+    
+    *-- 
+* Fuel map definition 
+*-- 
+Fmap Matex := RESINI: Matex :: 
+    EDIT 1 
+        ::: GEO: CAR3D 1 1 90 
+                    EDIT  0 
+                    X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID 
+        MESHX 0.0 <<pitch>> 
+        MESHY 0.0 <<pitch>> 
+        MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>> <<z11>>  
+        <<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>> <<z21>>  
+        <<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>> <<z31>>  
+        <<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>> <<z41>>  
+        <<z42>> <<z43>> <<z44>> <<z45>> <<z46>> <<z47>> <<z48>> <<z49>> <<z50>> <<z51>>  
+        <<z52>> <<z53>> <<z54>> <<z55>> <<z56>> <<z57>> <<z58>> <<z59>> <<z60>> <<z61>>  
+        <<z62>> <<z63>> <<z64>> <<z65>> <<z66>> <<z67>> <<z68>> <<z69>> <<z70>> <<z71>>  
+        <<z72>> <<z73>> <<z74>> <<z75>> <<z76>> <<z77>> <<z78>> <<z79>> <<z80>> <<z81>>  
+        <<z82>> <<z83>> <<z84>> <<z85>> <<z86>> <<z87>> <<z88>> <<z89>> <<z90>>
+
+        MIX 
+        PLANE 1 1 
+        PLANE 2 2 
+        PLANE 3 3 
+        PLANE 4 4 
+        PLANE 5 5 
+        PLANE 6 6 
+        PLANE 7 7 
+        PLANE 8 8 
+        PLANE 9 9 
+        PLANE 10 10 
+        PLANE 11 11 
+        PLANE 12 12 
+        PLANE 13 13 
+        PLANE 14 14 
+        PLANE 15 15 
+        PLANE 16 16 
+        PLANE 17 17 
+        PLANE 18 18 
+        PLANE 19 19 
+        PLANE 20 20 
+        PLANE 21 21 
+        PLANE 22 22 
+        PLANE 23 23 
+        PLANE 24 24 
+        PLANE 25 25 
+        PLANE 26 26 
+        PLANE 27 27 
+        PLANE 28 28 
+        PLANE 29 29 
+        PLANE 30 30 
+        PLANE 31 31 
+        PLANE 32 32 
+        PLANE 33 33 
+        PLANE 34 34 
+        PLANE 35 35 
+        PLANE 36 36 
+        PLANE 37 37 
+        PLANE 38 38 
+        PLANE 39 39 
+        PLANE 40 40 
+        PLANE 41 41 
+        PLANE 42 42 
+        PLANE 43 43 
+        PLANE 44 44 
+        PLANE 45 45 
+        PLANE 46 46 
+        PLANE 47 47 
+        PLANE 48 48 
+        PLANE 49 49 
+        PLANE 50 50 
+        PLANE 51 51 
+        PLANE 52 52 
+        PLANE 53 53 
+        PLANE 54 54 
+        PLANE 55 55 
+        PLANE 56 56 
+        PLANE 57 57 
+        PLANE 58 58 
+        PLANE 59 59 
+        PLANE 60 60 
+        PLANE 61 61 
+        PLANE 62 62 
+        PLANE 63 63 
+        PLANE 64 64 
+        PLANE 65 65 
+        PLANE 66 66 
+        PLANE 67 67 
+        PLANE 68 68 
+        PLANE 69 69 
+        PLANE 70 70 
+        PLANE 71 71 
+        PLANE 72 72 
+        PLANE 73 73 
+        PLANE 74 74 
+        PLANE 75 75 
+        PLANE 76 76 
+        PLANE 77 77 
+        PLANE 78 78 
+        PLANE 79 79 
+        PLANE 80 80 
+        PLANE 81 81 
+        PLANE 82 82 
+        PLANE 83 83 
+        PLANE 84 84 
+        PLANE 85 85 
+        PLANE 86 86 
+        PLANE 87 87 
+        PLANE 88 88 
+        PLANE 89 89 
+        PLANE 90 90 
+    ; 
+    ! 
+    NXNAME '01' NYNAME  'A' 
+    NCOMB 1 
+    B-ZONE 1 
+    
+    BTYPE INST-BURN 
+    INST-BVAL CHAN 0.0 
+
+    ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL 
+    ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL 
+    ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL 
+
+    FUEL WEIGHT  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    
+    SET-PARAM 'T-FUEL' BUND 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+
+    SET-PARAM 'T-COOL' BUND 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+
+    SET-PARAM 'D-COOL' BUND 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+
+    REACTOR-POW <<powi>> 
+    AXIAL-PFORM <<Pfact1>> <<Pfact2>> <<Pfact3>> <<Pfact4>> <<Pfact5>> 
+    <<Pfact6>> <<Pfact7>> <<Pfact8>> <<Pfact9>> <<Pfact10>>
+    <<Pfact11>> <<Pfact12>> <<Pfact13>> <<Pfact14>> <<Pfact15>> 
+    <<Pfact16>> <<Pfact17>> <<Pfact18>> <<Pfact19>> <<Pfact20>>
+    <<Pfact21>> <<Pfact22>> <<Pfact23>> <<Pfact24>> <<Pfact25>> 
+    <<Pfact26>> <<Pfact27>> <<Pfact28>> <<Pfact29>> <<Pfact30>>
+    <<Pfact31>> <<Pfact32>> <<Pfact33>> <<Pfact34>> <<Pfact35>> 
+    <<Pfact36>> <<Pfact37>> <<Pfact38>> <<Pfact39>> <<Pfact40>>
+    <<Pfact41>> <<Pfact42>> <<Pfact43>> <<Pfact44>> <<Pfact45>> 
+    <<Pfact46>> <<Pfact47>> <<Pfact48>> <<Pfact49>> <<Pfact50>>    
+    <<Pfact51>> <<Pfact52>> <<Pfact53>> <<Pfact54>> <<Pfact55>> 
+    <<Pfact56>> <<Pfact57>> <<Pfact58>> <<Pfact59>> <<Pfact60>>     
+    <<Pfact61>> <<Pfact62>> <<Pfact63>> <<Pfact64>> <<Pfact65>> 
+    <<Pfact66>> <<Pfact67>> <<Pfact68>> <<Pfact69>> <<Pfact70>>  
+    <<Pfact71>> <<Pfact72>> <<Pfact73>> <<Pfact74>> <<Pfact75>>
+    <<Pfact76>> <<Pfact77>> <<Pfact78>> <<Pfact79>> <<Pfact80>>
+    <<Pfact81>> <<Pfact82>> <<Pfact83>> <<Pfact84>> <<Pfact85>>
+    <<Pfact86>> <<Pfact87>> <<Pfact88>> <<Pfact89>> <<Pfact90>>
+    
+    ; 
+
+ELSEIF Iz1 100.0 = THEN 
+    GREP: guessPow :: GETVAL 'pform' 1 >>Pfact1<< ;
+    GREP: guessPow :: GETVAL 'pform' 2 >>Pfact2<< ;
+    GREP: guessPow :: GETVAL 'pform' 3 >>Pfact3<< ;
+    GREP: guessPow :: GETVAL 'pform' 4 >>Pfact4<< ;
+    GREP: guessPow :: GETVAL 'pform' 5 >>Pfact5<< ;
+    GREP: guessPow :: GETVAL 'pform' 6 >>Pfact6<< ;
+    GREP: guessPow :: GETVAL 'pform' 7 >>Pfact7<< ;
+    GREP: guessPow :: GETVAL 'pform' 8 >>Pfact8<< ;
+    GREP: guessPow :: GETVAL 'pform' 9 >>Pfact9<< ;
+    GREP: guessPow :: GETVAL 'pform' 10 >>Pfact10<< ;
+    GREP: guessPow :: GETVAL 'pform' 11 >>Pfact11<< ;
+    GREP: guessPow :: GETVAL 'pform' 12 >>Pfact12<< ;
+    GREP: guessPow :: GETVAL 'pform' 13 >>Pfact13<< ;
+    GREP: guessPow :: GETVAL 'pform' 14 >>Pfact14<< ;
+    GREP: guessPow :: GETVAL 'pform' 15 >>Pfact15<< ;
+    GREP: guessPow :: GETVAL 'pform' 16 >>Pfact16<< ;
+    GREP: guessPow :: GETVAL 'pform' 17 >>Pfact17<< ;
+    GREP: guessPow :: GETVAL 'pform' 18 >>Pfact18<< ;
+    GREP: guessPow :: GETVAL 'pform' 19 >>Pfact19<< ;
+    GREP: guessPow :: GETVAL 'pform' 20 >>Pfact20<< ;
+    GREP: guessPow :: GETVAL 'pform' 21 >>Pfact21<< ;
+    GREP: guessPow :: GETVAL 'pform' 22 >>Pfact22<< ;
+    GREP: guessPow :: GETVAL 'pform' 23 >>Pfact23<< ;
+    GREP: guessPow :: GETVAL 'pform' 24 >>Pfact24<< ;
+    GREP: guessPow :: GETVAL 'pform' 25 >>Pfact25<< ;
+    GREP: guessPow :: GETVAL 'pform' 26 >>Pfact26<< ;
+    GREP: guessPow :: GETVAL 'pform' 27 >>Pfact27<< ;
+    GREP: guessPow :: GETVAL 'pform' 28 >>Pfact28<< ;
+    GREP: guessPow :: GETVAL 'pform' 29 >>Pfact29<< ;
+    GREP: guessPow :: GETVAL 'pform' 30 >>Pfact30<< ;
+    GREP: guessPow :: GETVAL 'pform' 31 >>Pfact31<< ;
+    GREP: guessPow :: GETVAL 'pform' 32 >>Pfact32<< ;
+    GREP: guessPow :: GETVAL 'pform' 33 >>Pfact33<< ;
+    GREP: guessPow :: GETVAL 'pform' 34 >>Pfact34<< ;
+    GREP: guessPow :: GETVAL 'pform' 35 >>Pfact35<< ;
+    GREP: guessPow :: GETVAL 'pform' 36 >>Pfact36<< ;
+    GREP: guessPow :: GETVAL 'pform' 37 >>Pfact37<< ;
+    GREP: guessPow :: GETVAL 'pform' 38 >>Pfact38<< ;
+    GREP: guessPow :: GETVAL 'pform' 39 >>Pfact39<< ;
+    GREP: guessPow :: GETVAL 'pform' 40 >>Pfact40<< ;
+    GREP: guessPow :: GETVAL 'pform' 41 >>Pfact41<< ;
+    GREP: guessPow :: GETVAL 'pform' 42 >>Pfact42<< ;
+    GREP: guessPow :: GETVAL 'pform' 43 >>Pfact43<< ;
+    GREP: guessPow :: GETVAL 'pform' 44 >>Pfact44<< ;
+    GREP: guessPow :: GETVAL 'pform' 45 >>Pfact45<< ;
+    GREP: guessPow :: GETVAL 'pform' 46 >>Pfact46<< ;
+    GREP: guessPow :: GETVAL 'pform' 47 >>Pfact47<< ;
+    GREP: guessPow :: GETVAL 'pform' 48 >>Pfact48<< ;
+    GREP: guessPow :: GETVAL 'pform' 49 >>Pfact49<< ;
+    GREP: guessPow :: GETVAL 'pform' 50 >>Pfact50<< ;
+    GREP: guessPow :: GETVAL 'pform' 51 >>Pfact51<< ;
+    GREP: guessPow :: GETVAL 'pform' 52 >>Pfact52<< ;
+    GREP: guessPow :: GETVAL 'pform' 53 >>Pfact53<< ;
+    GREP: guessPow :: GETVAL 'pform' 54 >>Pfact54<< ;
+    GREP: guessPow :: GETVAL 'pform' 55 >>Pfact55<< ;
+    GREP: guessPow :: GETVAL 'pform' 56 >>Pfact56<< ;
+    GREP: guessPow :: GETVAL 'pform' 57 >>Pfact57<< ;
+    GREP: guessPow :: GETVAL 'pform' 58 >>Pfact58<< ;
+    GREP: guessPow :: GETVAL 'pform' 59 >>Pfact59<< ;
+    GREP: guessPow :: GETVAL 'pform' 60 >>Pfact60<< ;
+    GREP: guessPow :: GETVAL 'pform' 61 >>Pfact61<< ;
+    GREP: guessPow :: GETVAL 'pform' 62 >>Pfact62<< ;
+    GREP: guessPow :: GETVAL 'pform' 63 >>Pfact63<< ;
+    GREP: guessPow :: GETVAL 'pform' 64 >>Pfact64<< ;
+    GREP: guessPow :: GETVAL 'pform' 65 >>Pfact65<< ;
+    GREP: guessPow :: GETVAL 'pform' 66 >>Pfact66<< ;
+    GREP: guessPow :: GETVAL 'pform' 67 >>Pfact67<< ;
+    GREP: guessPow :: GETVAL 'pform' 68 >>Pfact68<< ;
+    GREP: guessPow :: GETVAL 'pform' 69 >>Pfact69<< ;
+    GREP: guessPow :: GETVAL 'pform' 70 >>Pfact70<< ;
+    GREP: guessPow :: GETVAL 'pform' 71 >>Pfact71<< ;
+    GREP: guessPow :: GETVAL 'pform' 72 >>Pfact72<< ;
+    GREP: guessPow :: GETVAL 'pform' 73 >>Pfact73<< ;
+    GREP: guessPow :: GETVAL 'pform' 74 >>Pfact74<< ;
+    GREP: guessPow :: GETVAL 'pform' 75 >>Pfact75<< ;
+    GREP: guessPow :: GETVAL 'pform' 76 >>Pfact76<< ;
+    GREP: guessPow :: GETVAL 'pform' 77 >>Pfact77<< ;
+    GREP: guessPow :: GETVAL 'pform' 78 >>Pfact78<< ;
+    GREP: guessPow :: GETVAL 'pform' 79 >>Pfact79<< ;
+    GREP: guessPow :: GETVAL 'pform' 80 >>Pfact80<< ;
+    GREP: guessPow :: GETVAL 'pform' 81 >>Pfact81<< ;
+    GREP: guessPow :: GETVAL 'pform' 82 >>Pfact82<< ;
+    GREP: guessPow :: GETVAL 'pform' 83 >>Pfact83<< ;
+    GREP: guessPow :: GETVAL 'pform' 84 >>Pfact84<< ;
+    GREP: guessPow :: GETVAL 'pform' 85 >>Pfact85<< ;
+    GREP: guessPow :: GETVAL 'pform' 86 >>Pfact86<< ;
+    GREP: guessPow :: GETVAL 'pform' 87 >>Pfact87<< ;
+    GREP: guessPow :: GETVAL 'pform' 88 >>Pfact88<< ;
+    GREP: guessPow :: GETVAL 'pform' 89 >>Pfact89<< ;
+    GREP: guessPow :: GETVAL 'pform' 90 >>Pfact90<< ;
+    GREP: guessPow :: GETVAL 'pform' 91 >>Pfact91<< ;
+    GREP: guessPow :: GETVAL 'pform' 92 >>Pfact92<< ;
+    GREP: guessPow :: GETVAL 'pform' 93 >>Pfact93<< ;
+    GREP: guessPow :: GETVAL 'pform' 94 >>Pfact94<< ;
+    GREP: guessPow :: GETVAL 'pform' 95 >>Pfact95<< ;
+    GREP: guessPow :: GETVAL 'pform' 96 >>Pfact96<< ;
+    GREP: guessPow :: GETVAL 'pform' 97 >>Pfact97<< ;
+    GREP: guessPow :: GETVAL 'pform' 98 >>Pfact98<< ;
+    GREP: guessPow :: GETVAL 'pform' 99 >>Pfact99<< ;
+    GREP: guessPow :: GETVAL 'pform' 100 >>Pfact100<< ;
+
+    EVALUATE z1 := height Iz1 / ; 
+    EVALUATE z2 := height Iz1 / z1 + ; 
+    EVALUATE z3 := height Iz1 / z2 + ; 
+    EVALUATE z4 := height Iz1 / z3 + ; 
+    EVALUATE z5 := height Iz1 / z4 + ; 
+    EVALUATE z6 := height Iz1 / z5 + ; 
+    EVALUATE z7 := height Iz1 / z6 + ; 
+    EVALUATE z8 := height Iz1 / z7 + ; 
+    EVALUATE z9 := height Iz1 / z8 + ; 
+    EVALUATE z10 := height Iz1 / z9 + ; 
+    EVALUATE z11 := height Iz1 / z10 + ; 
+    EVALUATE z12 := height Iz1 / z11 + ; 
+    EVALUATE z13 := height Iz1 / z12 + ; 
+    EVALUATE z14 := height Iz1 / z13 + ; 
+    EVALUATE z15 := height Iz1 / z14 + ; 
+    EVALUATE z16 := height Iz1 / z15 + ; 
+    EVALUATE z17 := height Iz1 / z16 + ; 
+    EVALUATE z18 := height Iz1 / z17 + ; 
+    EVALUATE z19 := height Iz1 / z18 + ; 
+    EVALUATE z20 := height Iz1 / z19 + ; 
+    EVALUATE z21 := height Iz1 / z20 + ; 
+    EVALUATE z22 := height Iz1 / z21 + ; 
+    EVALUATE z23 := height Iz1 / z22 + ; 
+    EVALUATE z24 := height Iz1 / z23 + ; 
+    EVALUATE z25 := height Iz1 / z24 + ; 
+    EVALUATE z26 := height Iz1 / z25 + ; 
+    EVALUATE z27 := height Iz1 / z26 + ; 
+    EVALUATE z28 := height Iz1 / z27 + ; 
+    EVALUATE z29 := height Iz1 / z28 + ; 
+    EVALUATE z30 := height Iz1 / z29 + ; 
+    EVALUATE z31 := height Iz1 / z30 + ; 
+    EVALUATE z32 := height Iz1 / z31 + ; 
+    EVALUATE z33 := height Iz1 / z32 + ; 
+    EVALUATE z34 := height Iz1 / z33 + ; 
+    EVALUATE z35 := height Iz1 / z34 + ; 
+    EVALUATE z36 := height Iz1 / z35 + ; 
+    EVALUATE z37 := height Iz1 / z36 + ; 
+    EVALUATE z38 := height Iz1 / z37 + ; 
+    EVALUATE z39 := height Iz1 / z38 + ; 
+    EVALUATE z40 := height Iz1 / z39 + ; 
+    EVALUATE z41 := height Iz1 / z40 + ; 
+    EVALUATE z42 := height Iz1 / z41 + ; 
+    EVALUATE z43 := height Iz1 / z42 + ; 
+    EVALUATE z44 := height Iz1 / z43 + ; 
+    EVALUATE z45 := height Iz1 / z44 + ; 
+    EVALUATE z46 := height Iz1 / z45 + ; 
+    EVALUATE z47 := height Iz1 / z46 + ; 
+    EVALUATE z48 := height Iz1 / z47 + ; 
+    EVALUATE z49 := height Iz1 / z48 + ; 
+    EVALUATE z50 := height Iz1 / z49 + ; 
+    EVALUATE z51 := height Iz1 / z50 + ; 
+    EVALUATE z52 := height Iz1 / z51 + ; 
+    EVALUATE z53 := height Iz1 / z52 + ; 
+    EVALUATE z54 := height Iz1 / z53 + ; 
+    EVALUATE z55 := height Iz1 / z54 + ; 
+    EVALUATE z56 := height Iz1 / z55 + ; 
+    EVALUATE z57 := height Iz1 / z56 + ; 
+    EVALUATE z58 := height Iz1 / z57 + ; 
+    EVALUATE z59 := height Iz1 / z58 + ; 
+    EVALUATE z60 := height Iz1 / z59 + ; 
+    EVALUATE z61 := height Iz1 / z60 + ; 
+    EVALUATE z62 := height Iz1 / z61 + ; 
+    EVALUATE z63 := height Iz1 / z62 + ; 
+    EVALUATE z64 := height Iz1 / z63 + ; 
+    EVALUATE z65 := height Iz1 / z64 + ; 
+    EVALUATE z66 := height Iz1 / z65 + ; 
+    EVALUATE z67 := height Iz1 / z66 + ; 
+    EVALUATE z68 := height Iz1 / z67 + ; 
+    EVALUATE z69 := height Iz1 / z68 + ; 
+    EVALUATE z70 := height Iz1 / z69 + ; 
+    EVALUATE z71 := height Iz1 / z70 + ; 
+    EVALUATE z72 := height Iz1 / z71 + ; 
+    EVALUATE z73 := height Iz1 / z72 + ; 
+    EVALUATE z74 := height Iz1 / z73 + ; 
+    EVALUATE z75 := height Iz1 / z74 + ; 
+    EVALUATE z76 := height Iz1 / z75 + ; 
+    EVALUATE z77 := height Iz1 / z76 + ; 
+    EVALUATE z78 := height Iz1 / z77 + ; 
+    EVALUATE z79 := height Iz1 / z78 + ; 
+    EVALUATE z80 := height Iz1 / z79 + ; 
+    EVALUATE z81 := height Iz1 / z80 + ; 
+    EVALUATE z82 := height Iz1 / z81 + ; 
+    EVALUATE z83 := height Iz1 / z82 + ; 
+    EVALUATE z84 := height Iz1 / z83 + ; 
+    EVALUATE z85 := height Iz1 / z84 + ; 
+    EVALUATE z86 := height Iz1 / z85 + ; 
+    EVALUATE z87 := height Iz1 / z86 + ; 
+    EVALUATE z88 := height Iz1 / z87 + ; 
+    EVALUATE z89 := height Iz1 / z88 + ; 
+    EVALUATE z90 := height Iz1 / z89 + ; 
+    EVALUATE z91 := height Iz1 / z90 + ; 
+    EVALUATE z92 := height Iz1 / z91 + ; 
+    EVALUATE z93 := height Iz1 / z92 + ; 
+    EVALUATE z94 := height Iz1 / z93 + ; 
+    EVALUATE z95 := height Iz1 / z94 + ; 
+    EVALUATE z96 := height Iz1 / z95 + ; 
+    EVALUATE z97 := height Iz1 / z96 + ; 
+    EVALUATE z98 := height Iz1 / z97 + ; 
+    EVALUATE z99 := height Iz1 / z98 + ; 
+    EVALUATE z100 := height ; 
+    
+    *-- 
+* Fuel map definition 
+*-- 
+Fmap Matex := RESINI: Matex :: 
+    EDIT 1 
+        ::: GEO: CAR3D 1 1 100 
+                    EDIT  0 
+                    X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID 
+        MESHX 0.0 <<pitch>> 
+        MESHY 0.0 <<pitch>> 
+        MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>> <<z11>>  
+        <<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>> <<z21>>  
+        <<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>> <<z31>>  
+        <<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>> <<z41>>  
+        <<z42>> <<z43>> <<z44>> <<z45>> <<z46>> <<z47>> <<z48>> <<z49>> <<z50>> <<z51>>  
+        <<z52>> <<z53>> <<z54>> <<z55>> <<z56>> <<z57>> <<z58>> <<z59>> <<z60>> <<z61>>  
+        <<z62>> <<z63>> <<z64>> <<z65>> <<z66>> <<z67>> <<z68>> <<z69>> <<z70>> <<z71>>  
+        <<z72>> <<z73>> <<z74>> <<z75>> <<z76>> <<z77>> <<z78>> <<z79>> <<z80>> <<z81>>  
+        <<z82>> <<z83>> <<z84>> <<z85>> <<z86>> <<z87>> <<z88>> <<z89>> <<z90>> <<z91>>  
+        <<z92>> <<z93>> <<z94>> <<z95>> <<z96>> <<z97>> <<z98>> <<z99>> <<z100>>
+
+        MIX 
+        PLANE 1 1 
+        PLANE 2 2 
+        PLANE 3 3 
+        PLANE 4 4 
+        PLANE 5 5 
+        PLANE 6 6 
+        PLANE 7 7 
+        PLANE 8 8 
+        PLANE 9 9 
+        PLANE 10 10 
+        PLANE 11 11 
+        PLANE 12 12 
+        PLANE 13 13 
+        PLANE 14 14 
+        PLANE 15 15 
+        PLANE 16 16 
+        PLANE 17 17 
+        PLANE 18 18 
+        PLANE 19 19 
+        PLANE 20 20 
+        PLANE 21 21 
+        PLANE 22 22 
+        PLANE 23 23 
+        PLANE 24 24 
+        PLANE 25 25 
+        PLANE 26 26 
+        PLANE 27 27 
+        PLANE 28 28 
+        PLANE 29 29 
+        PLANE 30 30 
+        PLANE 31 31 
+        PLANE 32 32 
+        PLANE 33 33 
+        PLANE 34 34 
+        PLANE 35 35 
+        PLANE 36 36 
+        PLANE 37 37 
+        PLANE 38 38 
+        PLANE 39 39 
+        PLANE 40 40 
+        PLANE 41 41 
+        PLANE 42 42 
+        PLANE 43 43 
+        PLANE 44 44 
+        PLANE 45 45 
+        PLANE 46 46 
+        PLANE 47 47 
+        PLANE 48 48 
+        PLANE 49 49 
+        PLANE 50 50 
+        PLANE 51 51 
+        PLANE 52 52 
+        PLANE 53 53 
+        PLANE 54 54 
+        PLANE 55 55 
+        PLANE 56 56 
+        PLANE 57 57 
+        PLANE 58 58 
+        PLANE 59 59 
+        PLANE 60 60 
+        PLANE 61 61 
+        PLANE 62 62 
+        PLANE 63 63 
+        PLANE 64 64 
+        PLANE 65 65 
+        PLANE 66 66 
+        PLANE 67 67 
+        PLANE 68 68 
+        PLANE 69 69 
+        PLANE 70 70 
+        PLANE 71 71 
+        PLANE 72 72 
+        PLANE 73 73 
+        PLANE 74 74 
+        PLANE 75 75 
+        PLANE 76 76 
+        PLANE 77 77 
+        PLANE 78 78 
+        PLANE 79 79 
+        PLANE 80 80 
+        PLANE 81 81 
+        PLANE 82 82 
+        PLANE 83 83 
+        PLANE 84 84 
+        PLANE 85 85 
+        PLANE 86 86 
+        PLANE 87 87 
+        PLANE 88 88 
+        PLANE 89 89 
+        PLANE 90 90 
+        PLANE 91 91 
+        PLANE 92 92 
+        PLANE 93 93 
+        PLANE 94 94 
+        PLANE 95 95 
+        PLANE 96 96 
+        PLANE 97 97 
+        PLANE 98 98 
+        PLANE 99 99 
+        PLANE 100 100 
+    ; 
+    ! 
+    NXNAME '01' NYNAME  'A' 
+    NCOMB 1 
+    B-ZONE 1 
+    
+    BTYPE INST-BURN 
+    INST-BVAL CHAN 0.0 
+
+    ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL 
+    ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL 
+    ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL 
+
+    FUEL WEIGHT  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    
+    SET-PARAM 'T-FUEL' BUND 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+
+    SET-PARAM 'T-COOL' BUND 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+
+    SET-PARAM 'D-COOL' BUND 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+
+    REACTOR-POW <<powi>> 
+    AXIAL-PFORM <<Pfact1>> <<Pfact2>> <<Pfact3>> <<Pfact4>> <<Pfact5>> 
+    <<Pfact6>> <<Pfact7>> <<Pfact8>> <<Pfact9>> <<Pfact10>>
+    <<Pfact11>> <<Pfact12>> <<Pfact13>> <<Pfact14>> <<Pfact15>> 
+    <<Pfact16>> <<Pfact17>> <<Pfact18>> <<Pfact19>> <<Pfact20>>
+    <<Pfact21>> <<Pfact22>> <<Pfact23>> <<Pfact24>> <<Pfact25>> 
+    <<Pfact26>> <<Pfact27>> <<Pfact28>> <<Pfact29>> <<Pfact30>>
+    <<Pfact31>> <<Pfact32>> <<Pfact33>> <<Pfact34>> <<Pfact35>> 
+    <<Pfact36>> <<Pfact37>> <<Pfact38>> <<Pfact39>> <<Pfact40>>
+    <<Pfact41>> <<Pfact42>> <<Pfact43>> <<Pfact44>> <<Pfact45>> 
+    <<Pfact46>> <<Pfact47>> <<Pfact48>> <<Pfact49>> <<Pfact50>>    
+    <<Pfact51>> <<Pfact52>> <<Pfact53>> <<Pfact54>> <<Pfact55>> 
+    <<Pfact56>> <<Pfact57>> <<Pfact58>> <<Pfact59>> <<Pfact60>>     
+    <<Pfact61>> <<Pfact62>> <<Pfact63>> <<Pfact64>> <<Pfact65>> 
+    <<Pfact66>> <<Pfact67>> <<Pfact68>> <<Pfact69>> <<Pfact70>>  
+    <<Pfact71>> <<Pfact72>> <<Pfact73>> <<Pfact74>> <<Pfact75>>
+    <<Pfact76>> <<Pfact77>> <<Pfact78>> <<Pfact79>> <<Pfact80>>
+    <<Pfact81>> <<Pfact82>> <<Pfact83>> <<Pfact84>> <<Pfact85>>
+    <<Pfact86>> <<Pfact87>> <<Pfact88>> <<Pfact89>> <<Pfact90>>
+    <<Pfact91>> <<Pfact92>> <<Pfact93>> <<Pfact94>> <<Pfact95>>
+    <<Pfact96>> <<Pfact97>> <<Pfact98>> <<Pfact99>> <<Pfact100>>
+    
+    ; 
+ELSEIF Iz1 160.0 = THEN 
+    GREP: guessPow :: GETVAL 'pform' 1 >>Pfact1<< ;
+    GREP: guessPow :: GETVAL 'pform' 2 >>Pfact2<< ;
+    GREP: guessPow :: GETVAL 'pform' 3 >>Pfact3<< ;
+    GREP: guessPow :: GETVAL 'pform' 4 >>Pfact4<< ;
+    GREP: guessPow :: GETVAL 'pform' 5 >>Pfact5<< ;
+    GREP: guessPow :: GETVAL 'pform' 6 >>Pfact6<< ;
+    GREP: guessPow :: GETVAL 'pform' 7 >>Pfact7<< ;
+    GREP: guessPow :: GETVAL 'pform' 8 >>Pfact8<< ;
+    GREP: guessPow :: GETVAL 'pform' 9 >>Pfact9<< ;
+    GREP: guessPow :: GETVAL 'pform' 10 >>Pfact10<< ;
+    GREP: guessPow :: GETVAL 'pform' 11 >>Pfact11<< ;
+    GREP: guessPow :: GETVAL 'pform' 12 >>Pfact12<< ;
+    GREP: guessPow :: GETVAL 'pform' 13 >>Pfact13<< ;
+    GREP: guessPow :: GETVAL 'pform' 14 >>Pfact14<< ;
+    GREP: guessPow :: GETVAL 'pform' 15 >>Pfact15<< ;
+    GREP: guessPow :: GETVAL 'pform' 16 >>Pfact16<< ;
+    GREP: guessPow :: GETVAL 'pform' 17 >>Pfact17<< ;
+    GREP: guessPow :: GETVAL 'pform' 18 >>Pfact18<< ;
+    GREP: guessPow :: GETVAL 'pform' 19 >>Pfact19<< ;
+    GREP: guessPow :: GETVAL 'pform' 20 >>Pfact20<< ;
+    GREP: guessPow :: GETVAL 'pform' 21 >>Pfact21<< ;
+    GREP: guessPow :: GETVAL 'pform' 22 >>Pfact22<< ;
+    GREP: guessPow :: GETVAL 'pform' 23 >>Pfact23<< ;
+    GREP: guessPow :: GETVAL 'pform' 24 >>Pfact24<< ;
+    GREP: guessPow :: GETVAL 'pform' 25 >>Pfact25<< ;
+    GREP: guessPow :: GETVAL 'pform' 26 >>Pfact26<< ;
+    GREP: guessPow :: GETVAL 'pform' 27 >>Pfact27<< ;
+    GREP: guessPow :: GETVAL 'pform' 28 >>Pfact28<< ;
+    GREP: guessPow :: GETVAL 'pform' 29 >>Pfact29<< ;
+    GREP: guessPow :: GETVAL 'pform' 30 >>Pfact30<< ;
+    GREP: guessPow :: GETVAL 'pform' 31 >>Pfact31<< ;
+    GREP: guessPow :: GETVAL 'pform' 32 >>Pfact32<< ;
+    GREP: guessPow :: GETVAL 'pform' 33 >>Pfact33<< ;
+    GREP: guessPow :: GETVAL 'pform' 34 >>Pfact34<< ;
+    GREP: guessPow :: GETVAL 'pform' 35 >>Pfact35<< ;
+    GREP: guessPow :: GETVAL 'pform' 36 >>Pfact36<< ;
+    GREP: guessPow :: GETVAL 'pform' 37 >>Pfact37<< ;
+    GREP: guessPow :: GETVAL 'pform' 38 >>Pfact38<< ;
+    GREP: guessPow :: GETVAL 'pform' 39 >>Pfact39<< ;
+    GREP: guessPow :: GETVAL 'pform' 40 >>Pfact40<< ;
+    GREP: guessPow :: GETVAL 'pform' 41 >>Pfact41<< ;
+    GREP: guessPow :: GETVAL 'pform' 42 >>Pfact42<< ;
+    GREP: guessPow :: GETVAL 'pform' 43 >>Pfact43<< ;
+    GREP: guessPow :: GETVAL 'pform' 44 >>Pfact44<< ;
+    GREP: guessPow :: GETVAL 'pform' 45 >>Pfact45<< ;
+    GREP: guessPow :: GETVAL 'pform' 46 >>Pfact46<< ;
+    GREP: guessPow :: GETVAL 'pform' 47 >>Pfact47<< ;
+    GREP: guessPow :: GETVAL 'pform' 48 >>Pfact48<< ;
+    GREP: guessPow :: GETVAL 'pform' 49 >>Pfact49<< ;
+    GREP: guessPow :: GETVAL 'pform' 50 >>Pfact50<< ;
+    GREP: guessPow :: GETVAL 'pform' 51 >>Pfact51<< ;
+    GREP: guessPow :: GETVAL 'pform' 52 >>Pfact52<< ;
+    GREP: guessPow :: GETVAL 'pform' 53 >>Pfact53<< ;
+    GREP: guessPow :: GETVAL 'pform' 54 >>Pfact54<< ;
+    GREP: guessPow :: GETVAL 'pform' 55 >>Pfact55<< ;
+    GREP: guessPow :: GETVAL 'pform' 56 >>Pfact56<< ;
+    GREP: guessPow :: GETVAL 'pform' 57 >>Pfact57<< ;
+    GREP: guessPow :: GETVAL 'pform' 58 >>Pfact58<< ;
+    GREP: guessPow :: GETVAL 'pform' 59 >>Pfact59<< ;
+    GREP: guessPow :: GETVAL 'pform' 60 >>Pfact60<< ;
+    GREP: guessPow :: GETVAL 'pform' 61 >>Pfact61<< ;
+    GREP: guessPow :: GETVAL 'pform' 62 >>Pfact62<< ;
+    GREP: guessPow :: GETVAL 'pform' 63 >>Pfact63<< ;
+    GREP: guessPow :: GETVAL 'pform' 64 >>Pfact64<< ;
+    GREP: guessPow :: GETVAL 'pform' 65 >>Pfact65<< ;
+    GREP: guessPow :: GETVAL 'pform' 66 >>Pfact66<< ;
+    GREP: guessPow :: GETVAL 'pform' 67 >>Pfact67<< ;
+    GREP: guessPow :: GETVAL 'pform' 68 >>Pfact68<< ;
+    GREP: guessPow :: GETVAL 'pform' 69 >>Pfact69<< ;
+    GREP: guessPow :: GETVAL 'pform' 70 >>Pfact70<< ;
+    GREP: guessPow :: GETVAL 'pform' 71 >>Pfact71<< ;
+    GREP: guessPow :: GETVAL 'pform' 72 >>Pfact72<< ;
+    GREP: guessPow :: GETVAL 'pform' 73 >>Pfact73<< ;
+    GREP: guessPow :: GETVAL 'pform' 74 >>Pfact74<< ;
+    GREP: guessPow :: GETVAL 'pform' 75 >>Pfact75<< ;
+    GREP: guessPow :: GETVAL 'pform' 76 >>Pfact76<< ;
+    GREP: guessPow :: GETVAL 'pform' 77 >>Pfact77<< ;
+    GREP: guessPow :: GETVAL 'pform' 78 >>Pfact78<< ;
+    GREP: guessPow :: GETVAL 'pform' 79 >>Pfact79<< ;
+    GREP: guessPow :: GETVAL 'pform' 80 >>Pfact80<< ;
+    GREP: guessPow :: GETVAL 'pform' 81 >>Pfact81<< ;
+    GREP: guessPow :: GETVAL 'pform' 82 >>Pfact82<< ;
+    GREP: guessPow :: GETVAL 'pform' 83 >>Pfact83<< ;
+    GREP: guessPow :: GETVAL 'pform' 84 >>Pfact84<< ;
+    GREP: guessPow :: GETVAL 'pform' 85 >>Pfact85<< ;
+    GREP: guessPow :: GETVAL 'pform' 86 >>Pfact86<< ;
+    GREP: guessPow :: GETVAL 'pform' 87 >>Pfact87<< ;
+    GREP: guessPow :: GETVAL 'pform' 88 >>Pfact88<< ;
+    GREP: guessPow :: GETVAL 'pform' 89 >>Pfact89<< ;
+    GREP: guessPow :: GETVAL 'pform' 90 >>Pfact90<< ;
+    GREP: guessPow :: GETVAL 'pform' 91 >>Pfact91<< ;
+    GREP: guessPow :: GETVAL 'pform' 92 >>Pfact92<< ;
+    GREP: guessPow :: GETVAL 'pform' 93 >>Pfact93<< ;
+    GREP: guessPow :: GETVAL 'pform' 94 >>Pfact94<< ;
+    GREP: guessPow :: GETVAL 'pform' 95 >>Pfact95<< ;
+    GREP: guessPow :: GETVAL 'pform' 96 >>Pfact96<< ;
+    GREP: guessPow :: GETVAL 'pform' 97 >>Pfact97<< ;
+    GREP: guessPow :: GETVAL 'pform' 98 >>Pfact98<< ;
+    GREP: guessPow :: GETVAL 'pform' 99 >>Pfact99<< ;
+    GREP: guessPow :: GETVAL 'pform' 100 >>Pfact100<< ;
+    GREP: guessPow :: GETVAL 'pform' 101 >>Pfact101<< ;
+    GREP: guessPow :: GETVAL 'pform' 102 >>Pfact102<< ;
+    GREP: guessPow :: GETVAL 'pform' 103 >>Pfact103<< ;
+    GREP: guessPow :: GETVAL 'pform' 104 >>Pfact104<< ;
+    GREP: guessPow :: GETVAL 'pform' 105 >>Pfact105<< ;
+    GREP: guessPow :: GETVAL 'pform' 106 >>Pfact106<< ;
+    GREP: guessPow :: GETVAL 'pform' 107 >>Pfact107<< ;
+    GREP: guessPow :: GETVAL 'pform' 108 >>Pfact108<< ;
+    GREP: guessPow :: GETVAL 'pform' 109 >>Pfact109<< ;
+    GREP: guessPow :: GETVAL 'pform' 110 >>Pfact110<< ;
+    GREP: guessPow :: GETVAL 'pform' 111 >>Pfact111<< ;
+    GREP: guessPow :: GETVAL 'pform' 112 >>Pfact112<< ;
+    GREP: guessPow :: GETVAL 'pform' 113 >>Pfact113<< ;
+    GREP: guessPow :: GETVAL 'pform' 114 >>Pfact114<< ;
+    GREP: guessPow :: GETVAL 'pform' 115 >>Pfact115<< ;
+    GREP: guessPow :: GETVAL 'pform' 116 >>Pfact116<< ;
+    GREP: guessPow :: GETVAL 'pform' 117 >>Pfact117<< ;
+    GREP: guessPow :: GETVAL 'pform' 118 >>Pfact118<< ;
+    GREP: guessPow :: GETVAL 'pform' 119 >>Pfact119<< ;
+    GREP: guessPow :: GETVAL 'pform' 120 >>Pfact120<< ;
+    GREP: guessPow :: GETVAL 'pform' 121 >>Pfact121<< ;
+    GREP: guessPow :: GETVAL 'pform' 122 >>Pfact122<< ;
+    GREP: guessPow :: GETVAL 'pform' 123 >>Pfact123<< ;
+    GREP: guessPow :: GETVAL 'pform' 124 >>Pfact124<< ;
+    GREP: guessPow :: GETVAL 'pform' 125 >>Pfact125<< ;
+    GREP: guessPow :: GETVAL 'pform' 126 >>Pfact126<< ;
+    GREP: guessPow :: GETVAL 'pform' 127 >>Pfact127<< ;
+    GREP: guessPow :: GETVAL 'pform' 128 >>Pfact128<< ;
+    GREP: guessPow :: GETVAL 'pform' 129 >>Pfact129<< ;
+    GREP: guessPow :: GETVAL 'pform' 130 >>Pfact130<< ;
+    GREP: guessPow :: GETVAL 'pform' 131 >>Pfact131<< ;
+    GREP: guessPow :: GETVAL 'pform' 132 >>Pfact132<< ;
+    GREP: guessPow :: GETVAL 'pform' 133 >>Pfact133<< ;
+    GREP: guessPow :: GETVAL 'pform' 134 >>Pfact134<< ;
+    GREP: guessPow :: GETVAL 'pform' 135 >>Pfact135<< ;
+    GREP: guessPow :: GETVAL 'pform' 136 >>Pfact136<< ;
+    GREP: guessPow :: GETVAL 'pform' 137 >>Pfact137<< ;
+    GREP: guessPow :: GETVAL 'pform' 138 >>Pfact138<< ;
+    GREP: guessPow :: GETVAL 'pform' 139 >>Pfact139<< ;
+    GREP: guessPow :: GETVAL 'pform' 140 >>Pfact140<< ;
+    GREP: guessPow :: GETVAL 'pform' 141 >>Pfact141<< ;
+    GREP: guessPow :: GETVAL 'pform' 142 >>Pfact142<< ;
+    GREP: guessPow :: GETVAL 'pform' 143 >>Pfact143<< ;
+    GREP: guessPow :: GETVAL 'pform' 144 >>Pfact144<< ;
+    GREP: guessPow :: GETVAL 'pform' 145 >>Pfact145<< ;
+    GREP: guessPow :: GETVAL 'pform' 146 >>Pfact146<< ;
+    GREP: guessPow :: GETVAL 'pform' 147 >>Pfact147<< ;
+    GREP: guessPow :: GETVAL 'pform' 148 >>Pfact148<< ;
+    GREP: guessPow :: GETVAL 'pform' 149 >>Pfact149<< ;
+    GREP: guessPow :: GETVAL 'pform' 150 >>Pfact150<< ;
+    GREP: guessPow :: GETVAL 'pform' 151 >>Pfact151<< ;
+    GREP: guessPow :: GETVAL 'pform' 152 >>Pfact152<< ;
+    GREP: guessPow :: GETVAL 'pform' 153 >>Pfact153<< ;
+    GREP: guessPow :: GETVAL 'pform' 154 >>Pfact154<< ;
+    GREP: guessPow :: GETVAL 'pform' 155 >>Pfact155<< ;
+    GREP: guessPow :: GETVAL 'pform' 156 >>Pfact156<< ;
+    GREP: guessPow :: GETVAL 'pform' 157 >>Pfact157<< ;
+    GREP: guessPow :: GETVAL 'pform' 158 >>Pfact158<< ;
+    GREP: guessPow :: GETVAL 'pform' 159 >>Pfact159<< ;
+    GREP: guessPow :: GETVAL 'pform' 160 >>Pfact160<< ;
+
+
+    EVALUATE z1 := height Iz1 / ; 
+    EVALUATE z2 := height Iz1 / z1 + ; 
+    EVALUATE z3 := height Iz1 / z2 + ; 
+    EVALUATE z4 := height Iz1 / z3 + ; 
+    EVALUATE z5 := height Iz1 / z4 + ; 
+    EVALUATE z6 := height Iz1 / z5 + ; 
+    EVALUATE z7 := height Iz1 / z6 + ; 
+    EVALUATE z8 := height Iz1 / z7 + ; 
+    EVALUATE z9 := height Iz1 / z8 + ; 
+    EVALUATE z10 := height Iz1 / z9 + ; 
+    EVALUATE z11 := height Iz1 / z10 + ; 
+    EVALUATE z12 := height Iz1 / z11 + ; 
+    EVALUATE z13 := height Iz1 / z12 + ; 
+    EVALUATE z14 := height Iz1 / z13 + ; 
+    EVALUATE z15 := height Iz1 / z14 + ; 
+    EVALUATE z16 := height Iz1 / z15 + ; 
+    EVALUATE z17 := height Iz1 / z16 + ; 
+    EVALUATE z18 := height Iz1 / z17 + ; 
+    EVALUATE z19 := height Iz1 / z18 + ; 
+    EVALUATE z20 := height Iz1 / z19 + ; 
+    EVALUATE z21 := height Iz1 / z20 + ; 
+    EVALUATE z22 := height Iz1 / z21 + ; 
+    EVALUATE z23 := height Iz1 / z22 + ; 
+    EVALUATE z24 := height Iz1 / z23 + ; 
+    EVALUATE z25 := height Iz1 / z24 + ; 
+    EVALUATE z26 := height Iz1 / z25 + ; 
+    EVALUATE z27 := height Iz1 / z26 + ; 
+    EVALUATE z28 := height Iz1 / z27 + ; 
+    EVALUATE z29 := height Iz1 / z28 + ; 
+    EVALUATE z30 := height Iz1 / z29 + ; 
+    EVALUATE z31 := height Iz1 / z30 + ; 
+    EVALUATE z32 := height Iz1 / z31 + ; 
+    EVALUATE z33 := height Iz1 / z32 + ; 
+    EVALUATE z34 := height Iz1 / z33 + ; 
+    EVALUATE z35 := height Iz1 / z34 + ; 
+    EVALUATE z36 := height Iz1 / z35 + ; 
+    EVALUATE z37 := height Iz1 / z36 + ; 
+    EVALUATE z38 := height Iz1 / z37 + ; 
+    EVALUATE z39 := height Iz1 / z38 + ; 
+    EVALUATE z40 := height Iz1 / z39 + ; 
+    EVALUATE z41 := height Iz1 / z40 + ; 
+    EVALUATE z42 := height Iz1 / z41 + ; 
+    EVALUATE z43 := height Iz1 / z42 + ; 
+    EVALUATE z44 := height Iz1 / z43 + ; 
+    EVALUATE z45 := height Iz1 / z44 + ; 
+    EVALUATE z46 := height Iz1 / z45 + ; 
+    EVALUATE z47 := height Iz1 / z46 + ; 
+    EVALUATE z48 := height Iz1 / z47 + ; 
+    EVALUATE z49 := height Iz1 / z48 + ; 
+    EVALUATE z50 := height Iz1 / z49 + ; 
+    EVALUATE z51 := height Iz1 / z50 + ; 
+    EVALUATE z52 := height Iz1 / z51 + ; 
+    EVALUATE z53 := height Iz1 / z52 + ; 
+    EVALUATE z54 := height Iz1 / z53 + ; 
+    EVALUATE z55 := height Iz1 / z54 + ; 
+    EVALUATE z56 := height Iz1 / z55 + ; 
+    EVALUATE z57 := height Iz1 / z56 + ; 
+    EVALUATE z58 := height Iz1 / z57 + ; 
+    EVALUATE z59 := height Iz1 / z58 + ; 
+    EVALUATE z60 := height Iz1 / z59 + ; 
+    EVALUATE z61 := height Iz1 / z60 + ; 
+    EVALUATE z62 := height Iz1 / z61 + ; 
+    EVALUATE z63 := height Iz1 / z62 + ; 
+    EVALUATE z64 := height Iz1 / z63 + ; 
+    EVALUATE z65 := height Iz1 / z64 + ; 
+    EVALUATE z66 := height Iz1 / z65 + ; 
+    EVALUATE z67 := height Iz1 / z66 + ; 
+    EVALUATE z68 := height Iz1 / z67 + ; 
+    EVALUATE z69 := height Iz1 / z68 + ; 
+    EVALUATE z70 := height Iz1 / z69 + ; 
+    EVALUATE z71 := height Iz1 / z70 + ; 
+    EVALUATE z72 := height Iz1 / z71 + ; 
+    EVALUATE z73 := height Iz1 / z72 + ; 
+    EVALUATE z74 := height Iz1 / z73 + ; 
+    EVALUATE z75 := height Iz1 / z74 + ; 
+    EVALUATE z76 := height Iz1 / z75 + ; 
+    EVALUATE z77 := height Iz1 / z76 + ; 
+    EVALUATE z78 := height Iz1 / z77 + ; 
+    EVALUATE z79 := height Iz1 / z78 + ; 
+    EVALUATE z80 := height Iz1 / z79 + ; 
+    EVALUATE z81 := height Iz1 / z80 + ; 
+    EVALUATE z82 := height Iz1 / z81 + ; 
+    EVALUATE z83 := height Iz1 / z82 + ; 
+    EVALUATE z84 := height Iz1 / z83 + ; 
+    EVALUATE z85 := height Iz1 / z84 + ; 
+    EVALUATE z86 := height Iz1 / z85 + ; 
+    EVALUATE z87 := height Iz1 / z86 + ; 
+    EVALUATE z88 := height Iz1 / z87 + ; 
+    EVALUATE z89 := height Iz1 / z88 + ; 
+    EVALUATE z90 := height Iz1 / z89 + ; 
+    EVALUATE z91 := height Iz1 / z90 + ; 
+    EVALUATE z92 := height Iz1 / z91 + ; 
+    EVALUATE z93 := height Iz1 / z92 + ; 
+    EVALUATE z94 := height Iz1 / z93 + ; 
+    EVALUATE z95 := height Iz1 / z94 + ; 
+    EVALUATE z96 := height Iz1 / z95 + ; 
+    EVALUATE z97 := height Iz1 / z96 + ; 
+    EVALUATE z98 := height Iz1 / z97 + ; 
+    EVALUATE z99 := height Iz1 / z98 + ; 
+    EVALUATE z100 := height Iz1 / z99 + ;
+    EVALUATE z101 := height Iz1 / z100 + ;
+    EVALUATE z102 := height Iz1 / z101 + ;
+    EVALUATE z103 := height Iz1 / z102 + ;
+    EVALUATE z104 := height Iz1 / z103 + ;
+    EVALUATE z105 := height Iz1 / z104 + ;
+    EVALUATE z106 := height Iz1 / z105 + ;
+    EVALUATE z107 := height Iz1 / z106 + ;
+    EVALUATE z108 := height Iz1 / z107 + ;
+    EVALUATE z109 := height Iz1 / z108 + ;
+    EVALUATE z110 := height Iz1 / z109 + ;
+    EVALUATE z111 := height Iz1 / z110 + ;
+    EVALUATE z112 := height Iz1 / z111 + ;
+    EVALUATE z113 := height Iz1 / z112 + ;
+    EVALUATE z114 := height Iz1 / z113 + ;
+    EVALUATE z115 := height Iz1 / z114 + ;
+    EVALUATE z116 := height Iz1 / z115 + ;
+    EVALUATE z117 := height Iz1 / z116 + ;
+    EVALUATE z118 := height Iz1 / z117 + ;
+    EVALUATE z119 := height Iz1 / z118 + ;
+    EVALUATE z120 := height Iz1 / z119 + ;
+    EVALUATE z121 := height Iz1 / z120 + ;
+    EVALUATE z122 := height Iz1 / z121 + ;  
+    EVALUATE z123 := height Iz1 / z122 + ;
+    EVALUATE z124 := height Iz1 / z123 + ;
+    EVALUATE z125 := height Iz1 / z124 + ;
+    EVALUATE z126 := height Iz1 / z125 + ;
+    EVALUATE z127 := height Iz1 / z126 + ;
+    EVALUATE z128 := height Iz1 / z127 + ;
+    EVALUATE z129 := height Iz1 / z128 + ;
+    EVALUATE z130 := height Iz1 / z129 + ;
+    EVALUATE z131 := height Iz1 / z130 + ;
+    EVALUATE z132 := height Iz1 / z131 + ;
+    EVALUATE z133 := height Iz1 / z132 + ;
+    EVALUATE z134 := height Iz1 / z133 + ;
+    EVALUATE z135 := height Iz1 / z134 + ;
+    EVALUATE z136 := height Iz1 / z135 + ;
+    EVALUATE z137 := height Iz1 / z136 + ;
+    EVALUATE z138 := height Iz1 / z137 + ;
+    EVALUATE z139 := height Iz1 / z138 + ;
+    EVALUATE z140 := height Iz1 / z139 + ;
+    EVALUATE z141 := height Iz1 / z140 + ;
+    EVALUATE z142 := height Iz1 / z141 + ;
+    EVALUATE z143 := height Iz1 / z142 + ;
+    EVALUATE z144 := height Iz1 / z143 + ;
+    EVALUATE z145 := height Iz1 / z144 + ;
+    EVALUATE z146 := height Iz1 / z145 + ;
+    EVALUATE z147 := height Iz1 / z146 + ;
+    EVALUATE z148 := height Iz1 / z147 + ;
+    EVALUATE z149 := height Iz1 / z148 + ;
+    EVALUATE z150 := height Iz1 / z149 + ;
+    EVALUATE z151 := height Iz1 / z150 + ;
+    EVALUATE z152 := height Iz1 / z151 + ;
+    EVALUATE z153 := height Iz1 / z152 + ;
+    EVALUATE z154 := height Iz1 / z153 + ;
+    EVALUATE z155 := height Iz1 / z154 + ;
+    EVALUATE z156 := height Iz1 / z155 + ;
+    EVALUATE z157 := height Iz1 / z156 + ;
+    EVALUATE z158 := height Iz1 / z157 + ;
+    EVALUATE z159 := height Iz1 / z158 + ;
+    EVALUATE z160 := height Iz1 / z159 + ; 
+    
+    *-- 
+* Fuel map definition 
+*-- 
+Fmap Matex := RESINI: Matex :: 
+    EDIT 1 
+        ::: GEO: CAR3D 1 1 160 
+                    EDIT  0 
+                    X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID 
+        MESHX 0.0 <<pitch>> 
+        MESHY 0.0 <<pitch>> 
+        MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>> <<z11>>  
+        <<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>> <<z21>>  
+        <<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>> <<z31>>  
+        <<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>> <<z41>>  
+        <<z42>> <<z43>> <<z44>> <<z45>> <<z46>> <<z47>> <<z48>> <<z49>> <<z50>> <<z51>>  
+        <<z52>> <<z53>> <<z54>> <<z55>> <<z56>> <<z57>> <<z58>> <<z59>> <<z60>> <<z61>>  
+        <<z62>> <<z63>> <<z64>> <<z65>> <<z66>> <<z67>> <<z68>> <<z69>> <<z70>> <<z71>>  
+        <<z72>> <<z73>> <<z74>> <<z75>> <<z76>> <<z77>> <<z78>> <<z79>> <<z80>> <<z81>>  
+        <<z82>> <<z83>> <<z84>> <<z85>> <<z86>> <<z87>> <<z88>> <<z89>> <<z90>> <<z91>>  
+        <<z92>> <<z93>> <<z94>> <<z95>> <<z96>> <<z97>> <<z98>> <<z99>> <<z100>>
+        <<z101>> <<z102>> <<z103>> <<z104>> <<z105>> <<z106>> <<z107>> <<z108>> <<z109>> <<z110>>
+        <<z111>> <<z112>> <<z113>> <<z114>> <<z115>> <<z116>> <<z117>> <<z118>> <<z119>> <<z120>>
+        <<z121>> <<z122>> <<z123>> <<z124>> <<z125>> <<z126>> <<z127>> <<z128>> <<z129>> <<z130>>
+        <<z131>> <<z132>> <<z133>> <<z134>> <<z135>> <<z136>> <<z137>> <<z138>> <<z139>> <<z140>>
+        <<z141>> <<z142>> <<z143>> <<z144>> <<z145>> <<z146>> <<z147>> <<z148>> <<z149>> <<z150>>
+        <<z151>> <<z152>> <<z153>> <<z154>> <<z155>> <<z156>> <<z157>> <<z158>> <<z159>> <<z160>>
+
+
+        MIX 
+        PLANE 1 1 
+        PLANE 2 2 
+        PLANE 3 3 
+        PLANE 4 4 
+        PLANE 5 5 
+        PLANE 6 6 
+        PLANE 7 7 
+        PLANE 8 8 
+        PLANE 9 9 
+        PLANE 10 10 
+        PLANE 11 11 
+        PLANE 12 12 
+        PLANE 13 13 
+        PLANE 14 14 
+        PLANE 15 15 
+        PLANE 16 16 
+        PLANE 17 17 
+        PLANE 18 18 
+        PLANE 19 19 
+        PLANE 20 20 
+        PLANE 21 21 
+        PLANE 22 22 
+        PLANE 23 23 
+        PLANE 24 24 
+        PLANE 25 25 
+        PLANE 26 26 
+        PLANE 27 27 
+        PLANE 28 28 
+        PLANE 29 29 
+        PLANE 30 30 
+        PLANE 31 31 
+        PLANE 32 32 
+        PLANE 33 33 
+        PLANE 34 34 
+        PLANE 35 35 
+        PLANE 36 36 
+        PLANE 37 37 
+        PLANE 38 38 
+        PLANE 39 39 
+        PLANE 40 40 
+        PLANE 41 41 
+        PLANE 42 42 
+        PLANE 43 43 
+        PLANE 44 44 
+        PLANE 45 45 
+        PLANE 46 46 
+        PLANE 47 47 
+        PLANE 48 48 
+        PLANE 49 49 
+        PLANE 50 50 
+        PLANE 51 51 
+        PLANE 52 52 
+        PLANE 53 53 
+        PLANE 54 54 
+        PLANE 55 55 
+        PLANE 56 56 
+        PLANE 57 57 
+        PLANE 58 58 
+        PLANE 59 59 
+        PLANE 60 60 
+        PLANE 61 61 
+        PLANE 62 62 
+        PLANE 63 63 
+        PLANE 64 64 
+        PLANE 65 65 
+        PLANE 66 66 
+        PLANE 67 67 
+        PLANE 68 68 
+        PLANE 69 69 
+        PLANE 70 70 
+        PLANE 71 71 
+        PLANE 72 72 
+        PLANE 73 73 
+        PLANE 74 74 
+        PLANE 75 75 
+        PLANE 76 76 
+        PLANE 77 77 
+        PLANE 78 78 
+        PLANE 79 79 
+        PLANE 80 80 
+        PLANE 81 81 
+        PLANE 82 82 
+        PLANE 83 83 
+        PLANE 84 84 
+        PLANE 85 85 
+        PLANE 86 86 
+        PLANE 87 87 
+        PLANE 88 88 
+        PLANE 89 89 
+        PLANE 90 90 
+        PLANE 91 91 
+        PLANE 92 92 
+        PLANE 93 93 
+        PLANE 94 94 
+        PLANE 95 95 
+        PLANE 96 96 
+        PLANE 97 97 
+        PLANE 98 98 
+        PLANE 99 99 
+        PLANE 100 100 
+        PLANE 101 101
+        PLANE 102 102
+        PLANE 103 103
+        PLANE 104 104
+        PLANE 105 105
+        PLANE 106 106
+        PLANE 107 107
+        PLANE 108 108
+        PLANE 109 109
+        PLANE 110 110
+        PLANE 111 111
+        PLANE 112 112
+        PLANE 113 113
+        PLANE 114 114
+        PLANE 115 115
+        PLANE 116 116
+        PLANE 117 117
+        PLANE 118 118
+        PLANE 119 119
+        PLANE 120 120
+        PLANE 121 121
+        PLANE 122 122
+        PLANE 123 123
+        PLANE 124 124
+        PLANE 125 125
+        PLANE 126 126
+        PLANE 127 127
+        PLANE 128 128
+        PLANE 129 129
+        PLANE 130 130
+        PLANE 131 131
+        PLANE 132 132
+        PLANE 133 133
+        PLANE 134 134
+        PLANE 135 135
+        PLANE 136 136
+        PLANE 137 137
+        PLANE 138 138
+        PLANE 139 139
+        PLANE 140 140
+        PLANE 141 141
+        PLANE 142 142
+        PLANE 143 143
+        PLANE 144 144
+        PLANE 145 145
+        PLANE 146 146
+        PLANE 147 147
+        PLANE 148 148
+        PLANE 149 149
+        PLANE 150 150
+        PLANE 151 151
+        PLANE 152 152
+        PLANE 153 153
+        PLANE 154 154
+        PLANE 155 155
+        PLANE 156 156
+        PLANE 157 157
+        PLANE 158 158
+        PLANE 159 159
+        PLANE 160 160
+
+    ; 
+    ! 
+    NXNAME '01' NYNAME  'A' 
+    NCOMB 1 
+    B-ZONE 1 
+    
+    BTYPE INST-BURN 
+    INST-BVAL CHAN 0.0 
+
+    ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL 
+    ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL 
+    ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL 
+
+    FUEL WEIGHT  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+    <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> 
+    
+    SET-PARAM 'T-FUEL' BUND 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 
+                            750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0 750.0
+
+    SET-PARAM 'T-COOL' BUND 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+                            543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0 543.0
+
+    SET-PARAM 'D-COOL' BUND 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+                            700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0 700.0
+
+    REACTOR-POW <<powi>> 
+    AXIAL-PFORM <<Pfact1>> <<Pfact2>> <<Pfact3>> <<Pfact4>> <<Pfact5>> 
+    <<Pfact6>> <<Pfact7>> <<Pfact8>> <<Pfact9>> <<Pfact10>>
+    <<Pfact11>> <<Pfact12>> <<Pfact13>> <<Pfact14>> <<Pfact15>> 
+    <<Pfact16>> <<Pfact17>> <<Pfact18>> <<Pfact19>> <<Pfact20>>
+    <<Pfact21>> <<Pfact22>> <<Pfact23>> <<Pfact24>> <<Pfact25>> 
+    <<Pfact26>> <<Pfact27>> <<Pfact28>> <<Pfact29>> <<Pfact30>>
+    <<Pfact31>> <<Pfact32>> <<Pfact33>> <<Pfact34>> <<Pfact35>> 
+    <<Pfact36>> <<Pfact37>> <<Pfact38>> <<Pfact39>> <<Pfact40>>
+    <<Pfact41>> <<Pfact42>> <<Pfact43>> <<Pfact44>> <<Pfact45>> 
+    <<Pfact46>> <<Pfact47>> <<Pfact48>> <<Pfact49>> <<Pfact50>>    
+    <<Pfact51>> <<Pfact52>> <<Pfact53>> <<Pfact54>> <<Pfact55>> 
+    <<Pfact56>> <<Pfact57>> <<Pfact58>> <<Pfact59>> <<Pfact60>>     
+    <<Pfact61>> <<Pfact62>> <<Pfact63>> <<Pfact64>> <<Pfact65>> 
+    <<Pfact66>> <<Pfact67>> <<Pfact68>> <<Pfact69>> <<Pfact70>>  
+    <<Pfact71>> <<Pfact72>> <<Pfact73>> <<Pfact74>> <<Pfact75>>
+    <<Pfact76>> <<Pfact77>> <<Pfact78>> <<Pfact79>> <<Pfact80>>
+    <<Pfact81>> <<Pfact82>> <<Pfact83>> <<Pfact84>> <<Pfact85>>
+    <<Pfact86>> <<Pfact87>> <<Pfact88>> <<Pfact89>> <<Pfact90>>
+    <<Pfact91>> <<Pfact92>> <<Pfact93>> <<Pfact94>> <<Pfact95>>
+    <<Pfact96>> <<Pfact97>> <<Pfact98>> <<Pfact99>> <<Pfact100>>
+    <<Pfact101>> <<Pfact102>> <<Pfact103>> <<Pfact104>> <<Pfact105>>
+    <<Pfact106>> <<Pfact107>> <<Pfact108>> <<Pfact109>> <<Pfact110>>
+    <<Pfact111>> <<Pfact112>> <<Pfact113>> <<Pfact114>> <<Pfact115>>
+    <<Pfact116>> <<Pfact117>> <<Pfact118>> <<Pfact119>> <<Pfact120>>
+    <<Pfact121>> <<Pfact122>> <<Pfact123>> <<Pfact124>> <<Pfact125>>
+    <<Pfact126>> <<Pfact127>> <<Pfact128>> <<Pfact129>> <<Pfact130>>
+    <<Pfact131>> <<Pfact132>> <<Pfact133>> <<Pfact134>> <<Pfact135>>
+    <<Pfact136>> <<Pfact137>> <<Pfact138>> <<Pfact139>> <<Pfact140>>
+    <<Pfact141>> <<Pfact142>> <<Pfact143>> <<Pfact144>> <<Pfact145>>
+    <<Pfact146>> <<Pfact147>> <<Pfact148>> <<Pfact149>> <<Pfact150>>
+    <<Pfact151>> <<Pfact152>> <<Pfact153>> <<Pfact154>> <<Pfact155>>
+    <<Pfact156>> <<Pfact157>> <<Pfact158>> <<Pfact159>> <<Pfact160>>
+    
+    ; 
+ENDIF ;
+
+END: ;
+
+QUIT "LIST" .

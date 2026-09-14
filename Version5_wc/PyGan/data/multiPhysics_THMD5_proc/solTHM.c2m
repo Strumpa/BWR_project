@@ -1,0 +1,78 @@
+***************************************************************************
+* CLE-2000 / DONJON script                                                *
+* Purpose : Initialization of the THM module before coupled calculations  *
+* Author : R.Guasch and C. Huet                                           *
+* Date : 25/05/2025                                                       *
+* CALL      :                                                             *
+*  Thm Fmap := iniTHM Fmap ;                                              *
+*                                                                         *
+***************************************************************************
+PARAMETER Thm Fmap ::
+  ::: LINKED_LIST Thm Fmap  ; ;
+MODULE THM: END: ;
+DOUBLE DpOutlet DtInlet DmassFlow Darea ;
+:: >>DpOutlet<< >>DtInlet<< >>DmassFlow<< >>Darea<< ;
+DOUBLE DfuelRadius DgapRadius DcladRadius ;
+:: >>DfuelRadius<< >>DgapRadius<< >>DcladRadius<< ;
+INTEGER iter ;
+:: >>iter<< ;
+STRING THM_correl ;
+:: >>THM_correl<< ;
+DOUBLE Drelax_f ;
+:: >>Drelax_f<< ;
+
+REAL pOutlet := DpOutlet D_TO_R ;
+REAL tInlet := DtInlet D_TO_R ;
+REAL massFlowRate := DmassFlow D_TO_R ;
+REAL area := Darea D_TO_R ;
+
+REAL fuelRadius := DfuelRadius D_TO_R ;
+REAL gapRadius := DgapRadius D_TO_R ;
+REAL cladRadius := DcladRadius D_TO_R ;
+REAL relax_f := Drelax_f D_TO_R ;
+
+*--
+* THM single-stage calculation
+*--
+IF iter 1 = THEN
+    Thm Fmap := THM: Fmap ::
+        EDIT 1
+        FLUID H2O
+        FPUISS 1.0
+        CRITFL 5.0E6
+        INLET <<pOutlet>> (*Pa*) <<tInlet>> (*K*)
+        INLET-Q <<area>> (*m2*) <<massFlowRate>> (*inlet mass flow rate kg/s*)
+        ASSMB 1 0
+        RADIUS <<fuelRadius>> <<gapRadius>> <<cladRadius>> 0.0 (* m *)
+        RODMESH 8 11
+        HGAP 10000.0
+        CONDC 0 21.5 KELVIN
+        CONDF 0 4.18 KELVIN
+        <<THM_correl>> (*correlation for subcooled boiling treatment*)
+        PDROP 1
+        DFM 1
+    ;
+    ECHO "Initialization of the THM module before coupled calculations" ;
+ELSE
+    Thm Fmap := THM: Thm Fmap ::
+        EDIT 1
+        FLUID H2O
+        FPUISS 1.0
+        CRITFL 5.0E6
+        INLET <<pOutlet>> (*Pa*) <<tInlet>> (*K*)
+        INLET-Q <<area>> (*m2*) <<massFlowRate>> (*inlet mass flow rate kg/s*)
+        ASSMB 1 0
+        RADIUS <<fuelRadius>> <<gapRadius>> <<cladRadius>> 0.0 (* m *)
+        RODMESH 8 11
+        HGAP 10000.0
+        CONDC 0 21.5 KELVIN
+        CONDF 0 4.18 KELVIN
+        <<THM_correl>> (*correlation for subcooled boiling treatment*)
+        PDROP 1
+        DFM 1
+        RELAX <<relax_f>> (* relaxation factor for the THM module *)
+    ;
+ENDIF ;
+
+
+END: ;

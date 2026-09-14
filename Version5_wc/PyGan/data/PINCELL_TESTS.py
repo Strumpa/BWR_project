@@ -50,7 +50,8 @@ elif void_fraction == 80.0:
     void_id = "80"
 #
 # Library = name of the draglib used to build LIB: object
-dlib_name = "e81d1mt18v2" #"endfb8r1_295" #"e81d1mt18v2" #"e81d1mt458" # "endfb8r1_295" # "eb81dec1" or "eb81dec0" or 'nJ311_295' : new JEFF3.1.1 library with more Gd157 dilutions and finer autolib data 
+dlib_name = "e81d1mt458" # "e81d1heatr", "e81d1mt18", "e81d1mt458", "e81d1draq"
+#"endfb8r1_295" #"e81d1mt18v2" #"e81d1mt458" # "endfb8r1_295" # "eb81dec1" or "eb81dec0" or 'nJ311_295' : new JEFF3.1.1 library with more Gd157 dilutions and finer autolib data 
 
 ssh_module = "USS" #"USS", "AUTO"
 ssh_method = "PT" #"PT", "RSE", "SUBG" all supported for USS: but AUTO: only takes SUBG
@@ -58,7 +59,7 @@ ssh_method = "PT" #"PT", "RSE", "SUBG" all supported for USS: but AUTO: only tak
 correlation = "CORR" # "CORR", "noCORR"
 time_intergator = "EXTR"
 #
-edpm_flag = "EDP0"
+elump_flag = "LUMPE"
 glob_opt = "EDP0" #"GLOB" # "NOGL", "EDP0"
 #
 if case_name == "UO2_BWR_PINCELL":
@@ -67,6 +68,7 @@ elif case_name == "GD_BWR_PINCELL":
 	burnup_points = "Gd"
 tracked_nuclides = ["U235","U238","Pu239", 
 					"Gd157","Gd155", "Xe135","Sm149"]
+#burnup_points = "test"
 
 #
 # Creation of results directory
@@ -96,13 +98,14 @@ StepList.close() # close without erasing
 
 pyGEOM, pyGEOM_SSH = GEO_C_SALT(case_name)
 pyTRACK, pyTF_EXC, pyTRACK_SSH, pyTF_EXC_SSH = TRK_C_SALT(pyGEOM, pyGEOM_SSH)
-pyLIB = Mix(dlib_name, case_name, ssh_method, edpm_flag, N_H, N_O)
+pyLIB = Mix(dlib_name, case_name, ssh_method, elump_flag, N_H, N_O)
 
-compo_name = f"_CPO_{void_id}_{case_name}_{dlib_name}_{edpm_flag}_{ssh_module}_{ssh_method}_{correlation}_{burnup_points}_{glob_opt}_{time_intergator}"
+compo_name = f"_CPO_{void_id}_{case_name}_{dlib_name}_{elump_flag}_{ssh_module}_{ssh_method}_{correlation}_{burnup_points}_{glob_opt}_{time_intergator}"
 # run DRAGON5 calculation with BU evolution
 # namCOMPO, pyLIB, pyTRACK, pyTF_EXC, pyTRACK_SS, pyTF_EXC_SS, StepList, name_compo
 pyCOMPO = cpow_EXTR(case_name, "COMPO", pyLIB, pyTRACK, pyTF_EXC, pyTRACK_SSH, pyTF_EXC_SSH, StepList, compo_name)
 #
+
 D5_NOM_case = D5_case(pyCOMPO = pyCOMPO,
 				dlib_name = dlib_name,
 				bu_points = burnup_points,
@@ -116,10 +119,14 @@ D5_NOM_case = D5_case(pyCOMPO = pyCOMPO,
 D5_NOM_case.set_BUscheme("predictor", "LE")
 
 evaluation = "endfb8r1"
+if dlib_name == "e81d1heatr": 
+    edep_mode = 2
+else:
+	edep_mode = 0
 origin_of_S2_data = "pynjoy2012_kerma"
 S2_ref_case = S2_case(case_name = case_name,
 						lib_name = f"{evaluation}_{origin_of_S2_data}",
-						edep_id = 0,
+						edep_id = edep_mode,
 						areQfissSet = False,
 						isEcaptSet = False,
 						pcc_id = 2,
@@ -127,9 +134,9 @@ S2_ref_case = S2_case(case_name = case_name,
 						tracked_nuclides = tracked_nuclides,
 						save_dir = save_dir_S2)
 
-S2_ref_case.read_S2_outputs(f"{case_name}_{void_id}_endfb8r1_edep0_pcc2_mc")
+S2_ref_case.read_S2_outputs(f"{case_name}_{void_id}_endfb8r1_edep{edep_mode}_pcc2_mc")
 
-comparisonD5_EDP0_S2 = multiD5S2(f"void fraction {void_id} D5 {ssh_method}-{correlation} {edpm_flag}+{glob_opt} - S2  vs edep0 pcc 2", [D5_NOM_case], S2_ref_case, burnup_points, tracked_nuclides, f"{save_dir_comparison}/{dlib_name}/{glob_opt}")
+comparisonD5_EDP0_S2 = multiD5S2(f"void fraction {void_id} D5 {ssh_method}-{correlation} {elump_flag}+{glob_opt} - S2  vs edep{edep_mode} pcc 2", [D5_NOM_case], S2_ref_case, burnup_points, tracked_nuclides, f"{save_dir_comparison}/{dlib_name}/{glob_opt}")
 
 comparisonD5_EDP0_S2.compare_keffs()
 comparisonD5_EDP0_S2.plot_delta_keff()

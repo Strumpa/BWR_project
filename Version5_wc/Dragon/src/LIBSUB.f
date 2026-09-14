@@ -66,7 +66,7 @@
      1 HSHI*12,HVECT(MAXED)*8,HNAMIS*12,HNAMIS2*12,TEXT4*4,CFILNA2*64
       LOGICAL LLENG,LLSHI,LTRANC,LINDEX,MASK2(MAXDIL)
       INTEGER ISOR(3),IPAR(NSTATE),IPAR2(NSTATE),IESP(MAXESP+1),
-     1 ISTATE(NSTATE),EDPMFLAG 
+     1 ISTATE(NSTATE)
       REAL DILUT(MAXDIL),EESP(MAXESP+1)
 *----
 *  ALLOCATABLE ARRAYS
@@ -79,7 +79,6 @@
       LOGICAL, ALLOCATABLE, DIMENSION(:) :: MASKJ
       REAL, ALLOCATABLE, DIMENSION(:) :: GIR,KGIR,KSN,KTN,ENER,EBIN
       REAL, ALLOCATABLE, DIMENSION(:,:) :: SN
-      REAL NFTOT(NGRO),HFACT(NGRO),KAPF
 *----
 *  SCRATCH STORAGE ALLOCATION
 *----
@@ -95,7 +94,6 @@
 *  THAT TWO IDENTICAL ISOTOPES ARE NEVER PROCESSED.
 *----
       CALL LCMGET(IPLIB,'STATE-VECTOR',ISTATE)
-      EDPMFLAG=ISTATE(28)
       CALL LCMGET(IPLIB,'ILIBRARYINDX',ILLIB)
       DO 20 I=1,NBISO
       IF(MASKI(I).AND.(ILLIB(I).NE.0)) THEN
@@ -278,11 +276,11 @@
          TEXT12='L_LIBRARY'
          READ(TEXT12,'(3A4)') (ISOR(I),I=1,3)
          CALL LCMPUT(IPTMP,'SIGNATURE',3,3,ISOR)
+! IPAR(28) : EDPM flag is passed to iso-dilution library to be used in LIBADD
          DO 80 I=1,NSTATE
          IPAR2(I)=IPAR(I)
    80    CONTINUE
          IPAR2(2)=NDIL+1
-         IPAR2(28)=EDPMFLAG
          CALL LCMPUT(IPTMP,'STATE-VECTOR',NSTATE,1,IPAR2)
          IF(NED.GT.0) THEN
             ALLOCATE(IJCEDM(2*NED))
@@ -382,23 +380,6 @@
          CALL KDRCPU(TK1)
 *        ---------------------------------------
          CALL LIBLIB(IPTMP,NDIL+1,MASK2(1),IMPY)
-*         PRINT *, "LIBSUB: AFTER LIBLIB CALL"
-*  Recover isotopeslist from temporary multi-dilution library
-*         JPTMP=LCMGID(IPTMP,'ISOTOPESLIST') ! recover 
-*  Recover NDIL+1-th isotope from JPTMP
-*         KPTMP=LCMGIL(JPTMP,NDIL+1) ! set ISOT-th isotope
-*         PRINT *, "FOR NDIL+1=",NDIL+1
-*  Recover H-FACTOR and NFTOT stored in the isotope's library
-*         CALL LCMGET(KPTMP,"H-FACTOR",HFACT)
-*         CALL LCMGET(KPTMP,"NFTOT",NFTOT)
-*         DO 110 IGR=1,NGRO
-*           KAPF=HFACT(IGR)/NFTOT(IGR)
-*           IF((KAPF.GT.200000000.0).OR.(KAPF.LT.180000000.0)) THEN
-*            PRINT *, "WARNING: KAPF=", KAPF
-*            PRINT *, "FOR IG=", IGR
-*            PRINT *, "FOR IDIL", IDIL
-*           ENDIF
-*  110    CONTINUE
 *        ---------------------------------------
          CALL KDRCPU(TK2)
          TKSUB=TKSUB+(TK2-TK1)

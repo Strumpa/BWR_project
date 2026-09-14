@@ -1,0 +1,14 @@
+*** Non-regression tests for : 
+* the implementation of a constant energy deposition per fission normalisation mode
+* Validated with Serpent2 set edepmode 0 [1] and BWR assemblies burnup calculations [2]
+* [1] "New energy deposition treatment in the Serpent 2 Monte Carlo transport code" - R. Tuominen et al.
+* July 2019, Annals of Nuclear Energy, Volume 129, doi: 10.1016/j.anucene.2019.02.003
+* [2] "A Constant Energy Deposition per Fission Model for Burnup Calculations of Boiling Water Reactor Fuel Bundles in DRAGON5"
+* - R. Guasch et al. submitted to M&C2027. 
+* Author : R. Guasch
+* Date : 10/09/2026.
+
+PROCEDURE UO2EDP0 GDEDP0 ;
+
+UO2EDP0 ;
+GDEDP0 ;

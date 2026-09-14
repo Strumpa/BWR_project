@@ -41,13 +41,13 @@ structure ({\tt L\_GEOM} signature) containing the detailed core geometry defini
 structure ({\tt L\_GEOM} signature) containing the core geometry definition with homogeneous assembly (only 1 mesh per assembly mandatory).
 
 \item[\dstr{descnap1}] structure containing the input data to this module to compute additional properties for subregions
-(see \Sect{descnap1}).
+(see Sect.~\ref{sect:descnap1}).
 
 \item[\dstr{descnap2}] structure containing the input data to this module to perform pin power reconstruction
-(see \Sect{descnap2}).
+(see Sect.~\ref{sect:descnap2}).
 
 \item[\dstr{descnap3}] structure containing the input data to this module to automatically define the core geometry with heterogeneous assembly
-(see \Sect{descnap3}).
+(see Sect.~\ref{sect:descnap3}).
 
 \end{ListeDeDescription}
 
@@ -177,7 +177,7 @@ printed by this calculation step:
 
 \item[\moc{DIRGEO}] keyword to specify \dusa{namedir}. 
 
-\item[\dusa{namedir}] name of the directory containing the heterogeneously or homogeneously homogenized cross sections. 
+\item[\dusa{namedir}] name of the directory containing the heterogeneously or homogeneously homogenized cross sections. This name is set as \moc{STEP} \moc{UP} \dusa{NAMDIR} in module {\tt COMPO:} and as \dusa{NAMDIR} in module {\tt NCR:} (see Sect~\ref{sect:descncr}).
 
 \item[\moc{MACGEO}] keyword to specify that the macro-geometry stored in the \dusa{GFF} record of the macrolib will be used instead of the macro-geometry of the  heterogeneously or homogeneously homogenized cross sections. Usually this other macro-geometry of the assembly corresponds to the pin-by-pin geometry. Note that another multicompo with all pin-wise properties is needed to be able to use the automatically generated geometry. 
 

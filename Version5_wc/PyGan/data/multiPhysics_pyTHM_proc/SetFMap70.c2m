@@ -1,0 +1,258 @@
+* CLE-2000 Procedure
+* Procedure :  SetFMap.c2m
+* Purpose   :  Fuel-map specifications for BWR coupled calculation
+* Author(s) :  R. Guasch, adapted from M. Guyot (2010) & A. Hebert (2011)
+* Date : 19/09/2024
+* Updated : 06/06/2025 (R. Guasch) to support 90 and 100 axial nodes
+* Update : 09/06/2025 : generated automatically by 'generate_c2m.py
+* Input data : Matex : material indexation
+*              pitch : assembly/cell pitch
+*              height : active core height
+*              BMass : fuel bundle mass (mass of UOX in an axial fuel slice)
+*              Nz : axial node index for the first axial node (NZ)
+**--------------
+* INPUT - OUTPUT LCM data / parameters definition/recovery
+*--------------
+PARAMETER Fmap Matex ::
+::: LINKED_LIST
+  Fmap Matex ; ;
+REAL pitch height BMass Nz ;
+:: >>pitch<< >>height<< >>BMass<< >>Nz<< ; (*BMass = Bundle Mass : mass of UOX in an axial fuel slice*)
+*--------------
+* MODULES definition
+*--------------
+MODULE RESINI: GREP: END: ;
+*--------------
+* Variable declaration
+*--------------
+ECHO 'Set fuel map for BWR coupled calculation' ;
+ECHO 'Number of axial nodes' Nz ;
+REAL TFuelIni TCoolIni DCoolIni := 750.0 543.0 0.7 ;
+REAL dz := height Nz / ;
+REAL z1 := dz ;
+REAL z2 := z1 dz + ;
+REAL z3 := z2 dz + ;
+REAL z4 := z3 dz + ;
+REAL z5 := z4 dz + ;
+REAL z6 := z5 dz + ;
+REAL z7 := z6 dz + ;
+REAL z8 := z7 dz + ;
+REAL z9 := z8 dz + ;
+REAL z10 := z9 dz + ;
+REAL z11 := z10 dz + ;
+REAL z12 := z11 dz + ;
+REAL z13 := z12 dz + ;
+REAL z14 := z13 dz + ;
+REAL z15 := z14 dz + ;
+REAL z16 := z15 dz + ;
+REAL z17 := z16 dz + ;
+REAL z18 := z17 dz + ;
+REAL z19 := z18 dz + ;
+REAL z20 := z19 dz + ;
+REAL z21 := z20 dz + ;
+REAL z22 := z21 dz + ;
+REAL z23 := z22 dz + ;
+REAL z24 := z23 dz + ;
+REAL z25 := z24 dz + ;
+REAL z26 := z25 dz + ;
+REAL z27 := z26 dz + ;
+REAL z28 := z27 dz + ;
+REAL z29 := z28 dz + ;
+REAL z30 := z29 dz + ;
+REAL z31 := z30 dz + ;
+REAL z32 := z31 dz + ;
+REAL z33 := z32 dz + ;
+REAL z34 := z33 dz + ;
+REAL z35 := z34 dz + ;
+REAL z36 := z35 dz + ;
+REAL z37 := z36 dz + ;
+REAL z38 := z37 dz + ;
+REAL z39 := z38 dz + ;
+REAL z40 := z39 dz + ;
+REAL z41 := z40 dz + ;
+REAL z42 := z41 dz + ;
+REAL z43 := z42 dz + ;
+REAL z44 := z43 dz + ;
+REAL z45 := z44 dz + ;
+REAL z46 := z45 dz + ;
+REAL z47 := z46 dz + ;
+REAL z48 := z47 dz + ;
+REAL z49 := z48 dz + ;
+REAL z50 := z49 dz + ;
+REAL z51 := z50 dz + ;
+REAL z52 := z51 dz + ;
+REAL z53 := z52 dz + ;
+REAL z54 := z53 dz + ;
+REAL z55 := z54 dz + ;
+REAL z56 := z55 dz + ;
+REAL z57 := z56 dz + ;
+REAL z58 := z57 dz + ;
+REAL z59 := z58 dz + ;
+REAL z60 := z59 dz + ;
+REAL z61 := z60 dz + ;
+REAL z62 := z61 dz + ;
+REAL z63 := z62 dz + ;
+REAL z64 := z63 dz + ;
+REAL z65 := z64 dz + ;
+REAL z66 := z65 dz + ;
+REAL z67 := z66 dz + ;
+REAL z68 := z67 dz + ;
+REAL z69 := z68 dz + ;
+REAL z70 := z69 dz + ;
+*-----
+* Fuel map definition
+*-----
+Fmap Matex := RESINI: Matex ::
+EDIT 1
+  ::: GEO: CAR3D 1 1 70
+ X- REFL X+ REFL Y- REFL Y+ REFL Z- VOID Z+ VOID
+ MESHX 0.0 <<pitch>>
+ MESHY 0.0 <<pitch>>
+ MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>>
+<<z11>> <<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>>
+<<z21>> <<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>>
+<<z31>> <<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>>
+<<z41>> <<z42>> <<z43>> <<z44>> <<z45>> <<z46>> <<z47>> <<z48>> <<z49>> <<z50>>
+<<z51>> <<z52>> <<z53>> <<z54>> <<z55>> <<z56>> <<z57>> <<z58>> <<z59>> <<z60>>
+<<z61>> <<z62>> <<z63>> <<z64>> <<z65>> <<z66>> <<z67>> <<z68>> <<z69>> <<z70>>
+ MIX
+PLANE 1 1
+PLANE 2 2
+PLANE 3 3
+PLANE 4 4
+PLANE 5 5
+PLANE 6 6
+PLANE 7 7
+PLANE 8 8
+PLANE 9 9
+PLANE 10 10
+PLANE 11 11
+PLANE 12 12
+PLANE 13 13
+PLANE 14 14
+PLANE 15 15
+PLANE 16 16
+PLANE 17 17
+PLANE 18 18
+PLANE 19 19
+PLANE 20 20
+PLANE 21 21
+PLANE 22 22
+PLANE 23 23
+PLANE 24 24
+PLANE 25 25
+PLANE 26 26
+PLANE 27 27
+PLANE 28 28
+PLANE 29 29
+PLANE 30 30
+PLANE 31 31
+PLANE 32 32
+PLANE 33 33
+PLANE 34 34
+PLANE 35 35
+PLANE 36 36
+PLANE 37 37
+PLANE 38 38
+PLANE 39 39
+PLANE 40 40
+PLANE 41 41
+PLANE 42 42
+PLANE 43 43
+PLANE 44 44
+PLANE 45 45
+PLANE 46 46
+PLANE 47 47
+PLANE 48 48
+PLANE 49 49
+PLANE 50 50
+PLANE 51 51
+PLANE 52 52
+PLANE 53 53
+PLANE 54 54
+PLANE 55 55
+PLANE 56 56
+PLANE 57 57
+PLANE 58 58
+PLANE 59 59
+PLANE 60 60
+PLANE 61 61
+PLANE 62 62
+PLANE 63 63
+PLANE 64 64
+PLANE 65 65
+PLANE 66 66
+PLANE 67 67
+PLANE 68 68
+PLANE 69 69
+PLANE 70 70
+;
+NXNAME '01' NYNAME  'A'
+NCOMB 1
+B-ZONE 1
+BTYPE INST-BURN
+INST-BVAL CHAN 0.0
+ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL
+ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL
+ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL
+FUEL WEIGHT <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+SET-PARAM 'T-FUEL' BUND
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+SET-PARAM 'T-COOL' BUND
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+SET-PARAM 'D-COOL' BUND
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+;
+

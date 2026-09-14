@@ -57,7 +57,22 @@ COMPO := COMPO: ::
     MAXCAL 5
     COMM 'Evolution burnup pincell' ENDC
     PARA 'Burnup' IRRA
-    ISOT 12 U235 U234 U238 Pu239 Pu240 Pu241 Pu242 Am241 Gd155 Gd157 Xe135 Sm149
+    ISOT  35 U234 U235 U236 U238 
+            Np237
+            Pu238 Pu239 Pu240 Pu241 Pu242 
+            Am241 Am243
+!            Mo95 --> Zr95 shouldnt be lumped
+            Tc99
+            Ru101 
+!            Rh103 --> Ru103 shouldnt be lumped 
+            Ag109
+            Xe131 Xe133 Xe135
+            Cs133
+            Nd143 Nd145 Nd148
+            Sm147 Sm149 Sm151 Sm152
+!           Sm150 --> Nd150 shouldnt be lumped 
+            Eu153 Eu155
+            Gd152 Gd154 Gd155 Gd156 Gd157 Gd158 Gd160
     INIT
 ;
 
@@ -117,10 +132,10 @@ WHILE istep nstep < DO
 
   IF istep 1 = THEN     
      FLUX := FLU: LIBRARY2 SYS TRACK TF_EXC :: 
-     EDIT 1 TYPE K B1 SIGS ;
+     EDIT 1 TYPE K ;
   ELSE
      FLUX := FLU: FLUX LIBRARY2 SYS TRACK TF_EXC :: 
-     EDIT 1 TYPE K B1 SIGS ;
+     EDIT 1 TYPE K  ;
   ENDIF ;
  
   SYS := DELETE: SYS ;
@@ -143,7 +158,22 @@ WHILE istep nstep < DO
   IF BUcompo BU = THEN
       EDIBU := EDI: FLUX LIBRARY2 TRACK ::
         EDIT 0
-        MICR 12 U235 U234 U238 Pu239 Pu240 Pu241 Pu242 Am241 Gd155 Gd157 Xe135 Sm149
+        MICR  35 U234 U235 U236 U238 
+            Np237
+            Pu238 Pu239 Pu240 Pu241 Pu242 
+            Am241 Am243
+!            Mo95 --> Zr95 shouldnt be lumped
+            Tc99
+            Ru101 
+!            Rh103 --> Ru103 shouldnt be lumped 
+            Ag109
+            Xe131 Xe133 Xe135
+            Cs133
+            Nd143 Nd145 Nd148
+            Sm147 Sm149 Sm151 Sm152
+!           Sm150 --> Nd150 shouldnt be lumped 
+            Eu153 Eu155
+            Gd152 Gd154 Gd155 Gd156 Gd157 Gd158 Gd160
         MERG MIX 1 1 1 1 1 1 0 0 0
         COND
         SAVE ON FUEL ;

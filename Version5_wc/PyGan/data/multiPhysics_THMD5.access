@@ -1,0 +1,11 @@
+#!/bin/sh
+if [ $# = 0 ]
+   then
+   echo "usage: multiPhysics_THMD5.access.access directory" 1>&2
+   exit 1
+fi
+ln -s $MPHYS_CPOS/_AT10COMPO_1 .
+ln -s $MPHYS_CPOS/_COMPO_24UOX .
+ln -s "$1"/data/multiPhysics_THMD5_proc/_COMPO_AT10_MPHYS_RSE_06062025 .
+ln -s "$1"/data/multiPhysics_THMD5_proc/_COMPO_AT10_MPHYS_PT_addeddens .
+echo "multiPhysics_THMD5.access terminated"

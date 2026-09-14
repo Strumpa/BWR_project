@@ -1,0 +1,46 @@
+* Procedure : InterpXS.c2m
+* Purpose : Interpolate cross-sections on axially varying properties
+* Author : R. Guasch
+* Date : 09/06/2025
+* Input data :
+*   - Fmap : fuel map with local parameters
+*   - Cpo : MULTICOMPO hosting XS data to be interpolated
+*   - MicroF : MULTICOMPO to store interpolated XS data
+*   - Nz : number of axial nodes (NZ)
+*--------------
+* INPUT - OUTPUT LCM data / parameters definition/recovery
+*--------------
+PARAMETER MicroF Fmap Cpo ::
+::: LINKED_LIST MicroF Fmap Cpo ; ;
+INTEGER Nz ;
+:: >>Nz<< ;
+*--------------
+* MODULES definition
+*--------------
+MODULE NCR: END: ;
+*--------------
+* Variable declaration
+*--------------
+ECHO 'Interpolate cross-sections on axially varying properties' ;
+ECHO 'Interpolation on Nz nodes' Nz ;
+*--------------
+* Interpolation of cross-sections on axially varying properties
+*--------------
+MicroF := NCR: Cpo Fmap ::
+EDIT 0
+NMIX <<Nz>>
+MICRO LINEAR
+TABLE Cpo EDIPARAM
+MIX 1 INST-BURN SET 'TFuel' MAP SET 'TCool' MAP SET 'DCool' MAP ENDMIX
+MIX 2 INST-BURN SET 'TFuel' MAP SET 'TCool' MAP SET 'DCool' MAP ENDMIX
+MIX 3 INST-BURN SET 'TFuel' MAP SET 'TCool' MAP SET 'DCool' MAP ENDMIX
+MIX 4 INST-BURN SET 'TFuel' MAP SET 'TCool' MAP SET 'DCool' MAP ENDMIX
+MIX 5 INST-BURN SET 'TFuel' MAP SET 'TCool' MAP SET 'DCool' MAP ENDMIX
+MIX 6 INST-BURN SET 'TFuel' MAP SET 'TCool' MAP SET 'DCool' MAP ENDMIX
+MIX 7 INST-BURN SET 'TFuel' MAP SET 'TCool' MAP SET 'DCool' MAP ENDMIX
+MIX 8 INST-BURN SET 'TFuel' MAP SET 'TCool' MAP SET 'DCool' MAP ENDMIX
+MIX 9 INST-BURN SET 'TFuel' MAP SET 'TCool' MAP SET 'DCool' MAP ENDMIX
+MIX 10 INST-BURN SET 'TFuel' MAP SET 'TCool' MAP SET 'DCool' MAP ENDMIX
+;
+END: ;
+QUIT .

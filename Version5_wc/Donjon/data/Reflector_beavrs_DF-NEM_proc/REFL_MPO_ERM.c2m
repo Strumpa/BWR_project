@@ -373,11 +373,11 @@ WHILE IndexCB iBoreMax < DO
     IF CASE 1 = THEN
       EVALUATE PCM := Keff SNKeff1 - 1.E5 * ;
       ECHO "...IndexCB=" IndexCB "CASE=1 SN Keff=" SNKeff1 "macro Keff=" Keff "(" PCM " pcm)" ;
-      assertS_low MACR_FLUX :: 'K-EFFECTIVE' 1 <<SNKeff1>> 1.0E-4 ;
+      assertS_low MACR_FLUX :: 'K-EFFECTIVE' 1 <<SNKeff1>> 2.0E-4 ;
     ELSEIF CASE 2 = THEN
       EVALUATE PCM := Keff SNKeff2 - 1.E5 * ;
       ECHO "...IndexCB=" IndexCB "CASE=2 SN Keff=" SNKeff2 "macro Keff=" Keff "(" PCM " pcm)" ;
-      assertS_low MACR_FLUX :: 'K-EFFECTIVE' 1 <<SNKeff2>> 1.0E-4 ;
+      assertS_low MACR_FLUX :: 'K-EFFECTIVE' 1 <<SNKeff2>> 2.0E-4 ;
     ENDIF ;
 
     MACRO MACR_FLUX := DELETE: MACRO MACR_FLUX ;

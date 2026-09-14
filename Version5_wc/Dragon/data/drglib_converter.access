@@ -8,8 +8,8 @@ if [ $# = 0 ]
    exit 1
 fi
 echo access draglib_converter.access
-#pos=$1/../../../PyNJOY/outputs/29052026_only_mt18_shem295_endfb8r1_idecay_v5p1
-pos=$1/../../../dragonShareRaph/draglib/
-ln -s "$pos"/draglib_psour_gd_shem295_nonlocal  EXPORT
+pos=$1/../../../PyNJOY/outputs/09092026_heatr_kerma_shem295_endfb8r1_idecay_v5p1
+#pos=$1/../../../dragonShareRaph/draglib/
+ln -s "$pos"/draglib09092026_heatr_kerma_shem295_endfb8r1_idecay_v5p1  EXPORT
 ls -l
 echo "Conversion data set draglib_converter.x2m accessed"

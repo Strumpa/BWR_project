@@ -7,7 +7,6 @@ import serpentTools as st
 import os
 
 # S2 PT class :
-
 class Serpent2_case:
     def __init__(self, case_name, lib_name, edep_id, areQfissSet, isEcaptSet, pcc_id, specific_power, tracked_nuclides, save_dir):
         self.case_name = case_name
@@ -377,6 +376,13 @@ class multiD5S2_comparisons:
         self.delta_Niso_dict = {}
         self.delta_Niso_abs_dict = {}
 
+        list_of_isos_for_cutoff = ["U234", "U235", "U238", 
+                                   "Np237",
+                                   "Am241", "Am243",
+                                   "Pu238", "Pu239", "Pu240", "Pu241", "Pu242",
+                                   "Gd154", "Gd155", "Gd156", "Gd157", "Gd158",
+                                   "Xe133", "Xe135", 
+                                   "Sm147", "Sm149", "Sm151", "Sm152"]
         for iso in self.tracked_nuclides:
 
             self.delta_Niso_dict[iso] = {}
@@ -415,23 +421,35 @@ class multiD5S2_comparisons:
                 # D5 - S2 differences
                 # ---------------------------------------------------------
 
-                delta_Niso = np.where(S2_Ni_interp != 0,
-                    (D5_Ni_common - S2_Ni_interp) * 100 / S2_Ni_interp, 0)
-
+                delta_Niso = np.where(S2_Ni_interp != 0, (D5_Ni_common - S2_Ni_interp) * 100 / S2_Ni_interp, 0)
                 delta_Niso_abs = (D5_Ni_common - S2_Ni_interp)
 
                 # ---------------------------------------------------------
                 # Store results
                 # ---------------------------------------------------------
 
-                case_name = (
-                    f"{case.draglib_name}_{case.ssh_opt}_"
-                    f"{case.correlation}_{case.extrapolation_type}"
-                    f"_to_S2_edep{self.S2_case.edep_id}"
-                )
+                case_name = f"{case.draglib_name}_{case.ssh_opt}_{case.correlation}_{case.extrapolation_type}_to_S2_edep{self.S2_case.edep_id}"
 
                 self.delta_Niso_dict[iso][case_name] = delta_Niso
                 self.delta_Niso_abs_dict[iso][case_name] = delta_Niso_abs
+                # Exclude the first 3 time steps and only consider BU >= 0.25 GWd/t
+                mask = (
+                    (np.arange(len(delta_Niso)) >= 3) &
+                    (D5_BU_common / 1000 >= 0.25)
+                )
+
+                if np.any(mask):
+                    # Find maximum absolute difference among the valid points
+                    valid_indices = np.where(mask)[0]
+                    index_where_max = valid_indices[np.argmax(np.abs(delta_Niso[mask]))]
+
+                    if np.abs(delta_Niso[index_where_max]) > 2.0: #and iso in list_of_isos_for_cutoff:
+                        print(f"For iso = {iso}")
+                        print(f"Maximum relative difference = {delta_Niso[index_where_max]} %")
+                        print(f"At BU = {D5_BU_common[index_where_max]/1000} GWd/t")
+                        print(f"With Niso S2 = {S2_Ni_interp[index_where_max]}")
+                        print(f"Relative difference = {delta_Niso[index_where_max]} %")
+                        print(f"Absolute difference = {delta_Niso_abs[index_where_max]} iso/b/cm")
 
                 # ---------------------------------------------------------
                 # Plot densities

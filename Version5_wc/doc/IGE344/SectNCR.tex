@@ -92,7 +92,7 @@ the RHS of structure \dstr{NCR:}.
 {\sc multicompo} data structure where the interpolation is performed. This name must be set in the RHS of structure \dstr{NCR:}.
 
 \item[\dusa{NAMDIR}] access the {\sc multicompo} structure of \dusa{CPONAM} from the sub-directory named \dusa{NAMDIR}.
-This value must be set equal to {\tt 'default'} if not previously defined by a {\tt STEP UP} keyword in module {\tt COMPO}.
+This value must be set equal to {\tt 'default'} if not previously defined by a {\tt STEP UP} keyword in module {\tt COMPO:}.
 
 \item[\dusa{namburn}] {\tt character*12} name of the parameter for burnup (or irradiation) in the sub-directory named \dusa{NAMDIR}.
 This value is defined if option \moc{TABLE} is set {\sl and} if burnup (or irradiation) is to be considered as parameter.
@@ -114,7 +114,7 @@ If a {\sc map} object is defined on the RHS of structure \dstr{NCR:}, and if the
 Each instance of \dusa{descintf} is a data structure specified as
 
 \begin{DataStructure}{Structure \dstr{descintf}}
-$[[$~\moc{MIX} \dusa{imix}~$[~\{$~\moc{FROM}~\dusa{imixold}~$|$~\moc{USE}~$\}~]$ \\
+$[[$~\moc{MIX} \dusa{imix}~$[~\{$~\moc{FROM}~\dusa{imixold}~$|$~\moc{USE}~$\}~]~[$ \moc{ASBLY} $]$ \\
 ~~~~~~$[~\{$~\moc{TIMAV-BURN} $|$ \moc{INST-BURN} $|$ \moc{AVG-EX-BURN}~\dusa{ivarty}~$\}~]$ \\
 ~~~~~~$[[~\{$~\moc{SET} $|$ \moc{DELTA} $|$ \moc{ADD}~$\}~\}~[~\{$ \moc{LINEAR} $|$ \moc{CUBIC}~$\}~]$ \dusa{PARKEY} $\{$~\dusa{val1} $|$ \moc{MAP}~$\}~[~\{$~\dusa{val2} $|$ \moc{MAP}~$\}~]$ \\
 ~~~~~~~~~~~~$[$~\moc{REF} $[[$~\dusa{PARKEY}~$\{$~\dusa{valref} $|$ \moc{SAMEASREF}~$\}$~$]]$~\moc{ENDREF}~$]~]]$  \\
@@ -134,6 +134,9 @@ $[[$~\moc{MIX} \dusa{imix}~$[~\{$~\moc{FROM}~\dusa{imixold}~$|$~\moc{USE}~$\}~]$
 \item[\dusa{imixold}] index of the mixture that is recovered in the {\sc multicompo} object. By default, \dusa{imixold}$=1$.
 
 \item[\moc{USE}] keyword used to set the index of the mixture in the {\sc multicompo} object equal to \dusa{imix}.
+
+\item[\moc{ASBLY}] keyword used to apply the same local and global parameters to all mixtures belonging to a single assembly. This option is
+useful to perform a $4 \times 4$ discretization of a single assembly. It is used together with the {\tt NAP:} module (see Sect.~\ref{sect:NAPData}).
 
 \item[\moc{TIMAV-BURN}] keyword used to compute time-averaged cross-section information. This option is available {\sl only if} a \dusa{MAPFL} object is set.
 By default, the type of calculation (\moc{TIMAV-BURN} or \moc{INST-BURN}) is recovered from the \dusa{MAPFL} object.

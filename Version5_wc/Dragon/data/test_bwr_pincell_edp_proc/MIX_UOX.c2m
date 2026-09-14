@@ -1,0 +1,114 @@
+* Mix_UOX procedure
+*----
+*  Name          : Mix_Cell.c2m
+*  Type          : DRAGON procedure
+*  Use           : Microlib generation with Draglibs for
+*                  UOX pincell calculation with 4 fuel regions, UOX + Gd2O3 with 6 regions
+*  Author        : R. Guasch
+
+*  Procedure called as:
+*
+*  LIBRARY := Mix_Cell :: <<Library>> <<cell_name>> ;
+*
+*  Where library is JEFF3.1.1 SHEM295 and 
+*  Output data  :
+*    LIBRARY    : Microlib with table of probabilities
+
+PARAMETER  LIBRARY  ::
+  EDIT 0
+    ::: LINKED_LIST LIBRARY  ;
+;
+
+STRING Library ssh_method edpmflag ;
+:: >>Library<< >>ssh_method<< >>edpmflag<< ;
+DOUBLE DN_H DN_O ;
+:: >>DN_H<< >>DN_O<< ;
+
+MODULE LIB: END: ;
+
+REAL N_H := DN_H D_TO_R ;
+REAL N_O := DN_O D_TO_R ;
+
+IF edpmflag "NONE" = THEN
+LIBRARY := LIB: ::
+  EDIT 1
+  NMIX 7    ! MAXIMUM OF MATERIAL MIXTURES
+  ANIS 4
+  ADED 4 NELAS N4N N2N N3N
+  <<ssh_method>>
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX 1 900.0
+    O16     = O16    4.66705E-02
+    U234    = U234   5.15910E-06 1 
+    U235    = U235   5.67035E-04 1 
+    U238    = U238   2.27631E-02 1
+    Pu239   = Pu239  1.0E-15 1
+    Pu240   = Pu240  0.0     1
+    Pu241   = Pu241  1.0E-15 1
+    Pu242   = Pu242  0.0     1
+  MIX 2 COMB 1 1.0
+  MIX 3 COMB 1 1.0
+  MIX 4 COMB 1 1.0
+
+  MIX 5 900.0 NOEV
+    He4      = He4 1.50456E-04
+
+  MIX 6 600.0 NOEV
+    Zr90  = Zr90   2.18317E-02 2
+    Zr91  = Zr91   4.76096E-03 2
+    Zr92  = Zr92   7.27723E-03 2
+    Zr94  = Zr94   7.37482E-03 2
+    Zr96  = Zr96   1.18812E-03 2
+
+  MIX 7 600.0 NOEV
+    H1      = H1_H2O <<N_H>>  
+    O16     = O16    <<N_O>> 
+;
+ELSE
+LIBRARY := LIB: ::
+  EDIT 1
+  NMIX 7    ! MAXIMUM OF MATERIAL MIXTURES
+  ANIS 4
+  ADED 4 NELAS N4N N2N N3N
+  <<ssh_method>>
+  <<edpmflag>>
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX 1 900.0
+    O16     = O16    4.66705E-02
+    U234    = U234   5.15910E-06 1 
+    U235    = U235   5.67035E-04 1 
+    U238    = U238   2.27631E-02 1
+    Pu239   = Pu239  1.0E-15 1
+    Pu240   = Pu240  0.0     1
+    Pu241   = Pu241  1.0E-15 1
+    Pu242   = Pu242  0.0     1
+  MIX 2 COMB 1 1.0
+  MIX 3 COMB 1 1.0
+  MIX 4 COMB 1 1.0
+
+  MIX 5 900.0 NOEV
+    He4      = He4 1.50456E-04
+
+  MIX 6 600.0 NOEV
+    Zr90  = Zr90   2.18317E-02 2
+    Zr91  = Zr91   4.76096E-03 2
+    Zr92  = Zr92   7.27723E-03 2
+    Zr94  = Zr94   7.37482E-03 2
+    Zr96  = Zr96   1.18812E-03 2
+
+  MIX 7 600.0 NOEV
+    H1      = H1_H2O <<N_H>>  
+    O16     = O16    <<N_O>> 
+;
+ENDIF ;
+
+END: ;
+QUIT .

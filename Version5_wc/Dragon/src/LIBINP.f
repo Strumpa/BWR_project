@@ -2,7 +2,7 @@
       SUBROUTINE LIBINP (MAXMIX,MAXED,MAXISO,IPLIB,INDREC,IMPX,NBISO,
      1 NGRO,NGT,NL,ITRANC,IPROB,ITIME,NLIB,NGF,IGRMAX,NDEPL,NCOMB,
      2 NEDMAC,NBMIX,NRES,IPROC,IMAC,NDEL,ISOADD,MAXISM,HVECT,IPRECI,
-     3 SVDEPS,STERN,EDPMFLAG)
+     3 SVDEPS,STERN,ELUMPFLAG)
 *
 *-----------------------------------------------------------------------
 *
@@ -17,6 +17,9 @@
 * version 2.1 of the License, or (at your option) any later version.
 *
 *Author(s): A. Hebert
+*  09/2026 proposed modification by R. Guasch :
+*    - flag to exclude energy from lumped isotopes and garantee 
+*      edepomode 0 Serpent2 formulation from R. Tuominen et al., ANE 129 (2019) 224–232.
 *
 *Parameters: input/output
 * MAXMIX    maximum value of NBMIX.
@@ -75,7 +78,6 @@
 * IPRECI    accuracy index for probability tables in CALENDF.
 * SVDEPS    rank accuracy of the singular value decomposition.
 * STERN     Sternheimer flag (=0/1: off/on).
-* EDPMFLAG  flag to exclude the lumped isotopes contributions to H-FACTOR
 *
 *-----------------------------------------------------------------------
 *
@@ -86,7 +88,7 @@
       TYPE(C_PTR) IPLIB
       INTEGER MAXMIX,MAXED,MAXISO,INDREC,IMPX,NBISO,NGRO,NGT,NL,ITRANC,
      > IPROB,ITIME,NLIB,NGF,IGRMAX,NDEPL,NCOMB,NEDMAC,NBMIX,NRES,IPROC,
-     > IMAC,NDEL,ISOADD,MAXISM,IPRECI,STERN,EDPMFLAG
+     > IMAC,NDEL,ISOADD,MAXISM,IPRECI,STERN,ELUMPFLAG
       REAL SVDEPS
       CHARACTER*(*) HVECT(MAXED)
 *----
@@ -520,7 +522,6 @@
       IF(NEDMAC.GT.MAXED) CALL XABORT('LIBINP: TOO MANY EXTRA EDITS R'
      > //'EQUESTED.')
       HVECT(NEDMAC)=HOBL(I)
-*      PRINT *, "HVECT(NEDMAC) =", HVECT(NEDMAC)
   120 CONTINUE
 *----
 *  ADD THE MISSING ISOTOPES FROM THE DEPLETION CHAIN.
@@ -676,7 +677,8 @@
       ISTATE(22)=MAXISM
       ISTATE(23)=IPRECI
       ISTATE(27)=STERN
-      ISTATE(28)=EDPMFLAG
+! Store ELUMPFLAG in the library's state vector ISTATE(28)
+      ISTATE(28)=ELUMPFLAG
       CALL LCMPUT(IPLIB,'STATE-VECTOR',NSTATE,1,ISTATE)
       CALL LCMPUT(IPLIB,'ISOTOPESUSED',3*NBISO,3,ISONAM)
       CALL LCMPUT(IPLIB,'ISOTOPERNAME',3*NBISO,3,ISONRF)

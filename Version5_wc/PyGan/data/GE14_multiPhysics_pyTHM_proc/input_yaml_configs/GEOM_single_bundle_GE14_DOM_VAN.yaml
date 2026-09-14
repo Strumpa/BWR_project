@@ -1,0 +1,21 @@
+# Geometry description for single bundle derived from BWRProgressionProblems.
+# Simple axial variation in the assembly geometry. This file is used for testing the ability of the CoreModel to handle axial variation in the assembly geometry and to build the corresponding assembly models for each axial region.
+# The power dominated region (DOM) is taken to be from 0.0 to 250 cm (adapted from BWRProgressionProblems),
+# The vanished rods region (VAN) is taken to be from 250 cm to 400.0 cm (adapted from BWRProgressionProblems).
+# This file describes 2D core layout and the the axial variation.
+
+
+CORE_GEOMETRY:
+  geometry_type: "Cartesian"
+  reactor_type: "BWR"
+  core_2D_layout:
+    - ["GE14_bundle"]
+  assembly_axial_layouts:
+    GE14_bundle:
+      - axial_region: "DOM"
+        axial_bounds: [0.0, 250.0]
+        assembly_geometry_file: "GEOM_GE14_DOM.yaml"
+
+      - axial_region: "VAN"
+        axial_bounds: [250.0, 400.0]
+        assembly_geometry_file: "GEOM_GE14_VAN.yaml"

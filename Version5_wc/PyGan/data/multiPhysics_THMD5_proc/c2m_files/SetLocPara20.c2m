@@ -1,0 +1,118 @@
+* Procedure : SetLocPara.c2m
+* Purpose : Set local TH parameters in each fuel Bundle
+* Author : R. Guasch
+* Date : 19/09/2024
+* Updated : 06/06/2025 to support up to 90 and 100 axial nodes
+* Update : 09/06/2025 : generated automatically by 'generate_c2m.py'
+* Input data :
+*  -Fmap : fuel map with local parameters to be modified/set
+*  -THData : LCM object with entries ['TFuelList', 'TCoolList', 'DCoolList'] defining material properties 
+*  -Nz : number of axial nodes (NZ)
+*--------------
+* INPUT - OUTPUT LCM data / parameters definition/recovery
+*--------------
+PARAMETER  Fmap THData ::
+::: LINKED_LIST Fmap THData ; ;
+REAL Nz ;
+:: >>Nz<< ;
+*--------------
+* MODULES definition
+*--------------
+MODULE GREP: RESINI: END: ;
+*--------------
+* Variable declaration
+*--------------
+REAL TF1 ; REAL TF2 ; REAL TF3 ; REAL TF4 ; REAL TF5 ;
+REAL TF6 ; REAL TF7 ; REAL TF8 ; REAL TF9 ; REAL TF10 ;
+REAL TF11 ; REAL TF12 ; REAL TF13 ; REAL TF14 ; REAL TF15 ;
+REAL TF16 ; REAL TF17 ; REAL TF18 ; REAL TF19 ; REAL TF20 ;
+REAL TC1 ; REAL TC2 ; REAL TC3 ; REAL TC4 ; REAL TC5 ;
+REAL TC6 ; REAL TC7 ; REAL TC8 ; REAL TC9 ; REAL TC10 ;
+REAL TC11 ; REAL TC12 ; REAL TC13 ; REAL TC14 ; REAL TC15 ;
+REAL TC16 ; REAL TC17 ; REAL TC18 ; REAL TC19 ; REAL TC20 ;
+REAL DC1 ; REAL DC2 ; REAL DC3 ; REAL DC4 ; REAL DC5 ;
+REAL DC6 ; REAL DC7 ; REAL DC8 ; REAL DC9 ; REAL DC10 ;
+REAL DC11 ; REAL DC12 ; REAL DC13 ; REAL DC14 ; REAL DC15 ;
+REAL DC16 ; REAL DC17 ; REAL DC18 ; REAL DC19 ; REAL DC20 ;
+GREP: THData :: GETVAL 'TFuelList' 1 >>TF1<< ;
+GREP: THData :: GETVAL 'TFuelList' 2 >>TF2<< ;
+GREP: THData :: GETVAL 'TFuelList' 3 >>TF3<< ;
+GREP: THData :: GETVAL 'TFuelList' 4 >>TF4<< ;
+GREP: THData :: GETVAL 'TFuelList' 5 >>TF5<< ;
+GREP: THData :: GETVAL 'TFuelList' 6 >>TF6<< ;
+GREP: THData :: GETVAL 'TFuelList' 7 >>TF7<< ;
+GREP: THData :: GETVAL 'TFuelList' 8 >>TF8<< ;
+GREP: THData :: GETVAL 'TFuelList' 9 >>TF9<< ;
+GREP: THData :: GETVAL 'TFuelList' 10 >>TF10<< ;
+GREP: THData :: GETVAL 'TFuelList' 11 >>TF11<< ;
+GREP: THData :: GETVAL 'TFuelList' 12 >>TF12<< ;
+GREP: THData :: GETVAL 'TFuelList' 13 >>TF13<< ;
+GREP: THData :: GETVAL 'TFuelList' 14 >>TF14<< ;
+GREP: THData :: GETVAL 'TFuelList' 15 >>TF15<< ;
+GREP: THData :: GETVAL 'TFuelList' 16 >>TF16<< ;
+GREP: THData :: GETVAL 'TFuelList' 17 >>TF17<< ;
+GREP: THData :: GETVAL 'TFuelList' 18 >>TF18<< ;
+GREP: THData :: GETVAL 'TFuelList' 19 >>TF19<< ;
+GREP: THData :: GETVAL 'TFuelList' 20 >>TF20<< ;
+GREP: THData :: GETVAL 'TCoolList' 1 >>TC1<< ;
+GREP: THData :: GETVAL 'TCoolList' 2 >>TC2<< ;
+GREP: THData :: GETVAL 'TCoolList' 3 >>TC3<< ;
+GREP: THData :: GETVAL 'TCoolList' 4 >>TC4<< ;
+GREP: THData :: GETVAL 'TCoolList' 5 >>TC5<< ;
+GREP: THData :: GETVAL 'TCoolList' 6 >>TC6<< ;
+GREP: THData :: GETVAL 'TCoolList' 7 >>TC7<< ;
+GREP: THData :: GETVAL 'TCoolList' 8 >>TC8<< ;
+GREP: THData :: GETVAL 'TCoolList' 9 >>TC9<< ;
+GREP: THData :: GETVAL 'TCoolList' 10 >>TC10<< ;
+GREP: THData :: GETVAL 'TCoolList' 11 >>TC11<< ;
+GREP: THData :: GETVAL 'TCoolList' 12 >>TC12<< ;
+GREP: THData :: GETVAL 'TCoolList' 13 >>TC13<< ;
+GREP: THData :: GETVAL 'TCoolList' 14 >>TC14<< ;
+GREP: THData :: GETVAL 'TCoolList' 15 >>TC15<< ;
+GREP: THData :: GETVAL 'TCoolList' 16 >>TC16<< ;
+GREP: THData :: GETVAL 'TCoolList' 17 >>TC17<< ;
+GREP: THData :: GETVAL 'TCoolList' 18 >>TC18<< ;
+GREP: THData :: GETVAL 'TCoolList' 19 >>TC19<< ;
+GREP: THData :: GETVAL 'TCoolList' 20 >>TC20<< ;
+GREP: THData :: GETVAL 'DCoolList' 1 >>DC1<< ;
+GREP: THData :: GETVAL 'DCoolList' 2 >>DC2<< ;
+GREP: THData :: GETVAL 'DCoolList' 3 >>DC3<< ;
+GREP: THData :: GETVAL 'DCoolList' 4 >>DC4<< ;
+GREP: THData :: GETVAL 'DCoolList' 5 >>DC5<< ;
+GREP: THData :: GETVAL 'DCoolList' 6 >>DC6<< ;
+GREP: THData :: GETVAL 'DCoolList' 7 >>DC7<< ;
+GREP: THData :: GETVAL 'DCoolList' 8 >>DC8<< ;
+GREP: THData :: GETVAL 'DCoolList' 9 >>DC9<< ;
+GREP: THData :: GETVAL 'DCoolList' 10 >>DC10<< ;
+GREP: THData :: GETVAL 'DCoolList' 11 >>DC11<< ;
+GREP: THData :: GETVAL 'DCoolList' 12 >>DC12<< ;
+GREP: THData :: GETVAL 'DCoolList' 13 >>DC13<< ;
+GREP: THData :: GETVAL 'DCoolList' 14 >>DC14<< ;
+GREP: THData :: GETVAL 'DCoolList' 15 >>DC15<< ;
+GREP: THData :: GETVAL 'DCoolList' 16 >>DC16<< ;
+GREP: THData :: GETVAL 'DCoolList' 17 >>DC17<< ;
+GREP: THData :: GETVAL 'DCoolList' 18 >>DC18<< ;
+GREP: THData :: GETVAL 'DCoolList' 19 >>DC19<< ;
+GREP: THData :: GETVAL 'DCoolList' 20 >>DC20<< ;
+*--------------
+* Fuel map local parameters modification
+*--------------
+Fmap := RESINI: Fmap :: EDIT 1
+BTYPE INST-BURN
+INST-BVAL CHAN 0.0
+SET-PARAM 'T-FUEL' BUND
+<<TF1>> <<TF2>> <<TF3>> <<TF4>> <<TF5>>
+<<TF6>> <<TF7>> <<TF8>> <<TF9>> <<TF10>>
+<<TF11>> <<TF12>> <<TF13>> <<TF14>> <<TF15>>
+<<TF16>> <<TF17>> <<TF18>> <<TF19>> <<TF20>>
+SET-PARAM 'T-COOL' BUND
+<<TC1>> <<TC2>> <<TC3>> <<TC4>> <<TC5>>
+<<TC6>> <<TC7>> <<TC8>> <<TC9>> <<TC10>>
+<<TC11>> <<TC12>> <<TC13>> <<TC14>> <<TC15>>
+<<TC16>> <<TC17>> <<TC18>> <<TC19>> <<TC20>>
+SET-PARAM 'D-COOL' BUND
+<<DC1>> <<DC2>> <<DC3>> <<DC4>> <<DC5>>
+<<DC6>> <<DC7>> <<DC8>> <<DC9>> <<DC10>>
+<<DC11>> <<DC12>> <<DC13>> <<DC14>> <<DC15>>
+<<DC16>> <<DC17>> <<DC18>> <<DC19>> <<DC20>>
+; 

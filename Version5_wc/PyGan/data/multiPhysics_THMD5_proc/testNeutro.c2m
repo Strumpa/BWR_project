@@ -1,0 +1,108 @@
+* Procedure : Neutronics.c2m
+* Purpose : Proceed to neutronics solution
+* Required output : axial power solution for TH solution
+* Author : R. Guasch, Adapted from PowComponent.c2m (A. Hébert)
+* Date : 19/09/2024
+* CALL      :                                                  
+*  Fmap Matex Flux := Neutronics Fmap Matex Flux Cpo Track THData  
+*    :: <<iter>> <<power>> ;
+
+
+PARAMETER  Fmap Matex Flux Power Cpo Track THData  ::
+  ::: LINKED_LIST Fmap Matex Flux Power Cpo Track THData  ; ;
+MODULE NCR: MACINI: TRIVAA: FLUD: FLPOW: GREP: DELETE: END: ;
+LINKED_LIST MacroF System Macro1 Macro2 MicroF ;
+PROCEDURE SetLocPara ;
+
+INTEGER iter ;
+ :: >>iter<< ;
+DOUBLE Dpowi  ;
+ :: >>Dpowi<< ;
+INTEGER Iz ;
+ :: >>Iz<< ;
+
+REAL powi := Dpowi D_TO_R ;
+REAL Iz1 :=  Iz I_TO_R ;
+
+REAL keff1 ;
+
+STRING DIR := "EDIPARAM" ;
+
+*-- 
+* Set local parameters in fuel map
+* --
+
+Fmap := SetLocPara Fmap THData :: <<Iz1>> ;
+
+*--
+* Cross-section database interpolation based on THData stored in Fuel map
+*--
+MicroF := NCR: Cpo Fmap ::
+      EDIT 100
+      MICRO LINEAR
+      TABLE Cpo <<DIR>>
+      NMIX 10
+      MIX 1 INST-BURN
+       'TFuel' 'TCool' 'DCool'
+      ENDMIX
+      MIX 2 
+       'TFuel' 'TCool' 'DCool'
+      ENDMIX
+      MIX 3 INST-BURN
+       'TFuel' 'TCool' 'DCool'
+      ENDMIX
+      MIX 4 INST-BURN
+       'TFuel' 'TCool' 'DCool'
+      ENDMIX
+      MIX 5 INST-BURN
+       'TFuel' 'TCool' 'DCool'
+      ENDMIX
+      MIX 6 INST-BURN
+       'TFuel' 'TCool' 'DCool'
+      ENDMIX
+      MIX 7 INST-BURN
+       'TFuel' 'TCool' 'DCool'
+      ENDMIX
+      MIX 8 
+       'TFuel' 'TCool' 'DCool'
+      ENDMIX
+      MIX 9 INST-BURN
+       'TFuel' 'TCool' 'DCool'
+      ENDMIX
+      MIX 10 INST-BURN
+       'TFuel' 'TCool' 'DCool'
+      ENDMIX
+;     
+
+MacroF := MicroF :: STEP UP 'MACROLIB' ;
+
+Macro2 Matex := MACINI: Matex MacroF :: FUEL ;
+  
+*--
+* Steady-state diffusion calculation
+*--
+System := TRIVAA: Macro2 Track ;
+
+IF iter 1 = THEN
+  Flux := FLUD: System Track ::
+    EDIT 1 ADI 4 ACCE 5 3 ;
+ELSE
+  Flux := FLUD: Flux System Track ::
+    EDIT 1 ;
+ENDIF ;
+
+System MacroF Macro2 := DELETE: System MacroF Macro2 ;
+
+GREP: Flux :: GETVAL 'K-EFFECTIVE' 1 >>keff1<< ;
+ECHO "+++ Burnup= 0.0 Keff=" keff1 ;
+
+*--
+* Power distribution calculation
+*--
+ECHO "total reactor power=" powi "MW" ;
+ECHO "In power at iter = " iter ;
+Power Fmap := FLPOW: Fmap Flux Track Matex
+            :: EDIT 10 PTOT <<powi>> PRINT DISTR FLUX PRINT DISTR POWER ;
+
+ECHO "Completed Neutronics calculation at iter = " iter ;
+END: ;

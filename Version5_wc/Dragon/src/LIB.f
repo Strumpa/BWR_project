@@ -14,6 +14,9 @@
 * version 2.1 of the License, or (at your option) any later version.
 *
 *Author(s): A. Hebert, G. Marleau and B.A.H. Meunier
+*  09/2026 proposed modification by R. Guasch :
+*    - flag to exclude energy from lumped isotopes and garantee 
+*      edepomode 0 Serpent2 formulation from R. Tuominen et al., ANE 129 (2019) 224–232.
 *
 *Parameters: input/output
 * NENTRY  number of LCM objects or files used by the operator.
@@ -65,7 +68,7 @@
      >             NCOMB,NEDMAC,NBMIX,NRES,MAXISM,ILCMLN,ILCMTY,IED,
      >             JED,KED,IDP,IBSTEP,MAXISO,NDEPL,NEDMA0,ITPROC,ISOADD,
      >             NADDXS,IPROB,IPROC,IMAC,NDEL,NFISS,IPRECI,NEL,STERN,
-     >             STERNR,EDPMFLAG
+     >             STERNR,ELUMPFLAG
       REAL         TMPDAY(3),DELT,TIMBRN,SVDEPS
       INTEGER      IKSTEP
       LOGICAL      LEXIST,EMPTY,LCM
@@ -126,7 +129,8 @@
         IPRECI=4
         STERN=1
         PARTICLER='N'
-        EDPMFLAG=0
+! Flag to include lumped isotopes energy to the H-FACTOR of parent isotopes.
+        ELUMPFLAG=0
       ENDIF
 *----
 *  TRY TO FIND A READ-ONLY LCM OBJECT
@@ -238,7 +242,7 @@
         MAXISM=ISTATE(22)
         IPRECI=ISTATE(23)
         STERN=ISTATE(27)
-        EDPMFLAG=ISTATE(28)
+        ELUMPFLAG=ISTATE(28)
         IF(NEDMAC.GT.0) THEN
           IF(NEDMAC .GT. MAXED) CALL XABORT(NAMSBR//': MAXED OVERFLOW')
           CALL LCMGTC(IPLIB,'ADDXSNAME-P0',8,NEDMAC,HVECT)
@@ -288,15 +292,10 @@
 *----
 *  READ THE ENERGY DEPOSITION MODE SELECTED
 *----
-      ELSE IF(CARLIR(1:4) .EQ. 'LUMP') THEN
-        EDPMFLAG=0
-        PRINT *, "SET EDPMFLAG TO 0 : LUMP"
-      ELSE IF(CARLIR(1:4) .EQ. 'EDP0') THEN
-        EDPMFLAG=1
-        PRINT *, "SET EDPMFLAG TO 1 : EDP0"
-      ELSE IF(CARLIR(1:4) .EQ. 'QFIS') THEN
-        EDPMFLAG=2
-        PRINT *, "SET EDPMFLAG TO 1 : QFIS"
+      ELSE IF(CARLIR(1:5) .EQ. 'LUMPE') THEN
+        ELUMPFLAG=0
+      ELSE IF(CARLIR(1:7) .EQ. 'NOLUMPE') THEN
+        ELUMPFLAG=1
       ELSE IF(CARLIR(1:4) .EQ. 'CTRA') THEN
 *----
 *  READ TRANSPORT CORRECTION TYPE
@@ -583,7 +582,7 @@
         ISTATE(22)=MAXISM
         ISTATE(23)=IPRECI
         ISTATE(27)=STERN
-        ISTATE(28)=EDPMFLAG
+        ISTATE(28)=ELUMPFLAG
         CALL LCMPUT(IPLIB,'STATE-VECTOR',NSTATE,1,ISTATE)
         GO TO 250
       ELSE
@@ -602,7 +601,7 @@
      >              ITIME ,NLIB  ,NGF   ,NGFR  ,NIDEPL,NCOMB ,
      >              NEDMAC,NBMIX ,NRES  ,IPROC ,IMAC  ,NDEL  ,
      >              ISOADD,MAXISM,HVECT ,IPRECI,SVDEPS,STERN,
-     >              EDPMFLAG)
+     >              ELUMPFLAG)
       ELSE IF(ITPROC .EQ. 2) THEN
         IF(NGRO .EQ. 0) CALL XABORT(NAMSBR//
      >  ': NUMBER OF GROUP REQUIRED FOR MAXS OF BURN')

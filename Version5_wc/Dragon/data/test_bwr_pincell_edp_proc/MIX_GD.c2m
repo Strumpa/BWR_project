@@ -1,0 +1,127 @@
+* MIX_C_PT procedure
+*----
+*  Name          : MIX_C_PT.c2m
+*  Type          : DRAGON procedure
+*  Use           : Microlib generation with Draglibs for UOX + Gd2O3 with 6 regions, PT
+*  Author        : R. Guasch
+*  Benchmark     : ATRIUM-10 Gd loaded pincell
+
+*  Procedure called as:
+*
+*  LIBRARY := Mix_Cell :: <<Library>> <<ssh_method>> ;
+*
+*  Where library is JEFF3.1.1 or ENDF/B-VIII.1 on SHEM295  
+*  Output data  :
+*    LIBRARY    : Microlib with mathematical probability table
+
+PARAMETER  LIBRARY  ::
+  EDIT 0
+    ::: LINKED_LIST LIBRARY  ;
+;
+
+STRING Library ssh_method edpmflag ;
+:: >>Library<< >>ssh_method<< >>edpmflag<< ;
+DOUBLE DN_H DN_O ;
+:: >>DN_H<< >>DN_O<< ;
+
+MODULE LIB: END: ;
+
+REAL N_H := DN_H D_TO_R ;
+REAL N_O := DN_O D_TO_R ;
+
+IF edpmflag "NONE" = THEN
+LIBRARY := LIB: ::
+  EDIT 0
+  NMIX 9    ! MAXIMUM OF MATERIAL MIXTURES
+  <<ssh_method>>
+  ANIS 4
+  ADED 4 NELAS N4N N2N N3N
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX 1 900.0
+    O16     = O16    4.621410E-02
+    U234    = U234   9.451580E-06 1 
+    U235    = U235   9.945290E-04 1 
+    U238    = U238   2.107540E-02 CORR 1
+    Pu239   = Pu239  0.0     1
+    Pu240   = Pu240  0.0     1
+    Pu241   = Pu241  0.0     1
+    Pu242   = Pu242  0.0     1
+    Gd154    = Gd154   2.986510E-05 1
+    Gd155    = Gd155   2.027540E-04 1
+    Gd156    = Gd156   2.804310E-04 1
+    Gd157    = Gd157   2.143990E-04 CORR 1
+    Gd158    = Gd158   3.403000E-04 1
+    Gd160    = Gd160   2.994740E-04 1  
+  MIX 2 COMB 1 1.0
+  MIX 3 COMB 1 1.0
+  MIX 4 COMB 1 1.0
+  MIX 5 COMB 1 1.0
+  MIX 6 COMB 1 1.0
+
+  MIX 7 900.0 NOEV
+    He4      = He4 1.50456E-04
+  
+  MIX 8 600.0 NOEV
+    Zr90  = Zr90   2.18317E-02 2
+    Zr91  = Zr91   4.76096E-03 2
+    Zr92  = Zr92   7.27723E-03 2
+    Zr94  = Zr94   7.37482E-03 2
+    Zr96  = Zr96   1.18812E-03 2
+    
+  MIX 9 600.0 NOEV
+    H1      = H1_H2O <<N_H>>  
+    O16     = O16    <<N_O>> 
+;
+ELSE
+LIBRARY := LIB: ::
+  EDIT 0
+  NMIX 9    ! MAXIMUM OF MATERIAL MIXTURES
+  <<ssh_method>>
+  <<edpmflag>>
+  ANIS 4
+  ADED 4 NELAS N4N N2N N3N
+
+  DEPL LIB: DRAGON FIL: <<Library>>
+
+  MIXS LIB: DRAGON FIL: <<Library>>
+
+  MIX 1 900.0
+    O16     = O16    4.621410E-02
+    U234    = U234   9.451580E-06 1 
+    U235    = U235   9.945290E-04 1 
+    U238    = U238   2.107540E-02 CORR 1
+    Pu239   = Pu239  0.0     1
+    Pu240   = Pu240  0.0     1
+    Pu241   = Pu241  0.0     1
+    Pu242   = Pu242  0.0     1
+    Gd154    = Gd154   2.986510E-05 1
+    Gd155    = Gd155   2.027540E-04 1
+    Gd156    = Gd156   2.804310E-04 1
+    Gd157    = Gd157   2.143990E-04 CORR 1
+    Gd158    = Gd158   3.403000E-04 1
+    Gd160    = Gd160   2.994740E-04 1  
+  MIX 2 COMB 1 1.0
+  MIX 3 COMB 1 1.0
+  MIX 4 COMB 1 1.0
+  MIX 5 COMB 1 1.0
+  MIX 6 COMB 1 1.0
+
+  MIX 7 900.0 NOEV
+    He4      = He4 1.50456E-04
+  
+  MIX 8 600.0 NOEV
+    Zr90  = Zr90   2.18317E-02 2
+    Zr91  = Zr91   4.76096E-03 2
+    Zr92  = Zr92   7.27723E-03 2
+    Zr94  = Zr94   7.37482E-03 2
+    Zr96  = Zr96   1.18812E-03 2
+    
+  MIX 9 600.0 NOEV
+    H1      = H1_H2O <<N_H>>  
+    O16     = O16    <<N_O>>  
+;
+
+ENDIF ;

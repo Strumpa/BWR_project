@@ -57,7 +57,7 @@ Note that the input order must be respected. \\
 
 \begin{DataStructure}{Structure \dstr{desctinst}}
 $[$ \moc{EDIT} \dusa{iprint} $]$ \\
-$[$ \moc{BURN-STEP} \dusa{rburn}  $|$ \moc{TIME} \dusa{rtime} $\{$ \moc{DAY} $|$ \moc{HOUR} $|$ \moc{MINUTE} $|$ \moc{SECOND} $\}$ $]$ \\
+$[$ \moc{BURN-STEP} \dusa{rburn}  $|~\{$ \moc{TIME} $|$ \moc{SAVE} $\}$ \dusa{rtime} $\{$ \moc{DAY} $|$ \moc{HOUR} $|$ \moc{MINUTE} $|$ \moc{SECOND} $\}$ $]$ \\
 $[[$ \moc{REFUEL} $[$ \moc{MICRO} $]$ \moc{CHAN} \dusa{NAMCHA} \dusa{nsh} $]]$ \\
 $[[$ \moc{NEWFUEL} $[$ \moc{MICRO} $]$ \moc{CHAN} \dusa{NAMCHA} \dusa{nsh} $\{$ \moc{SOME}
 ( \dusa{imix}(i), i=1,ABS(\dusa{nsh}) ) $|$ \moc{ALL} \dusa{imix} $\}~]]$ \\
@@ -85,6 +85,14 @@ of burn-up in the core.
 
 \item[\moc{TIME}] keyword used to indicate the time of combustion at the power specified
 in \dusa{POWER} structure.
+
+\item[\moc{SAVE}] keyword which allows storing relevant information from the fuel map and an
+input microlib for each specific time step directly into the fuel map. All this information is
+stored in a newly created heterogeneous list called “{\tt \_TINSAV}”. Each time the \moc{SAVE} keyword is
+called during the simulation, a new item is created and appended inside this list. It is important
+to note that the logic allows storing multiple items at the same time instant. This is particularly
+useful for capturing both pre- and post-refueling states by simply calling \moc{SAVE} before and after
+the refueling operation.
 
 \item[\dusa{rtime}] keyword used to set the time combustion value in \moc{DAY} or \moc{HOUR}
 or \moc{MINUTE} or \moc{SECOND}.

@@ -1,0 +1,184 @@
+****************************************************************
+* CLE-2000 / DONJON script                                     *
+* Purpose : initialize coupled neutronics/TH calculation       *
+* Author : A. Hebert adapted by R.Guasch                       *
+* Date : 16/09/2024                                            *
+* CALL      :                                                  *
+*  Fmap Matex Cpo Track := IniDONJON :: ;                      *
+*                                                              *
+****************************************************************
+PARAMETER  Fmap Matex Cpo Track Thm guessPow ::
+  ::: LINKED_LIST Fmap Matex Cpo Track Thm guessPow ; ;
+STRING name_compo ;
+:: >>name_compo<< ;
+INTEGER Iz ;
+:: >>Iz<< ;
+DOUBLE Dmass ; 
+:: >>Dmass<< ;
+DOUBLE Dheight ; 
+:: >>Dheight<< ;
+DOUBLE Dpitch ;
+:: >>Dpitch<< ;
+DOUBLE Dpowi ;
+:: >>Dpowi<< ;
+
+DOUBLE DpOutlet ;
+:: >>DpOutlet<< ;
+DOUBLE DtInlet ;
+:: >>DtInlet<< ;
+DOUBLE DmassFlow ;
+:: >>DmassFlow<< ;
+DOUBLE Darea ;
+:: >>Darea<< ;
+DOUBLE DfuelRadius ;
+:: >>DfuelRadius<< ;
+DOUBLE DgapRadius ;
+:: >>DgapRadius<< ;
+DOUBLE DcladRadius ;
+:: >>DcladRadius<< ;
+STRING THM_correl ;
+:: >>THM_correl<< ;
+DOUBLE Drelax_f ;
+:: >>Drelax_f<< ;
+
+ECHO "Begin test with generated c2m : nz = " Iz " , Pnorm = " Dpowi " W, THM_correlation = " THM_correl ;
+
+LINKED_LIST Geom ;
+MODULE   TRIVAT: UTL: END: ;
+
+PROCEDURE  
+GeoCore10 GeoCore20 GeoCore30 GeoCore40 GeoCore50 
+GeoCore60 GeoCore70 GeoCore80 GeoCore90 GeoCore100 
+GeoCore110 GeoCore120 GeoCore130 GeoCore140 GeoCore150 
+GeoCore160 GeoCore170 GeoCore180 GeoCore190 GeoCore200 
+SetFMap10 SetFMap20 SetFMap30 SetFMap40 SetFMap50 
+SetFMap60 SetFMap70 SetFMap80 SetFMap90 SetFMap100 
+SetFMap110 SetFMap120 SetFMap130 SetFMap140 SetFMap150 
+SetFMap160 SetFMap170 SetFMap180 SetFMap190 SetFMap200 
+solTHM ;
+SEQ_ASCII _COMPO :: FILE <<name_compo>> ;
+*----
+*  Local Parameters
+*----
+REAL mass := Dmass D_TO_R ;
+
+REAL pitch := Dpitch D_TO_R ;
+REAL height := Dheight D_TO_R ;
+REAL powi := Dpowi D_TO_R ;
+INTEGER iter := 1 ;
+
+
+EVALUATE pitch := pitch 100.0 * ;
+EVALUATE height := height 100.0 * ;
+
+INTEGER MaxR := 10000 ; 
+
+REAL Nz := Iz I_TO_R ;
+*----
+*  Recover the Multicompo
+*----
+STRING DIR := "EDIPARAM" ;
+Cpo := _COMPO ;
+UTL: Cpo :: DIR ;
+
+REAL BMass := mass Nz / ;
+IF Iz 10 = THEN
+  Geom Matex := GeoCore10 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 20 = THEN
+  Geom Matex := GeoCore20 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 30 = THEN
+  Geom Matex := GeoCore30 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 40 = THEN
+  Geom Matex := GeoCore40 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 50 = THEN
+  Geom Matex := GeoCore50 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 60 = THEN
+  Geom Matex := GeoCore60 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 70 = THEN
+  Geom Matex := GeoCore70 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 80 = THEN
+  Geom Matex := GeoCore80 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 90 = THEN
+  Geom Matex := GeoCore90 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 100 = THEN
+  Geom Matex := GeoCore100 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 110 = THEN  
+  Geom Matex := GeoCore110 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 120 = THEN
+  Geom Matex := GeoCore120 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 130 = THEN
+  Geom Matex := GeoCore130 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 140 = THEN
+  Geom Matex := GeoCore140 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 150 = THEN
+  Geom Matex := GeoCore150 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 160 = THEN
+  Geom Matex := GeoCore160 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 170 = THEN
+  Geom Matex := GeoCore170 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 180 = THEN
+  Geom Matex := GeoCore180 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 190 = THEN
+  Geom Matex := GeoCore190 :: <<pitch>> <<height>> <<Nz>> ;
+ELSEIF Iz 200 = THEN
+  Geom Matex := GeoCore200 :: <<pitch>> <<height>> <<Nz>> ;
+ELSE
+  ECHO "ERROR: Iz not supported" ;
+ENDIF ;
+
+Track := TRIVAT: Geom :: (*From pincell_mphy_thm Donjon test*)
+   EDIT 1 MAXR <<MaxR>> MCFD 1 ;
+
+*--
+* Fuel map definition
+*--
+IF Iz 10 = THEN
+  Fmap Matex := SetFMap10 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 20 = THEN
+  Fmap Matex := SetFMap20 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 30 = THEN
+  Fmap Matex := SetFMap30 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 40 = THEN
+  Fmap Matex := SetFMap40 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 50 = THEN
+  Fmap Matex := SetFMap50 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 60 = THEN
+  Fmap Matex := SetFMap60 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 70 = THEN
+  Fmap Matex := SetFMap70 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 80 = THEN
+  Fmap Matex := SetFMap80 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 90 = THEN
+  Fmap Matex := SetFMap90 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 100 = THEN
+  Fmap Matex := SetFMap100 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 110 = THEN
+  Fmap Matex := SetFMap110 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 120 = THEN
+  Fmap Matex := SetFMap120 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 130 = THEN
+  Fmap Matex := SetFMap130 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 140 = THEN
+  Fmap Matex := SetFMap140 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 150 = THEN  
+  Fmap Matex := SetFMap150 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 160 = THEN
+  Fmap Matex := SetFMap160 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 170 = THEN
+  Fmap Matex := SetFMap170 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 180 = THEN
+  Fmap Matex := SetFMap180 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 190 = THEN
+  Fmap Matex := SetFMap190 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSEIF Iz 200 = THEN
+  Fmap Matex := SetFMap200 Matex guessPow :: <<pitch>> <<height>> <<BMass>> <<Nz>> <<powi>> ;
+ELSE
+  ECHO "ERROR: Iz not supported" ;
+ENDIF ;
+
+Thm Fmap := solTHM Fmap :: <<DpOutlet>> <<DtInlet>> <<DmassFlow>> <<Darea>> 
+                          <<DfuelRadius>> <<DgapRadius>> <<DcladRadius>> 
+                          <<iter>> <<THM_correl>> <<Drelax_f>> ;
+
+END: ;
+QUIT "LIST" .

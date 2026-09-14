@@ -4,5 +4,5 @@ if [ $# = 0 ]
    echo "usage: VanDerGucht.access directory" 1>&2
    exit 1
 fi
-ln -s $1/../../libraries/ascii/SECLIB_XSM_NEW SECLIB_XSM
+ln -s $1/../../../libraries/ascii/SECLIB_XSM_NEW SECLIB_XSM
 ls -l

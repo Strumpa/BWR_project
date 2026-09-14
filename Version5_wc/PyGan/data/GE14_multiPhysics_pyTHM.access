@@ -1,0 +1,11 @@
+#!/bin/sh
+if [ $# = 0 ]
+   then
+   echo "usage: GE14_multiPhysics_pyTHM.access.access directory" 1>&2
+   exit 1
+fi
+ln -s "$1"/data/GE14_multiPhysics_pyTHM_proc/_CPO_GE14_DOM_DIAG .
+ln -s "$1"/data/GE14_multiPhysics_pyTHM_proc/_CPO_GE14_VAN_DIAG .
+ln -s "$1"/data/GE14_multiPhysics_pyTHM_proc/input_yaml_configs/ .
+ls -l
+echo "GE14_multiPhysics_pyTHM.access terminated"

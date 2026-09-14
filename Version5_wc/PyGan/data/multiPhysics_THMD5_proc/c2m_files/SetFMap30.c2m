@@ -1,0 +1,188 @@
+* CLE-2000 Procedure
+* Procedure :  SetFMap.c2m
+* Purpose   :  Fuel-map specifications for BWR coupled calculation
+* Author(s) :  R. Guasch, adapted from M. Guyot (2010) & A. Hebert (2011)
+* Date : 19/09/2024
+* Updated : 06/06/2025 (R. Guasch) to support 90 and 100 axial nodes
+* Update : 09/06/2025 : generated automatically by 'generate_c2m.py
+* Input data : Matex : material indexation
+*              guessPow : axial power forms for guess (initial) power distribution
+*              pitch : assembly/cell pitch
+*              height : active core height
+*              BMass : fuel bundle mass (mass of UOX in an axial fuel slice)
+*              Nz : axial node index for the first axial node (NZ)
+*              powi : normalization power (MW)
+**--------------
+* INPUT - OUTPUT LCM data / parameters definition/recovery
+*--------------
+PARAMETER Fmap Matex guessPow ::
+::: LINKED_LIST
+  Fmap Matex guessPow ; ;
+REAL pitch height BMass Nz powi ;
+:: >>pitch<< >>height<< >>BMass<< >>Nz<< >>powi<< ; (*BMass = Bundle Mass : mass of UOX in an axial fuel slice*)
+*--------------
+* MODULES definition
+*--------------
+MODULE RESINI: GREP: END: ;
+*--------------
+* Variable declaration
+*--------------
+ECHO 'Set fuel map for BWR coupled calculation' ;
+ECHO 'Number of axial nodes' Nz ;
+REAL TFuelIni TCoolIni DCoolIni := 750.0 543.0 700.0 ;
+REAL Pfact1 ; REAL Pfact2 ; REAL Pfact3 ; REAL Pfact4 ; REAL Pfact5 ;
+REAL Pfact6 ; REAL Pfact7 ; REAL Pfact8 ; REAL Pfact9 ; REAL Pfact10 ;
+REAL Pfact11 ; REAL Pfact12 ; REAL Pfact13 ; REAL Pfact14 ; REAL Pfact15 ;
+REAL Pfact16 ; REAL Pfact17 ; REAL Pfact18 ; REAL Pfact19 ; REAL Pfact20 ;
+REAL Pfact21 ; REAL Pfact22 ; REAL Pfact23 ; REAL Pfact24 ; REAL Pfact25 ;
+REAL Pfact26 ; REAL Pfact27 ; REAL Pfact28 ; REAL Pfact29 ; REAL Pfact30 ;
+GREP: guessPow :: GETVAL 'pform' 1 >>Pfact1<< ;
+GREP: guessPow :: GETVAL 'pform' 2 >>Pfact2<< ;
+GREP: guessPow :: GETVAL 'pform' 3 >>Pfact3<< ;
+GREP: guessPow :: GETVAL 'pform' 4 >>Pfact4<< ;
+GREP: guessPow :: GETVAL 'pform' 5 >>Pfact5<< ;
+GREP: guessPow :: GETVAL 'pform' 6 >>Pfact6<< ;
+GREP: guessPow :: GETVAL 'pform' 7 >>Pfact7<< ;
+GREP: guessPow :: GETVAL 'pform' 8 >>Pfact8<< ;
+GREP: guessPow :: GETVAL 'pform' 9 >>Pfact9<< ;
+GREP: guessPow :: GETVAL 'pform' 10 >>Pfact10<< ;
+GREP: guessPow :: GETVAL 'pform' 11 >>Pfact11<< ;
+GREP: guessPow :: GETVAL 'pform' 12 >>Pfact12<< ;
+GREP: guessPow :: GETVAL 'pform' 13 >>Pfact13<< ;
+GREP: guessPow :: GETVAL 'pform' 14 >>Pfact14<< ;
+GREP: guessPow :: GETVAL 'pform' 15 >>Pfact15<< ;
+GREP: guessPow :: GETVAL 'pform' 16 >>Pfact16<< ;
+GREP: guessPow :: GETVAL 'pform' 17 >>Pfact17<< ;
+GREP: guessPow :: GETVAL 'pform' 18 >>Pfact18<< ;
+GREP: guessPow :: GETVAL 'pform' 19 >>Pfact19<< ;
+GREP: guessPow :: GETVAL 'pform' 20 >>Pfact20<< ;
+GREP: guessPow :: GETVAL 'pform' 21 >>Pfact21<< ;
+GREP: guessPow :: GETVAL 'pform' 22 >>Pfact22<< ;
+GREP: guessPow :: GETVAL 'pform' 23 >>Pfact23<< ;
+GREP: guessPow :: GETVAL 'pform' 24 >>Pfact24<< ;
+GREP: guessPow :: GETVAL 'pform' 25 >>Pfact25<< ;
+GREP: guessPow :: GETVAL 'pform' 26 >>Pfact26<< ;
+GREP: guessPow :: GETVAL 'pform' 27 >>Pfact27<< ;
+GREP: guessPow :: GETVAL 'pform' 28 >>Pfact28<< ;
+GREP: guessPow :: GETVAL 'pform' 29 >>Pfact29<< ;
+GREP: guessPow :: GETVAL 'pform' 30 >>Pfact30<< ;
+REAL dz := height Nz / ;
+REAL z1 := dz ;
+REAL z2 := z1 dz + ;
+REAL z3 := z2 dz + ;
+REAL z4 := z3 dz + ;
+REAL z5 := z4 dz + ;
+REAL z6 := z5 dz + ;
+REAL z7 := z6 dz + ;
+REAL z8 := z7 dz + ;
+REAL z9 := z8 dz + ;
+REAL z10 := z9 dz + ;
+REAL z11 := z10 dz + ;
+REAL z12 := z11 dz + ;
+REAL z13 := z12 dz + ;
+REAL z14 := z13 dz + ;
+REAL z15 := z14 dz + ;
+REAL z16 := z15 dz + ;
+REAL z17 := z16 dz + ;
+REAL z18 := z17 dz + ;
+REAL z19 := z18 dz + ;
+REAL z20 := z19 dz + ;
+REAL z21 := z20 dz + ;
+REAL z22 := z21 dz + ;
+REAL z23 := z22 dz + ;
+REAL z24 := z23 dz + ;
+REAL z25 := z24 dz + ;
+REAL z26 := z25 dz + ;
+REAL z27 := z26 dz + ;
+REAL z28 := z27 dz + ;
+REAL z29 := z28 dz + ;
+REAL z30 := z29 dz + ;
+*-----
+* Fuel map definition
+*-----
+Fmap Matex := RESINI: Matex ::
+EDIT 1
+  ::: GEO: CAR3D 1 1 30
+ X- REFL X+ REFL Y- REFL Y+ REFL Z- VOID Z+ VOID
+ MESHX 0.0 <<pitch>>
+ MESHY 0.0 <<pitch>>
+ MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>>
+<<z11>> <<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>>
+<<z21>> <<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>>
+ MIX
+PLANE 1 1
+PLANE 2 2
+PLANE 3 3
+PLANE 4 4
+PLANE 5 5
+PLANE 6 6
+PLANE 7 7
+PLANE 8 8
+PLANE 9 9
+PLANE 10 10
+PLANE 11 11
+PLANE 12 12
+PLANE 13 13
+PLANE 14 14
+PLANE 15 15
+PLANE 16 16
+PLANE 17 17
+PLANE 18 18
+PLANE 19 19
+PLANE 20 20
+PLANE 21 21
+PLANE 22 22
+PLANE 23 23
+PLANE 24 24
+PLANE 25 25
+PLANE 26 26
+PLANE 27 27
+PLANE 28 28
+PLANE 29 29
+PLANE 30 30
+;
+NXNAME '01' NYNAME  'A'
+NCOMB 1
+B-ZONE 1
+BTYPE INST-BURN
+INST-BVAL CHAN 0.0
+ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL
+ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL
+ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL
+FUEL WEIGHT <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+SET-PARAM 'T-FUEL' BUND
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+<<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>> <<TFuelIni>>
+SET-PARAM 'T-COOL' BUND
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+<<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>> <<TCoolIni>>
+SET-PARAM 'D-COOL' BUND
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+<<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>> <<DCoolIni>>
+REACTOR-POW <<powi>>
+AXIAL-PFORM 
+<<Pfact1>> <<Pfact2>> <<Pfact3>> <<Pfact4>> <<Pfact5>>
+<<Pfact6>> <<Pfact7>> <<Pfact8>> <<Pfact9>> <<Pfact10>>
+<<Pfact11>> <<Pfact12>> <<Pfact13>> <<Pfact14>> <<Pfact15>>
+<<Pfact16>> <<Pfact17>> <<Pfact18>> <<Pfact19>> <<Pfact20>>
+<<Pfact21>> <<Pfact22>> <<Pfact23>> <<Pfact24>> <<Pfact25>>
+<<Pfact26>> <<Pfact27>> <<Pfact28>> <<Pfact29>> <<Pfact30>>
+;
+

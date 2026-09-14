@@ -75,6 +75,8 @@
       CALL LCMLEN(IPLIB,'MACROLIB',ILONG,ITYLCM)
       IF(ILONG.EQ.-1) THEN
          CALL LCMSIX(IPLIB,'MACROLIB',1)
+         CALL LCMLEN(IPLIB,'SIGNATURE',ILONG,ITYLCM)
+         IF(ILONG.EQ.0) GO TO 40
          CALL LCMGET(IPLIB,'STATE-VECTOR',IDATA)
          IF(IDATA(1).NE.NGRO) THEN
             WRITE(HSMG,'(38HLIBNFI: EXISTING MACROLIB HAVE NGROUP=,I4,
@@ -116,9 +118,9 @@
                CALL XABORT(HSMG)
             ENDIF
          ENDIF
-         CALL LCMSIX(IPLIB,' ',2)
+   40    CALL LCMSIX(IPLIB,' ',2)
       ENDIF
-      DO 100 ISOT=1,NBISO
+      DO 120 ISOT=1,NBISO
       IBM=MIX(ISOT)
       IF(IBM.GT.0) THEN
          JPLIB=IPISO(ISOT)
@@ -136,25 +138,25 @@
                   CALL LCMGET(JPLIB,'CHI--01',CHI1)
                ENDIF
                LFISS=.FALSE.
-               DO 35 IGR=1,NGRO
+               DO 50 IGR=1,NGRO
                LFISS=LFISS.OR.(CHI1(IGR).GT.0.0)
-   35          CONTINUE
-               IF(.NOT.LFISS) GO TO 100
+   50          CONTINUE
+               IF(.NOT.LFISS) GO TO 120
                IF(LSAME) THEN
                   CALL LCMLEN(JPLIB,'LAMBDA-D',LENGT1,ITYLCM)
                   IF((LENGT1.EQ.NDEL).AND.(NDEL.GT.0)) THEN
                      CALL LCMGET(JPLIB,'LAMBDA-D',LAM1)
                   ENDIF
                ENDIF
-               DO 40 IFIS=1,NFISSI
+               DO 60 IFIS=1,NFISSI
                IWFIS=INDFIS(IBM,IFIS)
                IF((IWFIS.EQ.ISOT).OR.(IWFIS.EQ.0)) THEN
                   KFIS=IFIS
-                  GO TO 90
+                  GO TO 110
                ENDIF
-   40          CONTINUE
+   60          CONTINUE
                IF(LSAME) THEN
-                  DO 70 IFIS=1,NFISSI
+                  DO 90 IFIS=1,NFISSI
                   IWFIS=INDFIS(IBM,IFIS)
                   JPLIB=IPISO(IWFIS)
                   IF(NESP.EQ.1) THEN
@@ -162,35 +164,35 @@
                   ELSE
                     CALL LCMGET(JPLIB,'CHI--01',CHI2)
                   ENDIF
-                  DO 50 IGR=1,NGRO
+                  DO 70 IGR=1,NGRO
                   IF(ABS(CHI1(IGR)-CHI2(IGR)).GT.1.0E-3) THEN
                      LSAME=.FALSE.
-                     GO TO 80
+                     GO TO 100
                   ENDIF
-   50             CONTINUE
+   70             CONTINUE
                   CALL LCMLEN(JPLIB,'LAMBDA-D',LENGT2,ITYLCM)
                   IF((LENGT1.EQ.NDEL).AND.(LENGT2.EQ.NDEL)
      1                               .AND.(NDEL.GT.0)) THEN
                      CALL LCMGET(JPLIB,'LAMBDA-D',LAM2)
-                     DO 60 IGR=1,NDEL
+                     DO 80 IGR=1,NDEL
                      IF(LAM1(IGR).NE.LAM2(IGR)) THEN
                         LSAME=.FALSE.
-                        GO TO 80
+                        GO TO 100
                      ENDIF
-   60                CONTINUE
+   80                CONTINUE
                   ENDIF
-   70             CONTINUE
+   90             CONTINUE
                ENDIF
-   80          NFISSI=NFISSI+1
+  100          NFISSI=NFISSI+1
                IF(NFISSI.GT.MAXNFI) CALL XABORT('LIBNFI: INDFIS OVERFL'
      1         //'OW.')
                KFIS=NFISSI
                INDFIS(:NBMIX,KFIS)=0
-   90          INDFIS(IBM,KFIS)=ISOT
+  110          INDFIS(IBM,KFIS)=ISOT
             ENDIF
          ENDIF
       ENDIF
-  100 CONTINUE
+  120 CONTINUE
 *----
 *  SCRATCH STORAGE DEALLOCATION
 *----

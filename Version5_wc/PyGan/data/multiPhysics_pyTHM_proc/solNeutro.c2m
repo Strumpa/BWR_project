@@ -1,0 +1,175 @@
+* Procedure : Neutronics.c2m
+* Purpose : Proceed to neutronics solution
+* Required output : axial power solution for TH solution
+* Author : R. Guasch, Adapted from PowComponent.c2m (A. Hébert)
+* Date : 19/09/2024
+* Modified on 09/06/2025 to get rid of THData LCM object dependency : 
+* --> use parameters stored in Fmap for interpolation of XS.
+* CALL      :                                                  
+*  Fmap Matex Flux := Neutronics Fmap Matex Flux Cpo Track THData  
+*    :: <<iter>> <<power>> ;
+
+
+PARAMETER  Fmap Matex Flux Power Cpo Track THData ::
+  ::: LINKED_LIST Fmap Matex Flux Power Cpo Track THData ; ;
+INTEGER iter ;
+ :: >>iter<< ;
+DOUBLE Dpowi  ;
+ :: >>Dpowi<< ;
+INTEGER Iz1 ;
+ :: >>Iz1<< ;
+
+
+MODULE NCR: MACINI: TRIVAA: FLUD: FLPOW: GREP: DELETE: END: ;
+LINKED_LIST MacroF System Macro1 Macro2 MicroF ;
+
+PROCEDURE 
+SLP10 SLP20 SLP30 SLP40 SLP50
+SLP60 SLP70 SLP80 SLP90 SLP100
+SLP110 SLP120 SLP130 SLP140 SLP150
+SLP160 SLP170 SLP180 SLP190 SLP200
+InterpXS10 InterpXS20 InterpXS30 InterpXS40 InterpXS50 
+InterpXS60 InterpXS70 InterpXS80 InterpXS90 InterpXS100
+InterpXS110 InterpXS120 InterpXS130 InterpXS140 InterpXS150
+InterpXS160 InterpXS170 InterpXS180 InterpXS190 InterpXS200 ;
+REAL powi := Dpowi D_TO_R ;
+
+REAL keff1 ;
+
+STRING DIR := "EDIPARAM" ;
+*-- 
+* Set local parameters in fuel map
+* --
+
+IF iter 1 = THEN
+    ECHO "use initial Fmap" ;
+ELSE
+      IF Iz1 10 = THEN
+            Fmap := SLP10 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 20 = THEN
+            Fmap := SLP20 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 30 = THEN
+            Fmap := SLP30 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 40 = THEN
+            Fmap := SLP40 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 50 = THEN
+            Fmap := SLP50 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 60 = THEN
+            Fmap := SLP60 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 70 = THEN
+            Fmap := SLP70 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 80 = THEN
+            Fmap := SLP80 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 90 = THEN
+            Fmap := SLP90 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 100 = THEN
+            Fmap := SLP100 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 110 = THEN
+            Fmap := SLP110 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 120 = THEN
+            Fmap := SLP120 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 130 = THEN
+            Fmap := SLP130 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 140 = THEN
+            Fmap := SLP140 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 150 = THEN
+            Fmap := SLP150 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 160 = THEN
+            Fmap := SLP160 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 170 = THEN
+            Fmap := SLP170 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 180 = THEN
+            Fmap := SLP180 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 190 = THEN
+            Fmap := SLP190 Fmap THData :: <<Iz1>> ;
+      ELSEIF Iz1 200 = THEN
+            Fmap := SLP200 Fmap THData :: <<Iz1>> ;
+      ELSE
+      ECHO "ERROR: Iz1 not supported" ;
+      ENDIF ;
+ENDIF ;
+
+
+ECHO "+++ Neutronics calculation at iter = " iter ;
+ECHO "+++ Power = " powi "MW" ;
+ECHO "+++ Number of axial nodes = " Iz1 ;
+*--
+* Cross-section database interpolation
+*--
+IF Iz1 10 = THEN
+      MicroF := InterpXS10 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 20 = THEN
+      MicroF := InterpXS20 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 30 = THEN
+      MicroF := InterpXS30 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 40 = THEN
+      MicroF := InterpXS40 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 50 = THEN     
+      MicroF := InterpXS50 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 60 = THEN
+      MicroF := InterpXS60 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 70 = THEN
+      MicroF := InterpXS70 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 80 = THEN
+      MicroF := InterpXS80 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 90 = THEN
+      MicroF := InterpXS90 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 100 = THEN
+      MicroF := InterpXS100 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 110 = THEN
+      MicroF := InterpXS110 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 120 = THEN
+      MicroF := InterpXS120 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 130 = THEN
+      MicroF := InterpXS130 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 140 = THEN
+      MicroF := InterpXS140 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 150 = THEN
+      MicroF := InterpXS150 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 160 = THEN
+      MicroF := InterpXS160 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 170 = THEN
+      MicroF := InterpXS170 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 180 = THEN
+      MicroF := InterpXS180 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 190 = THEN
+      MicroF := InterpXS190 Fmap Cpo :: <<Iz1>> ;
+ELSEIF Iz1 200 = THEN
+      MicroF := InterpXS200 Fmap Cpo :: <<Iz1>> ;
+ELSE
+  ECHO "ERROR: Iz1 not supported" ;
+ENDIF ;
+
+ECHO "+++ Interpolated cross-sections for iter = " iter ;
+MacroF := MicroF :: STEP UP 'MACROLIB' ;
+
+Macro2 Matex := MACINI: Matex MacroF :: FUEL ;
+  
+*--
+* Steady-state diffusion calculation
+*--
+System := TRIVAA: Macro2 Track ;
+
+IF iter 1 = THEN
+  Flux := FLUD: System Track ::
+    EDIT 1 ADI 4 ACCE 5 3 ;
+ELSE
+  Flux := FLUD: Flux System Track ::
+    EDIT 1 ;
+ENDIF ;
+
+System MacroF Macro2 := DELETE: System MacroF Macro2 ;
+
+GREP: Flux :: GETVAL 'K-EFFECTIVE' 1 >>keff1<< ;
+ECHO "+++ Burnup= 0.0 Keff=" keff1 ;
+
+*--
+* Power distribution calculation
+*--
+ECHO "total reactor power=" powi "MW" ;
+ECHO "In power at iter = " iter ;
+Power Fmap := FLPOW: Fmap Flux Track Matex
+            :: EDIT 1 PTOT <<powi>> PRINT DISTR FLUX PRINT DISTR POWER ;
+
+ECHO "Completed Neutronics calculation at iter = " iter ;
+END: ;

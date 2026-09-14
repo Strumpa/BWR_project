@@ -40,9 +40,10 @@ fi
 
 #ln -s "$pos"/draglibshem295_endfb8r1_idecay0_v5p1_13052026 eb81dec0
 #ln -s "$pos"/draglibshem295_endfb8r1_idecay1_v5p1_13052026 eb81dec1
-#ln -s "$pos"/draglibshem2_endfb8r1_mt458_idecay1_v5p1_22052026 e81d1mt458
-ln -s "$pos"/draglibshem295_endfb8r1_mt18_idecay1_v5p1_28052026 e81d1mt18
-ln -s "$pos"/draglibshem295_endfb8r1_mt18_idecay1_v5p1_29052026 e81d1mt18v2
+ln -s "$pos"/draglibshem295_endfb8r1_only_mt458_idecay1_v5p1_09092026 e81d1mt458
+ln -s "$pos"/draglibshem295_endfb8r1_only_mt18_idecay1_v5p1_09092026 e81d1mt18
+ln -s "$pos"/draglibshem295_endfb8r1_draq_idecay1_v5p1_09092026 e81d1draq
+ln -s "$pos"/draglibshem295_endfb8r1_heatr_kerma_idecay1_v5p1_09092026 e81d1heatr
 ln -s "$pos"/draglibendfb8r1SHEM295_v5p1 endfb8r1_295
 
 ln -s "$pos2"/draglibendfb8r1SHEM295 eb81_Qvals

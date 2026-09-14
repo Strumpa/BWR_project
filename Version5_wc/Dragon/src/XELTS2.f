@@ -71,7 +71,7 @@
      >                  EPS, TOTLEN, ZERO, ONE
       DOUBLE PRECISION  WEIGHT, ANGTSA(2,2), ANGLE2(2), ABSC(2), DENS,
      >                  DP, RCIRC, PROJ, PMAX, PMIN, DEPART, DENLIN,
-     >                  DRKORI(2), RONEPS
+     >                  DRKORI(2), RONEPS, DMIN, DIST, EPSANG
       INTEGER           IOUT, NSCUT(2),INDC(2),IPER(2),IREFL(2)
       INTEGER           NDIM, IPERG, IDEB, ISUM, ISTRID, IANG, ITX, ITY,
      >                  IDIM, NOTRAK, NANGLS, NSOLMX, IREF1, ITG,
@@ -81,7 +81,8 @@
      >                  NUMANG, I, J, K, LINE, NSUB, ITYPBC
       LOGICAL           SWZERO, SWZDIR(3), SWBNEW
       CHARACTER         TEDATA*13
-      PARAMETER       ( EPS=1.E-5, ZERO= 0.0E0, ONE=1.0E0, IOUT=6 ) 
+      PARAMETER       ( EPS=1.E-5, ZERO= 0.0E0, ONE=1.0E0, IOUT=6,
+     >                  EPSANG=1.0D-5 ) 
 *----
 *  ALLOCATABLE ARRAYS
 *----
@@ -411,16 +412,19 @@
             NSUB=NSUB+1
             IF(NSUB.GT.SUBMAX) CALL XABORT('XELTS2: SUBMAX OVERFLOW.')
             KANGL(NSUB)=0
+            DMIN=1.0D30
             DO II=1,4*NANGLE
-              IF((DBLE(TRKDIR(1)).EQ.ANGLES(1,II)).AND.
-     >           (DBLE(TRKDIR(2)).EQ.ANGLES(2,II))) THEN
-                  KANGL(NSUB)=II
-                  GO TO 215
+              DIST=MAX(ABS(DBLE(TRKDIR(1))-ANGLES(1,II)),
+     >                 ABS(DBLE(TRKDIR(2))-ANGLES(2,II)))
+              IF(DIST.LT.DMIN) THEN
+                DMIN=DIST
+                KANGL(NSUB)=II
               ENDIF
             ENDDO
-            CALL XABORT('XELTS2: UNABLE TO FIND AN ANGULAR INDEX FOR A'
+            IF(DMIN.GT.EPSANG)
+     >      CALL XABORT('XELTS2: UNABLE TO FIND AN ANGULAR INDEX FOR A'
      >      //' SUBTRACK')
- 215        CALL XELLIN(  NDIM, NTOTCL, MAXREM, REMESH,
+            CALL XELLIN(  NDIM, NTOTCL, MAXREM, REMESH,
      >                    NSUR, NVOL, INDEX, MINDIM, MAXDIM,
      >                  ICOORD, ICUR, INCR, TRKBEG, TRKEND, TRKDIR,
      >                  PROJC2, TOTLEN,

@@ -441,7 +441,6 @@ C Compute relative position of assembly in original geometry
       ENDDO
 
 C Save heterogeneous core geometry
-      if(impx.ge.100)write(6,*) 'debug: Save heter. core geometry'
       ISTATE(:NSTATE)=0
       ISTATE(1)=ITYPGP
       ISTATE(3)=NXF
@@ -452,6 +451,13 @@ C Save heterogeneous core geometry
 *      ISTATE(39)=NMIXA
 *      ISTATE(40)=NMIXP
       IF(LSPX .OR. LSPY .OR. LSPZ) ISTATE(11)=1
+      IF(IMPX.GT.1) THEN
+        WRITE(6,'(36H NAPGEO: HEREROGENEOUS CORE GEOMETRY)')
+        WRITE(6,400) ISTATE(:7),ISTATE(11),NMIXA,NMIXP
+        WRITE(6,'(10H MIX-ASBLY/(5X,20I5))') MIXA(:NMIXA)
+        WRITE(6,'(5X,20I5)') MIXA(NMIXA+1:2*NMIXA)
+        WRITE(6,'(10H     NCODE/(5X,5I5))') NCODE(:6)
+      ENDIF
       CALL LCMPUT(IPGNW,'STATE-VECTOR',NSTATE,1,ISTATE)
       CALL LCMPUT(IPGNW,'MESHX',NXF+1,2,MXF)
       CALL LCMPUT(IPGNW,'MESHY',NYF+1,2,MYF)
@@ -469,9 +475,9 @@ C Save heterogeneous core geometry
       CALL LCMPUT(IPGNW,'A-NX',JN,1,NBAX(JM))
       CALL LCMPUT(IPGNW,'A-IBX',JN,1,IBAX(JM))
       CALL LCMPUT(IPGNW,'A-NMIXP',1,1,NMIXP)
-! 
-      if(impx.ge.100)write(6,*) 'debug: beging deallacate'
-
+*----
+*  SCRATCH STORAGE DEALLOCATION
+*----
       DEALLOCATE(IBAX)
       DEALLOCATE(NBAX)
       DEALLOCATE(AZONE)
@@ -481,7 +487,17 @@ C Save heterogeneous core geometry
       DEALLOCATE(SZD)
       DEALLOCATE(MIXF)
       DEALLOCATE(MIXA)
-
-
       RETURN
+*
+  400 FORMAT(/14H STATE VECTOR:/
+     1 7H ITYPE ,I6,18H   (GEOMETRY TYPE)/
+     2 7H LR    ,I6,20H   (NUMBER OF TUBES)/
+     3 7H LX    ,I6,22H   (X-DIMENSION INDEX)/
+     4 7H LY    ,I6,22H   (Y-DIMENSION INDEX)/
+     5 7H LZ    ,I6,22H   (Z-DIMENSION INDEX)/
+     6 7H LREG  ,I6,22H   (NUMBER OF REGIONS)/
+     7 7H MAXMIX,I6,43H   (NB. OF MIXTURES IN THE GLOBAL GEOMETRY)/
+     8 7H ISPLIT,I6,28H   (1=MESH-SPLITTING/0=ELSE)/
+     9 7H NMIXA ,I6,30H   (NB. OF TYPE OF ASSEMBLIES)/
+     1 7H NMIXP ,I6,47H   (NB. OF MIXTURES IN THE MULTICOMPO GEOMETRY))
       END

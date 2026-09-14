@@ -1,0 +1,24 @@
+#!/bin/sh
+if [ $# = 0 ]
+   then
+   echo "usage: s2m.access directory" 1>&2
+   exit 1
+fi
+ln -s $1/data/s2m_proc/homog2g_res.m .
+ln -s $1/data/s2m_proc/candu4g_res.m .
+ln -s $1/data/s2m_proc/candu4g_legacy_res.m .
+ln -s $1/data/s2m_proc/pin2g_res.m .
+MACH=`uname -sm | sed 's/[ ]/_/'`
+pos=$1/../../../libraries/l_endian
+if [ -f "$pos"/draglibJeff3p1p1SHEM295_v5p1.gz ]
+   then
+    echo 'gunzipping draglibJeff3p1p1SHEM295_v5p1'
+    chmod 755 "$pos"
+    gunzip "$pos"/draglibJeff3p1p1SHEM295_v5p1.gz
+fi
+if [ -f "$pos"/draglibJeff3p1p1SHEM295_v5p1 ]
+   then
+    ln -s "$pos"/draglibJeff3p1p1SHEM295_v5p1 D295
+fi
+ls -l
+echo "s2m access script terminated"

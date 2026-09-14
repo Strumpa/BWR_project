@@ -1,0 +1,1203 @@
+****************************************************************************
+*                                                                          *
+* Procedure :  SetFMap.c2m adapted from simlpePOW test                     *
+* Purpose   :  Fuel-map specifications for BWR coupled calculation         *
+* Author(s) :  R. Guasch, adapted from M. Guyot (2010) & A. Hebert (2011)  *
+* Date : 19/09/2024                                                        *
+*                                                                          *
+* CALL      :  FMAP MATEX := SetFMap MATEX ;                               *
+*                                                                          *
+****************************************************************************
+
+PARAMETER Fmap Matex ::
+      ::: LINKED_LIST
+          Fmap Matex ; ;
+MODULE RESINI: END: ;
+REAL pitch height BMass Iz1 ;
+:: >>pitch<< >>height<< >>BMass<< >>Iz1<< ; (*BMass = Bundle Mass : mass of UOX in an axial fuel slice*)
+
+REAL z1 z2 z3 z4 z5 z6 z7 z8 z9 z10 ; 
+REAL z11 z12 z13 z14 z15 z16 z17 z18 z19 z20 ; 
+REAL z21 z22 z23 z24 z25 z26 z27 z28 z29 z30 ; 
+REAL z31 z32 z33 z34 z35 z36 z37 z38 z39 z40 ; 
+REAL z41 z42 z43 z44 z45 z46 z47 z48 z49 z50 ; 
+REAL z51 z52 z53 z54 z55 z56 z57 z58 z59 z60 ; 
+REAL z61 z62 z63 z64 z65 z66 z67 z68 z69 z70 ; 
+REAL z71 z72 z73 z74 z75 z76 z77 z78 z79 z80 ; 
+REAL z81 z82 z83 z84 z85 z86 z87 z88 z89 z90 ; 
+REAL z91 z92 z93 z94 z95 z96 z97 z98 z99 z100 ; 
+REAL z101 z102 z103 z104 z105 z106 z107 z108 z109 z110 ; 
+REAL z111 z112 z113 z114 z115 z116 z117 z118 z119 z120 ; 
+REAL z121 z122 z123 z124 z125 z126 z127 z128 z129 z130 ; 
+REAL z131 z132 z133 z134 z135 z136 z137 z138 z139 z140 ; 
+REAL z141 z142 z143 z144 z145 z146 z147 z148 z149 z150 ; 
+REAL z151 z152 z153 z154 z155 z156 z157 z158 z159 z160 ; 
+
+IF Iz1 20.0 = THEN
+      EVALUATE z1 := height 20.0 / ;
+      EVALUATE z2 := height 20.0 / z1 + ;
+      EVALUATE z3 := height 20.0 / z2 + ;
+      EVALUATE z4 := height 20.0 / z3 + ;
+      EVALUATE z5 := height 20.0 / z4 + ;
+      EVALUATE z6 := height 20.0 / z5 + ;
+      EVALUATE z7 := height 20.0 / z6 + ;
+      EVALUATE z8 := height 20.0 / z7 + ;
+      EVALUATE z9 := height 20.0 / z8 + ;
+      EVALUATE z10 := height 20.0 / z9 + ;
+      EVALUATE z11 := height 20.0 / z10 + ;
+      EVALUATE z12 := height 20.0 / z11 + ;
+      EVALUATE z13 := height 20.0 / z12 + ;
+      EVALUATE z14 := height 20.0 / z13 + ;
+      EVALUATE z15 := height 20.0 / z14 + ;
+      EVALUATE z16 := height 20.0 / z15 + ;
+      EVALUATE z17 := height 20.0 / z16 + ;
+      EVALUATE z18 := height 20.0 / z17 + ;
+      EVALUATE z19 := height 20.0 / z18 + ;
+      EVALUATE z20 := height 20.0 / z19 + ;
+
+      *--
+      * Fuel map definition
+      *--
+      Fmap Matex := RESINI: Matex ::
+      EDIT 10
+            ::: GEO: CAR3D 1 1 20
+                  EDIT  0
+                  X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID
+      MESHX 0.0 <<pitch>>
+      MESHY 0.0 <<pitch>>
+      MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>>
+            <<z9>> <<z10>> <<z11>> <<z12>> <<z13>> <<z14>> <<z15>> <<z16>>
+            <<z17>> <<z18>> <<z19>> <<z20>>
+      MIX
+      PLANE 1 1
+      PLANE 2 2
+      PLANE 3 3
+      PLANE 4 4
+      PLANE 5 5
+      PLANE 6 6
+      PLANE 7 7
+      PLANE 8 8
+      PLANE 9 9
+      PLANE 10 10
+      PLANE 11 11
+      PLANE 12 12
+      PLANE 13 13
+      PLANE 14 14
+      PLANE 15 15
+      PLANE 16 16
+      PLANE 17 17
+      PLANE 18 18
+      PLANE 19 19
+      PLANE 20 20
+      ;
+      !
+      NXNAME '01' NYNAME  'A'
+      NCOMB 1
+      B-ZONE 1
+
+      BTYPE INST-BURN
+      INST-BVAL CHAN 0.0
+
+      ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL
+      ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL
+      ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL
+
+      FUEL WEIGHT <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                  <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                  <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                  <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+      ;
+ELSEIF Iz1 40.0 = THEN
+      EVALUATE z1 := height 40.0 / ;
+      EVALUATE z2 := height 40.0 / z1 + ;
+      EVALUATE z3 := height 40.0 / z2 + ;
+      EVALUATE z4 := height 40.0 / z3 + ;
+      EVALUATE z5 := height 40.0 / z4 + ;
+      EVALUATE z6 := height 40.0 / z5 + ;
+      EVALUATE z7 := height 40.0 / z6 + ;
+      EVALUATE z8 := height 40.0 / z7 + ;
+      EVALUATE z9 := height 40.0 / z8 + ;
+      EVALUATE z10 := height 40.0 / z9 + ;
+      EVALUATE z11 := height 40.0 / z10 + ;
+      EVALUATE z12 := height 40.0 / z11 + ;
+      EVALUATE z13 := height 40.0 / z12 + ;
+      EVALUATE z14 := height 40.0 / z13 + ;
+      EVALUATE z15 := height 40.0 / z14 + ;
+      EVALUATE z16 := height 40.0 / z15 + ;
+      EVALUATE z17 := height 40.0 / z16 + ;
+      EVALUATE z18 := height 40.0 / z17 + ;
+      EVALUATE z19 := height 40.0 / z18 + ;
+      EVALUATE z20 := height 40.0 / z19 + ;
+      EVALUATE z21 := height 40.0 / z20 + ;
+      EVALUATE z22 := height 40.0 / z21 + ;
+      EVALUATE z23 := height 40.0 / z22 + ;
+      EVALUATE z24 := height 40.0 / z23 + ;
+      EVALUATE z25 := height 40.0 / z24 + ;
+      EVALUATE z26 := height 40.0 / z25 + ;
+      EVALUATE z27 := height 40.0 / z26 + ;
+      EVALUATE z28 := height 40.0 / z27 + ;
+      EVALUATE z29 := height 40.0 / z28 + ;
+      EVALUATE z30 := height 40.0 / z29 + ;
+      EVALUATE z31 := height 40.0 / z30 + ;
+      EVALUATE z32 := height 40.0 / z31 + ;
+      EVALUATE z33 := height 40.0 / z32 + ;
+      EVALUATE z34 := height 40.0 / z33 + ;
+      EVALUATE z35 := height 40.0 / z34 + ;
+      EVALUATE z36 := height 40.0 / z35 + ;
+      EVALUATE z37 := height 40.0 / z36 + ;
+      EVALUATE z38 := height 40.0 / z37 + ;
+      EVALUATE z39 := height 40.0 / z38 + ;
+      EVALUATE z40 := height 40.0 / z39 + ;
+
+      *--
+      * Fuel map definition
+      *--
+      Fmap Matex := RESINI: Matex ::
+      EDIT 10
+            ::: GEO: CAR3D 1 1 40
+                  EDIT  0
+                  X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID
+      MESHX 0.0 <<pitch>>
+      MESHY 0.0 <<pitch>>
+      MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>>
+             <<z11>> <<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>>
+             <<z21>> <<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>>
+             <<z31>> <<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>>
+            
+      MIX
+      PLANE 1 1
+      PLANE 2 2
+      PLANE 3 3
+      PLANE 4 4
+      PLANE 5 5
+      PLANE 6 6
+      PLANE 7 7
+      PLANE 8 8
+      PLANE 9 9
+      PLANE 10 10
+      PLANE 11 11
+      PLANE 12 12
+      PLANE 13 13
+      PLANE 14 14
+      PLANE 15 15
+      PLANE 16 16
+      PLANE 17 17
+      PLANE 18 18
+      PLANE 19 19
+      PLANE 20 20
+      PLANE 21 21
+      PLANE 22 22
+      PLANE 23 23
+      PLANE 24 24
+      PLANE 25 25
+      PLANE 26 26
+      PLANE 27 27
+      PLANE 28 28
+      PLANE 29 29
+      PLANE 30 30
+      PLANE 31 31
+      PLANE 32 32
+      PLANE 33 33
+      PLANE 34 34
+      PLANE 35 35
+      PLANE 36 36
+      PLANE 37 37
+      PLANE 38 38
+      PLANE 39 39
+      PLANE 40 40
+      ;
+      !
+      NXNAME '01' NYNAME  'A'
+      NCOMB 1
+      B-ZONE 1
+
+      BTYPE INST-BURN
+      INST-BVAL CHAN 0.0
+
+      ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL
+      ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL
+      ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL
+
+      FUEL WEIGHT <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                  <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                  <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                  <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                  <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                  <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                  <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                  <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+      ;
+ELSEIF Iz1 10.0 = THEN
+      EVALUATE z1 := height 10.0 / ;
+      EVALUATE z2 := height 10.0 / z1 + ;
+      EVALUATE z3 := height 10.0 / z2 + ;
+      EVALUATE z4 := height 10.0 / z3 + ;
+      EVALUATE z5 := height 10.0 / z4 + ;
+      EVALUATE z6 := height 10.0 / z5 + ;
+      EVALUATE z7 := height 10.0 / z6 + ;
+      EVALUATE z8 := height 10.0 / z7 + ;
+      EVALUATE z9 := height 10.0 / z8 + ;
+      EVALUATE z10 := height 10.0 / z9 + ;
+
+      *--
+      * Fuel map definition
+      *--
+      Fmap Matex := RESINI: Matex ::
+      EDIT 10
+            ::: GEO: CAR3D 1 1 10
+                  EDIT  0
+                  X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID
+      MESHX 0.0 <<pitch>>
+      MESHY 0.0 <<pitch>>
+      MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>>
+             
+      MIX
+      PLANE 1 1
+      PLANE 2 2
+      PLANE 3 3
+      PLANE 4 4
+      PLANE 5 5
+      PLANE 6 6
+      PLANE 7 7
+      PLANE 8 8
+      PLANE 9 9
+      PLANE 10 10
+      ;
+      !
+      NXNAME '01' NYNAME  'A'
+      NCOMB 1
+      B-ZONE 1
+
+      BTYPE INST-BURN
+      INST-BVAL CHAN 0.0
+
+      ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL
+      ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL
+      ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL
+
+      FUEL WEIGHT <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+                  <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>
+      ;
+
+ELSEIF Iz1 50.0 = THEN 
+
+EVALUATE z1 := height 50.0 / ; 
+EVALUATE z2 := height 50.0 / z1 + ; 
+EVALUATE z3 := height 50.0 / z2 + ; 
+EVALUATE z4 := height 50.0 / z3 + ; 
+EVALUATE z5 := height 50.0 / z4 + ; 
+EVALUATE z6 := height 50.0 / z5 + ; 
+EVALUATE z7 := height 50.0 / z6 + ; 
+EVALUATE z8 := height 50.0 / z7 + ; 
+EVALUATE z9 := height 50.0 / z8 + ; 
+EVALUATE z10 := height 50.0 / z9 + ; 
+EVALUATE z11 := height 50.0 / z10 + ; 
+EVALUATE z12 := height 50.0 / z11 + ; 
+EVALUATE z13 := height 50.0 / z12 + ; 
+EVALUATE z14 := height 50.0 / z13 + ; 
+EVALUATE z15 := height 50.0 / z14 + ; 
+EVALUATE z16 := height 50.0 / z15 + ; 
+EVALUATE z17 := height 50.0 / z16 + ; 
+EVALUATE z18 := height 50.0 / z17 + ; 
+EVALUATE z19 := height 50.0 / z18 + ; 
+EVALUATE z20 := height 50.0 / z19 + ; 
+EVALUATE z21 := height 50.0 / z20 + ; 
+EVALUATE z22 := height 50.0 / z21 + ; 
+EVALUATE z23 := height 50.0 / z22 + ; 
+EVALUATE z24 := height 50.0 / z23 + ; 
+EVALUATE z25 := height 50.0 / z24 + ; 
+EVALUATE z26 := height 50.0 / z25 + ; 
+EVALUATE z27 := height 50.0 / z26 + ; 
+EVALUATE z28 := height 50.0 / z27 + ; 
+EVALUATE z29 := height 50.0 / z28 + ; 
+EVALUATE z30 := height 50.0 / z29 + ; 
+EVALUATE z31 := height 50.0 / z30 + ; 
+EVALUATE z32 := height 50.0 / z31 + ; 
+EVALUATE z33 := height 50.0 / z32 + ; 
+EVALUATE z34 := height 50.0 / z33 + ; 
+EVALUATE z35 := height 50.0 / z34 + ; 
+EVALUATE z36 := height 50.0 / z35 + ; 
+EVALUATE z37 := height 50.0 / z36 + ; 
+EVALUATE z38 := height 50.0 / z37 + ; 
+EVALUATE z39 := height 50.0 / z38 + ; 
+EVALUATE z40 := height 50.0 / z39 + ; 
+EVALUATE z41 := height 50.0 / z40 + ; 
+EVALUATE z42 := height 50.0 / z41 + ; 
+EVALUATE z43 := height 50.0 / z42 + ; 
+EVALUATE z44 := height 50.0 / z43 + ; 
+EVALUATE z45 := height 50.0 / z44 + ; 
+EVALUATE z46 := height 50.0 / z45 + ; 
+EVALUATE z47 := height 50.0 / z46 + ; 
+EVALUATE z48 := height 50.0 / z47 + ; 
+EVALUATE z49 := height 50.0 / z48 + ; 
+EVALUATE z50 := height 50.0 / z49 + ; 
+ 
+*-- 
+* Fuel map definition 
+*-- 
+Fmap Matex := RESINI: Matex :: 
+   EDIT 10 
+      ::: GEO: CAR3D 1 1 50 
+                EDIT  0 
+                X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID 
+   MESHX 0.0 <<pitch>> 
+   MESHY 0.0 <<pitch>> 
+   MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>> <<z11>>  
+<<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>> <<z21>>  
+<<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>> <<z31>>  
+<<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>> <<z41>>  
+<<z42>> <<z43>> <<z44>> <<z45>> <<z46>> <<z47>> <<z48>> <<z49>> <<z50>>
+
+   MIX 
+   PLANE 1 1 
+   PLANE 2 2 
+   PLANE 3 3 
+   PLANE 4 4 
+   PLANE 5 5 
+   PLANE 6 6 
+   PLANE 7 7 
+   PLANE 8 8 
+   PLANE 9 9 
+   PLANE 10 10 
+   PLANE 11 11 
+   PLANE 12 12 
+   PLANE 13 13 
+   PLANE 14 14 
+   PLANE 15 15 
+   PLANE 16 16 
+   PLANE 17 17 
+   PLANE 18 18 
+   PLANE 19 19 
+   PLANE 20 20 
+   PLANE 21 21 
+   PLANE 22 22 
+   PLANE 23 23 
+   PLANE 24 24 
+   PLANE 25 25 
+   PLANE 26 26 
+   PLANE 27 27 
+   PLANE 28 28 
+   PLANE 29 29 
+   PLANE 30 30 
+   PLANE 31 31 
+   PLANE 32 32 
+   PLANE 33 33 
+   PLANE 34 34 
+   PLANE 35 35 
+   PLANE 36 36 
+   PLANE 37 37 
+   PLANE 38 38 
+   PLANE 39 39 
+   PLANE 40 40 
+   PLANE 41 41 
+   PLANE 42 42 
+   PLANE 43 43 
+   PLANE 44 44 
+   PLANE 45 45 
+   PLANE 46 46 
+   PLANE 47 47 
+   PLANE 48 48 
+   PLANE 49 49 
+   PLANE 50 50 
+   
+; 
+! 
+NXNAME '01' NYNAME  'A' 
+NCOMB 1 
+B-ZONE 1 
+ 
+BTYPE INST-BURN 
+INST-BVAL CHAN 0.0 
+
+ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL 
+ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL 
+ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL 
+
+FUEL WEIGHT 
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+; 
+
+
+ELSEIF Iz1 70.0 = THEN 
+
+EVALUATE z1 := height 70.0 / ; 
+EVALUATE z2 := height 70.0 / z1 + ; 
+EVALUATE z3 := height 70.0 / z2 + ; 
+EVALUATE z4 := height 70.0 / z3 + ; 
+EVALUATE z5 := height 70.0 / z4 + ; 
+EVALUATE z6 := height 70.0 / z5 + ; 
+EVALUATE z7 := height 70.0 / z6 + ; 
+EVALUATE z8 := height 70.0 / z7 + ; 
+EVALUATE z9 := height 70.0 / z8 + ; 
+EVALUATE z10 := height 70.0 / z9 + ; 
+EVALUATE z11 := height 70.0 / z10 + ; 
+EVALUATE z12 := height 70.0 / z11 + ; 
+EVALUATE z13 := height 70.0 / z12 + ; 
+EVALUATE z14 := height 70.0 / z13 + ; 
+EVALUATE z15 := height 70.0 / z14 + ; 
+EVALUATE z16 := height 70.0 / z15 + ; 
+EVALUATE z17 := height 70.0 / z16 + ; 
+EVALUATE z18 := height 70.0 / z17 + ; 
+EVALUATE z19 := height 70.0 / z18 + ; 
+EVALUATE z20 := height 70.0 / z19 + ; 
+EVALUATE z21 := height 70.0 / z20 + ; 
+EVALUATE z22 := height 70.0 / z21 + ; 
+EVALUATE z23 := height 70.0 / z22 + ; 
+EVALUATE z24 := height 70.0 / z23 + ; 
+EVALUATE z25 := height 70.0 / z24 + ; 
+EVALUATE z26 := height 70.0 / z25 + ; 
+EVALUATE z27 := height 70.0 / z26 + ; 
+EVALUATE z28 := height 70.0 / z27 + ; 
+EVALUATE z29 := height 70.0 / z28 + ; 
+EVALUATE z30 := height 70.0 / z29 + ; 
+EVALUATE z31 := height 70.0 / z30 + ; 
+EVALUATE z32 := height 70.0 / z31 + ; 
+EVALUATE z33 := height 70.0 / z32 + ; 
+EVALUATE z34 := height 70.0 / z33 + ; 
+EVALUATE z35 := height 70.0 / z34 + ; 
+EVALUATE z36 := height 70.0 / z35 + ; 
+EVALUATE z37 := height 70.0 / z36 + ; 
+EVALUATE z38 := height 70.0 / z37 + ; 
+EVALUATE z39 := height 70.0 / z38 + ; 
+EVALUATE z40 := height 70.0 / z39 + ; 
+EVALUATE z41 := height 70.0 / z40 + ; 
+EVALUATE z42 := height 70.0 / z41 + ; 
+EVALUATE z43 := height 70.0 / z42 + ; 
+EVALUATE z44 := height 70.0 / z43 + ; 
+EVALUATE z45 := height 70.0 / z44 + ; 
+EVALUATE z46 := height 70.0 / z45 + ; 
+EVALUATE z47 := height 70.0 / z46 + ; 
+EVALUATE z48 := height 70.0 / z47 + ; 
+EVALUATE z49 := height 70.0 / z48 + ; 
+EVALUATE z50 := height 70.0 / z49 + ; 
+EVALUATE z51 := height 70.0 / z50 + ; 
+EVALUATE z52 := height 70.0 / z51 + ; 
+EVALUATE z53 := height 70.0 / z52 + ; 
+EVALUATE z54 := height 70.0 / z53 + ; 
+EVALUATE z55 := height 70.0 / z54 + ; 
+EVALUATE z56 := height 70.0 / z55 + ; 
+EVALUATE z57 := height 70.0 / z56 + ; 
+EVALUATE z58 := height 70.0 / z57 + ; 
+EVALUATE z59 := height 70.0 / z58 + ; 
+EVALUATE z60 := height 70.0 / z59 + ; 
+EVALUATE z61 := height 70.0 / z60 + ; 
+EVALUATE z62 := height 70.0 / z61 + ; 
+EVALUATE z63 := height 70.0 / z62 + ; 
+EVALUATE z64 := height 70.0 / z63 + ; 
+EVALUATE z65 := height 70.0 / z64 + ; 
+EVALUATE z66 := height 70.0 / z65 + ; 
+EVALUATE z67 := height 70.0 / z66 + ; 
+EVALUATE z68 := height 70.0 / z67 + ; 
+EVALUATE z69 := height 70.0 / z68 + ; 
+EVALUATE z70 := height ; 
+ 
+*-- 
+* Fuel map definition 
+*-- 
+Fmap Matex := RESINI: Matex :: 
+   EDIT 10 
+      ::: GEO: CAR3D 1 1 70 
+                EDIT  0 
+                X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID 
+   MESHX 0.0 <<pitch>> 
+   MESHY 0.0 <<pitch>> 
+   MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>> <<z11>>  
+<<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>> <<z21>>  
+<<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>> <<z31>>  
+<<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>> <<z41>>  
+<<z42>> <<z43>> <<z44>> <<z45>> <<z46>> <<z47>> <<z48>> <<z49>> <<z50>> <<z51>>  
+<<z52>> <<z53>> <<z54>> <<z55>> <<z56>> <<z57>> <<z58>> <<z59>> <<z60>> <<z61>>  
+<<z62>> <<z63>> <<z64>> <<z65>> <<z66>> <<z67>> <<z68>> <<z69>> <<z70>>
+
+   MIX 
+   PLANE 1 1 
+   PLANE 2 2 
+   PLANE 3 3 
+   PLANE 4 4 
+   PLANE 5 5 
+   PLANE 6 6 
+   PLANE 7 7 
+   PLANE 8 8 
+   PLANE 9 9 
+   PLANE 10 10 
+   PLANE 11 11 
+   PLANE 12 12 
+   PLANE 13 13 
+   PLANE 14 14 
+   PLANE 15 15 
+   PLANE 16 16 
+   PLANE 17 17 
+   PLANE 18 18 
+   PLANE 19 19 
+   PLANE 20 20 
+   PLANE 21 21 
+   PLANE 22 22 
+   PLANE 23 23 
+   PLANE 24 24 
+   PLANE 25 25 
+   PLANE 26 26 
+   PLANE 27 27 
+   PLANE 28 28 
+   PLANE 29 29 
+   PLANE 30 30 
+   PLANE 31 31 
+   PLANE 32 32 
+   PLANE 33 33 
+   PLANE 34 34 
+   PLANE 35 35 
+   PLANE 36 36 
+   PLANE 37 37 
+   PLANE 38 38 
+   PLANE 39 39 
+   PLANE 40 40 
+   PLANE 41 41 
+   PLANE 42 42 
+   PLANE 43 43 
+   PLANE 44 44 
+   PLANE 45 45 
+   PLANE 46 46 
+   PLANE 47 47 
+   PLANE 48 48 
+   PLANE 49 49 
+   PLANE 50 50 
+   PLANE 51 51 
+   PLANE 52 52 
+   PLANE 53 53 
+   PLANE 54 54 
+   PLANE 55 55 
+   PLANE 56 56 
+   PLANE 57 57 
+   PLANE 58 58 
+   PLANE 59 59 
+   PLANE 60 60 
+   PLANE 61 61 
+   PLANE 62 62 
+   PLANE 63 63 
+   PLANE 64 64 
+   PLANE 65 65 
+   PLANE 66 66 
+   PLANE 67 67 
+   PLANE 68 68 
+   PLANE 69 69 
+   PLANE 70 70 
+   
+; 
+! 
+NXNAME '01' NYNAME  'A' 
+NCOMB 1 
+B-ZONE 1 
+ 
+BTYPE INST-BURN 
+INST-BVAL CHAN 0.0 
+
+ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL 
+ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL 
+ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL 
+
+FUEL WEIGHT 
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+      <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> 
+; 
+
+ELSEIF Iz1 80.0 = THEN 
+
+EVALUATE z1 := height 80.0 / ; 
+EVALUATE z2 := height 80.0 / z1 + ; 
+EVALUATE z3 := height 80.0 / z2 + ; 
+EVALUATE z4 := height 80.0 / z3 + ; 
+EVALUATE z5 := height 80.0 / z4 + ; 
+EVALUATE z6 := height 80.0 / z5 + ; 
+EVALUATE z7 := height 80.0 / z6 + ; 
+EVALUATE z8 := height 80.0 / z7 + ; 
+EVALUATE z9 := height 80.0 / z8 + ; 
+EVALUATE z10 := height 80.0 / z9 + ; 
+EVALUATE z11 := height 80.0 / z10 + ; 
+EVALUATE z12 := height 80.0 / z11 + ; 
+EVALUATE z13 := height 80.0 / z12 + ; 
+EVALUATE z14 := height 80.0 / z13 + ; 
+EVALUATE z15 := height 80.0 / z14 + ; 
+EVALUATE z16 := height 80.0 / z15 + ; 
+EVALUATE z17 := height 80.0 / z16 + ; 
+EVALUATE z18 := height 80.0 / z17 + ; 
+EVALUATE z19 := height 80.0 / z18 + ; 
+EVALUATE z20 := height 80.0 / z19 + ; 
+EVALUATE z21 := height 80.0 / z20 + ; 
+EVALUATE z22 := height 80.0 / z21 + ; 
+EVALUATE z23 := height 80.0 / z22 + ; 
+EVALUATE z24 := height 80.0 / z23 + ; 
+EVALUATE z25 := height 80.0 / z24 + ; 
+EVALUATE z26 := height 80.0 / z25 + ; 
+EVALUATE z27 := height 80.0 / z26 + ; 
+EVALUATE z28 := height 80.0 / z27 + ; 
+EVALUATE z29 := height 80.0 / z28 + ; 
+EVALUATE z30 := height 80.0 / z29 + ; 
+EVALUATE z31 := height 80.0 / z30 + ; 
+EVALUATE z32 := height 80.0 / z31 + ; 
+EVALUATE z33 := height 80.0 / z32 + ; 
+EVALUATE z34 := height 80.0 / z33 + ; 
+EVALUATE z35 := height 80.0 / z34 + ; 
+EVALUATE z36 := height 80.0 / z35 + ; 
+EVALUATE z37 := height 80.0 / z36 + ; 
+EVALUATE z38 := height 80.0 / z37 + ; 
+EVALUATE z39 := height 80.0 / z38 + ; 
+EVALUATE z40 := height 80.0 / z39 + ; 
+EVALUATE z41 := height 80.0 / z40 + ; 
+EVALUATE z42 := height 80.0 / z41 + ; 
+EVALUATE z43 := height 80.0 / z42 + ; 
+EVALUATE z44 := height 80.0 / z43 + ; 
+EVALUATE z45 := height 80.0 / z44 + ; 
+EVALUATE z46 := height 80.0 / z45 + ; 
+EVALUATE z47 := height 80.0 / z46 + ; 
+EVALUATE z48 := height 80.0 / z47 + ; 
+EVALUATE z49 := height 80.0 / z48 + ; 
+EVALUATE z50 := height 80.0 / z49 + ; 
+EVALUATE z51 := height 80.0 / z50 + ; 
+EVALUATE z52 := height 80.0 / z51 + ; 
+EVALUATE z53 := height 80.0 / z52 + ; 
+EVALUATE z54 := height 80.0 / z53 + ; 
+EVALUATE z55 := height 80.0 / z54 + ; 
+EVALUATE z56 := height 80.0 / z55 + ; 
+EVALUATE z57 := height 80.0 / z56 + ; 
+EVALUATE z58 := height 80.0 / z57 + ; 
+EVALUATE z59 := height 80.0 / z58 + ; 
+EVALUATE z60 := height 80.0 / z59 + ; 
+EVALUATE z61 := height 80.0 / z60 + ; 
+EVALUATE z62 := height 80.0 / z61 + ; 
+EVALUATE z63 := height 80.0 / z62 + ; 
+EVALUATE z64 := height 80.0 / z63 + ; 
+EVALUATE z65 := height 80.0 / z64 + ; 
+EVALUATE z66 := height 80.0 / z65 + ; 
+EVALUATE z67 := height 80.0 / z66 + ; 
+EVALUATE z68 := height 80.0 / z67 + ; 
+EVALUATE z69 := height 80.0 / z68 + ; 
+EVALUATE z70 := height 80.0 / z69 + ; 
+EVALUATE z71 := height 80.0 / z70 + ; 
+EVALUATE z72 := height 80.0 / z71 + ; 
+EVALUATE z73 := height 80.0 / z72 + ; 
+EVALUATE z74 := height 80.0 / z73 + ; 
+EVALUATE z75 := height 80.0 / z74 + ; 
+EVALUATE z76 := height 80.0 / z75 + ; 
+EVALUATE z77 := height 80.0 / z76 + ; 
+EVALUATE z78 := height 80.0 / z77 + ; 
+EVALUATE z79 := height 80.0 / z78 + ; 
+EVALUATE z80 := height 80.0 / z79 + ; 
+ 
+*-- 
+* Fuel map definition 
+*-- 
+Fmap Matex := RESINI: Matex :: 
+   EDIT 10 
+      ::: GEO: CAR3D 1 1 80 
+                EDIT  0 
+                X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID 
+   MESHX 0.0 <<pitch>> 
+   MESHY 0.0 <<pitch>> 
+   MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>> <<z11>>  
+<<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>> <<z21>>  
+<<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>> <<z31>>  
+<<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>> <<z41>>  
+<<z42>> <<z43>> <<z44>> <<z45>> <<z46>> <<z47>> <<z48>> <<z49>> <<z50>> <<z51>>  
+<<z52>> <<z53>> <<z54>> <<z55>> <<z56>> <<z57>> <<z58>> <<z59>> <<z60>> <<z61>>  
+<<z62>> <<z63>> <<z64>> <<z65>> <<z66>> <<z67>> <<z68>> <<z69>> <<z70>> <<z71>>  
+<<z72>> <<z73>> <<z74>> <<z75>> <<z76>> <<z77>> <<z78>> <<z79>> <<z80>> 
+
+   MIX 
+   PLANE 1 1 
+   PLANE 2 2 
+   PLANE 3 3 
+   PLANE 4 4 
+   PLANE 5 5 
+   PLANE 6 6 
+   PLANE 7 7 
+   PLANE 8 8 
+   PLANE 9 9 
+   PLANE 10 10 
+   PLANE 11 11 
+   PLANE 12 12 
+   PLANE 13 13 
+   PLANE 14 14 
+   PLANE 15 15 
+   PLANE 16 16 
+   PLANE 17 17 
+   PLANE 18 18 
+   PLANE 19 19 
+   PLANE 20 20 
+   PLANE 21 21 
+   PLANE 22 22 
+   PLANE 23 23 
+   PLANE 24 24 
+   PLANE 25 25 
+   PLANE 26 26 
+   PLANE 27 27 
+   PLANE 28 28 
+   PLANE 29 29 
+   PLANE 30 30 
+   PLANE 31 31 
+   PLANE 32 32 
+   PLANE 33 33 
+   PLANE 34 34 
+   PLANE 35 35 
+   PLANE 36 36 
+   PLANE 37 37 
+   PLANE 38 38 
+   PLANE 39 39 
+   PLANE 40 40 
+   PLANE 41 41 
+   PLANE 42 42 
+   PLANE 43 43 
+   PLANE 44 44 
+   PLANE 45 45 
+   PLANE 46 46 
+   PLANE 47 47 
+   PLANE 48 48 
+   PLANE 49 49 
+   PLANE 50 50 
+   PLANE 51 51 
+   PLANE 52 52 
+   PLANE 53 53 
+   PLANE 54 54 
+   PLANE 55 55 
+   PLANE 56 56 
+   PLANE 57 57 
+   PLANE 58 58 
+   PLANE 59 59 
+   PLANE 60 60 
+   PLANE 61 61 
+   PLANE 62 62 
+   PLANE 63 63 
+   PLANE 64 64 
+   PLANE 65 65 
+   PLANE 66 66 
+   PLANE 67 67 
+   PLANE 68 68 
+   PLANE 69 69 
+   PLANE 70 70 
+   PLANE 71 71 
+   PLANE 72 72 
+   PLANE 73 73 
+   PLANE 74 74 
+   PLANE 75 75 
+   PLANE 76 76 
+   PLANE 77 77 
+   PLANE 78 78 
+   PLANE 79 79 
+   PLANE 80 80 
+   
+; 
+! 
+NXNAME '01' NYNAME  'A' 
+NCOMB 1 
+B-ZONE 1 
+ 
+BTYPE INST-BURN 
+INST-BVAL CHAN 0.0 
+
+ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL 
+ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL 
+ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL 
+
+FUEL WEIGHT <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> ; 
+
+ELSEIF Iz1 160.0 = THEN 
+EVALUATE z1 := height 160.0 / ; 
+EVALUATE z2 := height 160.0 / z1 + ; 
+EVALUATE z3 := height 160.0 / z2 + ; 
+EVALUATE z4 := height 160.0 / z3 + ; 
+EVALUATE z5 := height 160.0 / z4 + ; 
+EVALUATE z6 := height 160.0 / z5 + ; 
+EVALUATE z7 := height 160.0 / z6 + ; 
+EVALUATE z8 := height 160.0 / z7 + ; 
+EVALUATE z9 := height 160.0 / z8 + ; 
+EVALUATE z10 := height 160.0 / z9 + ; 
+EVALUATE z11 := height 160.0 / z10 + ; 
+EVALUATE z12 := height 160.0 / z11 + ; 
+EVALUATE z13 := height 160.0 / z12 + ; 
+EVALUATE z14 := height 160.0 / z13 + ; 
+EVALUATE z15 := height 160.0 / z14 + ; 
+EVALUATE z16 := height 160.0 / z15 + ; 
+EVALUATE z17 := height 160.0 / z16 + ; 
+EVALUATE z18 := height 160.0 / z17 + ; 
+EVALUATE z19 := height 160.0 / z18 + ; 
+EVALUATE z20 := height 160.0 / z19 + ; 
+EVALUATE z21 := height 160.0 / z20 + ; 
+EVALUATE z22 := height 160.0 / z21 + ; 
+EVALUATE z23 := height 160.0 / z22 + ; 
+EVALUATE z24 := height 160.0 / z23 + ; 
+EVALUATE z25 := height 160.0 / z24 + ; 
+EVALUATE z26 := height 160.0 / z25 + ; 
+EVALUATE z27 := height 160.0 / z26 + ; 
+EVALUATE z28 := height 160.0 / z27 + ; 
+EVALUATE z29 := height 160.0 / z28 + ; 
+EVALUATE z30 := height 160.0 / z29 + ; 
+EVALUATE z31 := height 160.0 / z30 + ; 
+EVALUATE z32 := height 160.0 / z31 + ; 
+EVALUATE z33 := height 160.0 / z32 + ; 
+EVALUATE z34 := height 160.0 / z33 + ; 
+EVALUATE z35 := height 160.0 / z34 + ; 
+EVALUATE z36 := height 160.0 / z35 + ; 
+EVALUATE z37 := height 160.0 / z36 + ; 
+EVALUATE z38 := height 160.0 / z37 + ; 
+EVALUATE z39 := height 160.0 / z38 + ; 
+EVALUATE z40 := height 160.0 / z39 + ; 
+EVALUATE z41 := height 160.0 / z40 + ; 
+EVALUATE z42 := height 160.0 / z41 + ; 
+EVALUATE z43 := height 160.0 / z42 + ; 
+EVALUATE z44 := height 160.0 / z43 + ; 
+EVALUATE z45 := height 160.0 / z44 + ; 
+EVALUATE z46 := height 160.0 / z45 + ; 
+EVALUATE z47 := height 160.0 / z46 + ; 
+EVALUATE z48 := height 160.0 / z47 + ; 
+EVALUATE z49 := height 160.0 / z48 + ; 
+EVALUATE z50 := height 160.0 / z49 + ; 
+EVALUATE z51 := height 160.0 / z50 + ; 
+EVALUATE z52 := height 160.0 / z51 + ; 
+EVALUATE z53 := height 160.0 / z52 + ; 
+EVALUATE z54 := height 160.0 / z53 + ; 
+EVALUATE z55 := height 160.0 / z54 + ; 
+EVALUATE z56 := height 160.0 / z55 + ; 
+EVALUATE z57 := height 160.0 / z56 + ; 
+EVALUATE z58 := height 160.0 / z57 + ; 
+EVALUATE z59 := height 160.0 / z58 + ; 
+EVALUATE z60 := height 160.0 / z59 + ; 
+EVALUATE z61 := height 160.0 / z60 + ; 
+EVALUATE z62 := height 160.0 / z61 + ; 
+EVALUATE z63 := height 160.0 / z62 + ; 
+EVALUATE z64 := height 160.0 / z63 + ; 
+EVALUATE z65 := height 160.0 / z64 + ; 
+EVALUATE z66 := height 160.0 / z65 + ; 
+EVALUATE z67 := height 160.0 / z66 + ; 
+EVALUATE z68 := height 160.0 / z67 + ; 
+EVALUATE z69 := height 160.0 / z68 + ; 
+EVALUATE z70 := height 160.0 / z69 + ; 
+EVALUATE z71 := height 160.0 / z70 + ; 
+EVALUATE z72 := height 160.0 / z71 + ; 
+EVALUATE z73 := height 160.0 / z72 + ; 
+EVALUATE z74 := height 160.0 / z73 + ; 
+EVALUATE z75 := height 160.0 / z74 + ; 
+EVALUATE z76 := height 160.0 / z75 + ; 
+EVALUATE z77 := height 160.0 / z76 + ; 
+EVALUATE z78 := height 160.0 / z77 + ; 
+EVALUATE z79 := height 160.0 / z78 + ; 
+EVALUATE z80 := height 160.0 / z79 + ; 
+EVALUATE z81 := height 160.0 / z80 + ; 
+EVALUATE z82 := height 160.0 / z81 + ; 
+EVALUATE z83 := height 160.0 / z82 + ; 
+EVALUATE z84 := height 160.0 / z83 + ; 
+EVALUATE z85 := height 160.0 / z84 + ; 
+EVALUATE z86 := height 160.0 / z85 + ; 
+EVALUATE z87 := height 160.0 / z86 + ; 
+EVALUATE z88 := height 160.0 / z87 + ; 
+EVALUATE z89 := height 160.0 / z88 + ; 
+EVALUATE z90 := height 160.0 / z89 + ; 
+EVALUATE z91 := height 160.0 / z90 + ; 
+EVALUATE z92 := height 160.0 / z91 + ; 
+EVALUATE z93 := height 160.0 / z92 + ; 
+EVALUATE z94 := height 160.0 / z93 + ; 
+EVALUATE z95 := height 160.0 / z94 + ; 
+EVALUATE z96 := height 160.0 / z95 + ; 
+EVALUATE z97 := height 160.0 / z96 + ; 
+EVALUATE z98 := height 160.0 / z97 + ; 
+EVALUATE z99 := height 160.0 / z98 + ; 
+EVALUATE z100 := height 160.0 / z99 + ; 
+EVALUATE z101 := height 160.0 / z100 + ; 
+EVALUATE z102 := height 160.0 / z101 + ; 
+EVALUATE z103 := height 160.0 / z102 + ; 
+EVALUATE z104 := height 160.0 / z103 + ; 
+EVALUATE z105 := height 160.0 / z104 + ; 
+EVALUATE z106 := height 160.0 / z105 + ; 
+EVALUATE z107 := height 160.0 / z106 + ; 
+EVALUATE z108 := height 160.0 / z107 + ; 
+EVALUATE z109 := height 160.0 / z108 + ; 
+EVALUATE z110 := height 160.0 / z109 + ; 
+EVALUATE z111 := height 160.0 / z110 + ; 
+EVALUATE z112 := height 160.0 / z111 + ; 
+EVALUATE z113 := height 160.0 / z112 + ; 
+EVALUATE z114 := height 160.0 / z113 + ; 
+EVALUATE z115 := height 160.0 / z114 + ; 
+EVALUATE z116 := height 160.0 / z115 + ; 
+EVALUATE z117 := height 160.0 / z116 + ; 
+EVALUATE z118 := height 160.0 / z117 + ; 
+EVALUATE z119 := height 160.0 / z118 + ; 
+EVALUATE z120 := height 160.0 / z119 + ; 
+EVALUATE z121 := height 160.0 / z120 + ; 
+EVALUATE z122 := height 160.0 / z121 + ; 
+EVALUATE z123 := height 160.0 / z122 + ; 
+EVALUATE z124 := height 160.0 / z123 + ; 
+EVALUATE z125 := height 160.0 / z124 + ; 
+EVALUATE z126 := height 160.0 / z125 + ; 
+EVALUATE z127 := height 160.0 / z126 + ; 
+EVALUATE z128 := height 160.0 / z127 + ; 
+EVALUATE z129 := height 160.0 / z128 + ; 
+EVALUATE z130 := height 160.0 / z129 + ; 
+EVALUATE z131 := height 160.0 / z130 + ; 
+EVALUATE z132 := height 160.0 / z131 + ; 
+EVALUATE z133 := height 160.0 / z132 + ; 
+EVALUATE z134 := height 160.0 / z133 + ; 
+EVALUATE z135 := height 160.0 / z134 + ; 
+EVALUATE z136 := height 160.0 / z135 + ; 
+EVALUATE z137 := height 160.0 / z136 + ; 
+EVALUATE z138 := height 160.0 / z137 + ; 
+EVALUATE z139 := height 160.0 / z138 + ; 
+EVALUATE z140 := height 160.0 / z139 + ; 
+EVALUATE z141 := height 160.0 / z140 + ; 
+EVALUATE z142 := height 160.0 / z141 + ; 
+EVALUATE z143 := height 160.0 / z142 + ; 
+EVALUATE z144 := height 160.0 / z143 + ; 
+EVALUATE z145 := height 160.0 / z144 + ; 
+EVALUATE z146 := height 160.0 / z145 + ; 
+EVALUATE z147 := height 160.0 / z146 + ; 
+EVALUATE z148 := height 160.0 / z147 + ; 
+EVALUATE z149 := height 160.0 / z148 + ; 
+EVALUATE z150 := height 160.0 / z149 + ; 
+EVALUATE z151 := height 160.0 / z150 + ; 
+EVALUATE z152 := height 160.0 / z151 + ; 
+EVALUATE z153 := height 160.0 / z152 + ; 
+EVALUATE z154 := height 160.0 / z153 + ; 
+EVALUATE z155 := height 160.0 / z154 + ; 
+EVALUATE z156 := height 160.0 / z155 + ; 
+EVALUATE z157 := height 160.0 / z156 + ; 
+EVALUATE z158 := height 160.0 / z157 + ; 
+EVALUATE z159 := height 160.0 / z158 + ; 
+EVALUATE z160 := height 160.0 / z159 + ; 
+ 
+*-- 
+* Fuel map definition 
+*-- 
+Fmap Matex := RESINI: Matex :: 
+   EDIT 10 
+      ::: GEO: CAR3D 1 1 160 
+                EDIT  0 
+                X- REFL X+ REFL  Y- REFL Y+ REFL  Z- VOID Z+ VOID 
+   MESHX 0.0 <<pitch>> 
+   MESHY 0.0 <<pitch>> 
+   MESHZ 0.0 <<z1>> <<z2>> <<z3>> <<z4>> <<z5>> <<z6>> <<z7>> <<z8>> <<z9>> <<z10>> <<z11>>  
+<<z12>> <<z13>> <<z14>> <<z15>> <<z16>> <<z17>> <<z18>> <<z19>> <<z20>> <<z21>>  
+<<z22>> <<z23>> <<z24>> <<z25>> <<z26>> <<z27>> <<z28>> <<z29>> <<z30>> <<z31>>  
+<<z32>> <<z33>> <<z34>> <<z35>> <<z36>> <<z37>> <<z38>> <<z39>> <<z40>> <<z41>>  
+<<z42>> <<z43>> <<z44>> <<z45>> <<z46>> <<z47>> <<z48>> <<z49>> <<z50>> <<z51>>  
+<<z52>> <<z53>> <<z54>> <<z55>> <<z56>> <<z57>> <<z58>> <<z59>> <<z60>> <<z61>>  
+<<z62>> <<z63>> <<z64>> <<z65>> <<z66>> <<z67>> <<z68>> <<z69>> <<z70>> <<z71>>  
+<<z72>> <<z73>> <<z74>> <<z75>> <<z76>> <<z77>> <<z78>> <<z79>> <<z80>> <<z81>>  
+<<z82>> <<z83>> <<z84>> <<z85>> <<z86>> <<z87>> <<z88>> <<z89>> <<z90>> <<z91>>  
+<<z92>> <<z93>> <<z94>> <<z95>> <<z96>> <<z97>> <<z98>> <<z99>> <<z100>> <<z101>>  
+<<z102>> <<z103>> <<z104>> <<z105>> <<z106>> <<z107>> <<z108>> <<z109>> <<z110>> <<z111>>  
+<<z112>> <<z113>> <<z114>> <<z115>> <<z116>> <<z117>> <<z118>> <<z119>> <<z120>> <<z121>>  
+<<z122>> <<z123>> <<z124>> <<z125>> <<z126>> <<z127>> <<z128>> <<z129>> <<z130>> <<z131>>  
+<<z132>> <<z133>> <<z134>> <<z135>> <<z136>> <<z137>> <<z138>> <<z139>> <<z140>> <<z141>>  
+<<z142>> <<z143>> <<z144>> <<z145>> <<z146>> <<z147>> <<z148>> <<z149>> <<z150>> <<z151>>  
+<<z152>> <<z153>> <<z154>> <<z155>> <<z156>> <<z157>> <<z158>> <<z159>> <<z160>> 
+
+   MIX 
+   PLANE 1 1 
+   PLANE 2 2 
+   PLANE 3 3 
+   PLANE 4 4 
+   PLANE 5 5 
+   PLANE 6 6 
+   PLANE 7 7 
+   PLANE 8 8 
+   PLANE 9 9 
+   PLANE 10 10 
+   PLANE 11 11 
+   PLANE 12 12 
+   PLANE 13 13 
+   PLANE 14 14 
+   PLANE 15 15 
+   PLANE 16 16 
+   PLANE 17 17 
+   PLANE 18 18 
+   PLANE 19 19 
+   PLANE 20 20 
+   PLANE 21 21 
+   PLANE 22 22 
+   PLANE 23 23 
+   PLANE 24 24 
+   PLANE 25 25 
+   PLANE 26 26 
+   PLANE 27 27 
+   PLANE 28 28 
+   PLANE 29 29 
+   PLANE 30 30 
+   PLANE 31 31 
+   PLANE 32 32 
+   PLANE 33 33 
+   PLANE 34 34 
+   PLANE 35 35 
+   PLANE 36 36 
+   PLANE 37 37 
+   PLANE 38 38 
+   PLANE 39 39 
+   PLANE 40 40 
+   PLANE 41 41 
+   PLANE 42 42 
+   PLANE 43 43 
+   PLANE 44 44 
+   PLANE 45 45 
+   PLANE 46 46 
+   PLANE 47 47 
+   PLANE 48 48 
+   PLANE 49 49 
+   PLANE 50 50 
+   PLANE 51 51 
+   PLANE 52 52 
+   PLANE 53 53 
+   PLANE 54 54 
+   PLANE 55 55 
+   PLANE 56 56 
+   PLANE 57 57 
+   PLANE 58 58 
+   PLANE 59 59 
+   PLANE 60 60 
+   PLANE 61 61 
+   PLANE 62 62 
+   PLANE 63 63 
+   PLANE 64 64 
+   PLANE 65 65 
+   PLANE 66 66 
+   PLANE 67 67 
+   PLANE 68 68 
+   PLANE 69 69 
+   PLANE 70 70 
+   PLANE 71 71 
+   PLANE 72 72 
+   PLANE 73 73 
+   PLANE 74 74 
+   PLANE 75 75 
+   PLANE 76 76 
+   PLANE 77 77 
+   PLANE 78 78 
+   PLANE 79 79 
+   PLANE 80 80 
+   PLANE 81 81 
+   PLANE 82 82 
+   PLANE 83 83 
+   PLANE 84 84 
+   PLANE 85 85 
+   PLANE 86 86 
+   PLANE 87 87 
+   PLANE 88 88 
+   PLANE 89 89 
+   PLANE 90 90 
+   PLANE 91 91 
+   PLANE 92 92 
+   PLANE 93 93 
+   PLANE 94 94 
+   PLANE 95 95 
+   PLANE 96 96 
+   PLANE 97 97 
+   PLANE 98 98 
+   PLANE 99 99 
+   PLANE 100 100 
+   PLANE 101 101 
+   PLANE 102 102 
+   PLANE 103 103 
+   PLANE 104 104 
+   PLANE 105 105 
+   PLANE 106 106 
+   PLANE 107 107 
+   PLANE 108 108 
+   PLANE 109 109 
+   PLANE 110 110 
+   PLANE 111 111 
+   PLANE 112 112 
+   PLANE 113 113 
+   PLANE 114 114 
+   PLANE 115 115 
+   PLANE 116 116 
+   PLANE 117 117 
+   PLANE 118 118 
+   PLANE 119 119 
+   PLANE 120 120 
+   PLANE 121 121 
+   PLANE 122 122 
+   PLANE 123 123 
+   PLANE 124 124 
+   PLANE 125 125 
+   PLANE 126 126 
+   PLANE 127 127 
+   PLANE 128 128 
+   PLANE 129 129 
+   PLANE 130 130 
+   PLANE 131 131 
+   PLANE 132 132 
+   PLANE 133 133 
+   PLANE 134 134 
+   PLANE 135 135 
+   PLANE 136 136 
+   PLANE 137 137 
+   PLANE 138 138 
+   PLANE 139 139 
+   PLANE 140 140 
+   PLANE 141 141 
+   PLANE 142 142 
+   PLANE 143 143 
+   PLANE 144 144 
+   PLANE 145 145 
+   PLANE 146 146 
+   PLANE 147 147 
+   PLANE 148 148 
+   PLANE 149 149 
+   PLANE 150 150 
+   PLANE 151 151 
+   PLANE 152 152 
+   PLANE 153 153 
+   PLANE 154 154 
+   PLANE 155 155 
+   PLANE 156 156 
+   PLANE 157 157 
+   PLANE 158 158 
+   PLANE 159 159 
+   PLANE 160 160 
+   
+; 
+! 
+NXNAME '01' NYNAME  'A' 
+NCOMB 1 
+B-ZONE 1 
+ 
+BTYPE INST-BURN 
+INST-BVAL CHAN 0.0 
+
+ADD-PARAM PNAME 'T-FUEL' PARKEY 'TFuel' LOCAL 
+ADD-PARAM PNAME 'T-COOL' PARKEY 'TCool' LOCAL 
+ADD-PARAM PNAME 'D-COOL' PARKEY 'DCool' LOCAL 
+
+FUEL WEIGHT <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>>  
+<<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> <<BMass>> ; 
+ENDIF ;
+
+END: ;
+
+QUIT "LIST" .

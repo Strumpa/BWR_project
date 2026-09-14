@@ -16,7 +16,8 @@
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version
 *
-*Author(s): A. Hebert
+*Author(s): A. Hebert, R. Guasch
+* Modified 09-2026 by R. Guasch to validate EDP0 keyword.
 *
 *Parameters: input
 * IMPX    print flag (equal to zero for no print).
@@ -94,10 +95,9 @@
       TYPE(C_PTR) KPLIB,KPLIB5
       CHARACTER HSMG*131,NAMDXS(MAXREA)*8
       DOUBLE PRECISION GAR,GAR1,GAR2,GARD,XDRCST,EVJ,FITD,PHI,FNORM,VPH
-      DOUBLE PRECISION INTNF,INTF, KAP
-      INTEGER IPRLOC, NGRNF
+      INTEGER IPRLOC
       LOGICAL LKERMA, FINDU5
-      REAL, ALLOCATABLE, DIMENSION(:) :: ZKERMA,ZNFTOT,NFTOTI
+      REAL, ALLOCATABLE, DIMENSION(:) :: ZKERMA,ZNFTOT
       REAL, ALLOCATABLE, DIMENSION(:,:) :: XSREC
 *----
 *  SCRATCH STORAGE ALLOCATION
@@ -109,7 +109,6 @@
       LKERMA=.FALSE.
       FINDU5=.FALSE.
       IS235=0
-      PRINT *, 'EVOSIG: IGLOB =', IGLOB
       IF(IGLOB.EQ.-1) THEN
         DO 30 IST=1,NVAR+NSUPS
           IF(IZAE(IST).EQ.922350) IS235=IST
@@ -171,6 +170,7 @@
         ALLOCATE(ZKERMA(NGROUP))
         CALL LCMGET(KPLIB,'H-FACTOR',ZKERMA)
         GAR=0.0D0
+! Compute the lethargy integrated microscopic heating rate : MeV*b/(cm^2*s)
         DO 100 IU=1,NGROUP
          GAR=GAR+1.0E-6*DBLE(ZKERMA(IU)*FLUMIX(IU,IBM)) ! convert to MeV
   100   CONTINUE
@@ -183,7 +183,6 @@
           ELSE 
             GO TO 115
           ENDIF
-          !IF(K.EQ.0) CALL XABORT('EVOSIG: NO U235 INFO(2).')
           KPLIB5=IPISO(K)
           IF(.NOT.C_ASSOCIATED(KPLIB5)) THEN
             WRITE(HSMG,'(42HEVOSIG: ISOTOPE U235 IS NOT AVAILABLE IN T,
@@ -203,8 +202,9 @@
         SIG(IS,NREAC,IBM)=SIG(IS,NREAC,IBM)+1.0E-3*FACT*REAL(GAR)
         DEALLOCATE(ZNFTOT)
       ELSE
+! Do not apply EDP0 empirical formula and keep H-FACTOR * FLUX to compute microscopic heating rates
+        SIG(IS,NREAC,IBM)=SIG(IS,NREAC,IBM)+1.0E-3*FACT*REAL(GAR)
         IF((IGLOB.EQ.-1).AND.(IZAE(IS).GT.900000)) THEN
-          PRINT *, "FOR IZAE(IS)=", IZAE(IS)
           CALL XABORT('EVOSIG: EDP0 OPTION NEEDS H-FACTOR INFORMATION.')
         ENDIF
       ENDIF
@@ -311,7 +311,6 @@
       IF(IMPX.GT.0) WRITE(IOUT,6000) PHI*1.0E+13
       IF(INR.GT.0) THEN
          FNORM=PHI*VTOT/VPH
-         PRINT *, 'Normalizing reaction rates with FNORM =', FNORM 
          DO 290 IBM=1,NBMIX
          VPHV(IBM)=VPHV(IBM)*REAL(FNORM)
          DO 280 IQ=1,NREAC
